@@ -1,0 +1,71 @@
+---
+output:
+  md_document:
+    variant: markdown_github
+---
+
+<!-- README.md is generated from README.Rmd. Please edit that file -->
+
+```{r, echo = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.path = "README-"
+)
+```
+# Welcome to the dev-version of jointest R package
+
+<!-- #[library flipscores on CRAN](http://cran.r-project.org/web/packages/flipscores/index.html) -->
+
+
+* * *
+
+## Set up
+
+To **install** this github version type (in R):
+
+    ##if devtools is not installed yet: 
+    ## install.packages("devtools") 
+    library(devtools)
+    install_github("livioivil/jointest")
+
+
+<!-- ## Some examples -->
+
+
+
+## A (minimal) example
+
+```{r,  message = FALSE}
+n=20
+set.seed(123)
+D=data.frame(X=rnorm(n),Z1=rnorm(n),Z2=rnorm(n))
+D$Y=D$Z1+D$X+rnorm(n)
+mod1=glm(Y~X+Z1+Z2,data=D)
+mod2=glm(Y~X+poly(Z1,2)+Z2,data=D)
+mod3=glm(Y~X+poly(Z1,2)+poly(Z2,2),data=D)
+mod4=glm(Y~X+Z1+poly(Z2,2),data=D)
+mods=list(mod1=mod1,mod2=mod2,mod3=mod3,mod4=mod4)
+for(i in 1:length(mods))
+ mods[[i]]$call$data=eval(D)
+library(jointest)
+res=join_flipscores(mods,n_flips = 5000, score_type = "effective" ,
+       seed = 1, tested_coeffs = "X")
+summary(res)
+summary(combine(res))
+res=p.adjust.fwer(res)
+summary(res)
+
+```
+
+
+## References
+
+J Hemerik, JJ Goeman and L Finos (2019) Robust testing in generalized linear models by sign-flipping score contributions, Submitted, arXiv: 1909.03796
+
+<https://arxiv.org/abs/1909.03796>
+
+## Bug reports
+If you encounter a bug, please file a
+[reprex](https://github.com/tidyverse/reprex) (minimal reproducible example)
+on [github](https://github.com/livioivil/jointest/issues).
