@@ -1,12 +1,10 @@
-npc <- function(Tspace,comb_funct=comb_funct_fisher,tail=0,comb_name="Combined"){
+npc <- function(Tspace,comb_funct=comb_funct_fisher,tail=0){
   if(!(comb_funct%in%c("mean","median")))
     Tspace=.set_tail(Tspace,tail=tail)
   
   if(comb_funct%in%c("Fisher","Liptak","Stoufer","Tippet","minp")){
     Tspace=.t2p(Tspace,tail=tail)
   }
-  
-  nMods= max(1,ncol(Tspace))
   
   if(comb_funct=="mean"){
     Tspace=rowMeans(Tspace)
@@ -26,13 +24,8 @@ npc <- function(Tspace,comb_funct=comb_funct_fisher,tail=0,comb_name="Combined")
   }
   #it is now the vector of combined test stat
   Tspace=matrix(Tspace)
-  colnames(Tspace)=comb_name
   
-  summary_table=data.frame(Coeff=comb_name,Stat=comb_funct,
-             nMods= nMods,
-             S=Tspace[1],
-             p=.t2p_only_first(Tspace,tail = 1))
-  list(Tspace=Tspace, summary_table=summary_table)
+ Tspace
 }
 
 .rowMedians <- function(X,...)
@@ -43,5 +36,5 @@ npc <- function(Tspace,comb_funct=comb_funct_fisher,tail=0,comb_name="Combined")
 
 .comb_funct_fisher <- function(p)-log(p)
 .comb_funct_liptak <- function(p)-qnorm(p)
-
+#add here other functions..
 ################################

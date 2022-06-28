@@ -31,12 +31,7 @@ combine <- function(mods,
   
   Tspace=.get_all_Tspace(mods)
   
-  res=lapply(1:length(combined),function(id){
-    npc(Tspace[,combined[[id]]],
-        comb_funct = comb_funct,
-        tail = tail,
-        comb_name =names(combined)[id])
-    })
+  res=lapply(1:length(combined),jointest:::.npc2jointest,Tspace,combined,tail,comb_funct)
   
   # ## I don't now how to set names in npc(), I do it here
   # res=.set_comb_names_in_summary_table(res,names(combined))
@@ -45,12 +40,22 @@ combine <- function(mods,
   
   names(res)=names(combined)
   
-  # 
-  # if(length(res)>1)
-  #   res$Overall=npc(Tspace[,uniq_nm],comb_funct = comb_funct,tail = tail)
   class(res) <- c("jointest", class(res))
   res  
-  # list(summary_table=summary_ei_combined(res),
-  #      Tspace=.get_all_Tspace(res)
-  #      )
+}
+
+.npc2jointest <- function(id,Tspace,combined,tail,comb_funct){
+  comb_name =names(combined)[id]
+  if(is.null(comb_name)) comb_name="Combined"
+  Tspace=jointest:::npc(Tspace[,combined[[id]]],
+                        comb_funct = comb_funct,
+                        tail = tail)
+  colnames(Tspace)=comb_name
+  summary_table=data.frame(Coeff=comb_name,
+                           Stat=comb_funct,
+                           nMods= max(1,ncol(Tspace)),
+                           S=Tspace[1],
+                           p=.t2p_only_first(Tspace,tail = 1))
+  
+  list(Tspace=Tspace, summary_table=summary_table)
 }
