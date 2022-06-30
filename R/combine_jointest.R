@@ -31,7 +31,11 @@ combine <- function(mods,
   
   Tspace=.get_all_Tspace(mods)
   
-  res=lapply(1:length(combined),jointest:::.npc2jointest,Tspace,combined,tail,comb_funct)
+  res=lapply(1:length(combined),jointest:::.npc2jointest,
+             Tspace=Tspace,
+             combined=combined,
+             tail=tail,
+             comb_funct=comb_funct)
   
   # ## I don't now how to set names in npc(), I do it here
   # res=.set_comb_names_in_summary_table(res,names(combined))

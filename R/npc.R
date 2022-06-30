@@ -3,13 +3,16 @@ npc <- function(Tspace,comb_funct=comb_funct_fisher,tail=0){
     Tspace=.set_tail(Tspace,tail=tail)
   
   if(comb_funct%in%c("Fisher","Liptak","Stoufer","Tippet","minp")){
-    Tspace=.t2p(Tspace,tail=tail)
+    Tspace=.t2p(Tspace,tail=1)
   }
+  
+  if(comb_funct=="minp")
+    Tspace=-Tspace
   
   if(comb_funct=="mean"){
     Tspace=rowMeans(Tspace)
     Tspace=.set_tail(Tspace,tail=tail)
-  } else if(comb_funct=="maxT"){
+  } else if(comb_funct%in%c("minp","maxT")){
     Tspace=.rowMax(Tspace)
   } else if(comb_funct=="median"){
     Tspace=.rowMedians(Tspace)
