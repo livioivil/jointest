@@ -43,13 +43,14 @@ join_flipscores <- function(mods,
 
   modflips=lapply(1:length(mods), function(i)
     { 
-    temp=flipscores::flipscores(formula=mods[[i]],score_type = score_type,n_flips = n_flips,
+    temp=flipscores::flipscores(model=mods[[i]],score_type = score_type,n_flips = n_flips,
                to_be_tested=tested_coeffs[[i]],seed=eval(seed,1))
     if(statistics%in%c("t")){
       sumY2s=colSums(temp$scores^2)
       n=nrow(temp$scores)
       tt=sapply(1:length(sumY2s),
                 function(i) .sum2t(temp$Tspace[,i],sumY2s[i],n))
+      if(any(is.na(tt))) browser()
       colnames(tt)=colnames(temp$Tspace)
       temp$Tspace = tt
     } 
