@@ -17,7 +17,7 @@
 #'for(i in 1:length(mods))
 #' mods[[i]]$call$data=eval(D)
 #'library(jointest)
-#'res=join_flipscores(mods,n_flips = 5000, score_type = "effective" ,
+#'res=join_flipscores(mods,n_flips = 5000, score_type = "standardized" ,
 #'       seed = 1, tested_coeffs = "X")
 #'summary(res)
 #'summary(combine(res))
@@ -45,6 +45,17 @@ join_flipscores <- function(mods,
     { 
     temp=flipscores::flipscores(model=mods[[i]],score_type = score_type,n_flips = n_flips,
                to_be_tested=tested_coeffs[[i]],seed=eval(seed,1))
+<<<<<<< HEAD
+    if(statistics%in%c("t")) 
+      if(score_type=="effective"||score_type=="orthogonalized") {
+        sumY2s=colSums(temp$scores^2)
+        n=nrow(temp$scores)
+        tt=sapply(1:length(sumY2s),
+                  function(i) flipscores:::.sum2t(temp$Tspace[,i],sumY2s[i],n))
+        colnames(tt)=colnames(temp$Tspace)
+        temp$Tspace = tt
+      } 
+=======
     if(statistics%in%c("t")){
       sumY2s=colSums(temp$scores^2)
       n=nrow(temp$scores)
@@ -54,6 +65,7 @@ join_flipscores <- function(mods,
       colnames(tt)=colnames(temp$Tspace)
       temp$Tspace = tt
     } 
+>>>>>>> master
     temp
   })
   names(modflips)=names(mods)
