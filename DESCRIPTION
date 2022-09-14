@@ -1,6 +1,6 @@
 Package: jointest
-Version: 1.1.0
-Date: 2022-06-20
+Version: 1.2.0
+Date: 2022-09-15
 Title: Multivariate testing trought joint sign-flip scores (Hemerik, Goeman and Finos (2020) <doi:10.1111/rssb.12369>).
 Author: Livio Finos
 Maintainer: Livio Finos <livio.finos@unipd.it>

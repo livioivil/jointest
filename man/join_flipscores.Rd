@@ -34,10 +34,10 @@ mods=list(mod1=mod1,mod2=mod2,mod3=mod3,mod4=mod4)
 for(i in 1:length(mods))
 mods[[i]]$call$data=eval(D)
 library(jointest)
-res=join_flipscores(mods,n_flips = 5000, score_type = "effective" ,
+res=join_flipscores(mods,n_flips = 5000, score_type = "standardized" ,
       seed = 1, tested_coeffs = "X")
 summary(res)
 summary(combine(res))
-jointest:::p.adjust.fwer(res)
-plot(res)
+res=p.adjust.fwer(res)
+summary(res)
 }

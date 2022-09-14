@@ -45,7 +45,7 @@ make_models<-function (mod, max_cat = 3, var_exclude = NULL, data_new = NULL,
 }
 
 #########################
-multiverse_boostrap<-ffunction (mods, data, var_interest, B = 500, verbatim = TRUE) 
+multiverse_boostrap<-function (mods, data, var_interest, B = 500, verbatim = TRUE) 
 {
   n_data <- dim(data)[1]
   yvar <- all.vars(formula(mods[[1]]))[1]
