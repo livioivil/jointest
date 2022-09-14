@@ -23,41 +23,35 @@
 #'summary(combine(res))
 #'res=p.adjust.fwer(res)
 #'summary(res)
-join_flipscores <- function(mods,
-                       tested_coeffs=NULL,
-                       n_flips=5000,
-                       score_type="standardized",
-                       seed=NULL,
-                       statistics="t"){
-  
-  names(mods)=.set_mods_names(mods) 
-  
-  if(is.null(tested_coeffs)){
-    tested_coeffs=.get_all_coeff_names_list(mods)
+join_flipscores <- function (mods, tested_coeffs = NULL, n_flips = 5000, score_type = "standardized", 
+                             seed = NULL, statistics = "t") 
+{
+  names(mods) = .set_mods_names(mods)
+  if (is.null(tested_coeffs)) {
+    tested_coeffs = .get_all_coeff_names_list(mods)
   }
-  
-  if(!is.list(tested_coeffs)){
-    temp=.get_all_coeff_names_list(mods)
-    tested_coeffs=lapply(temp,function(nms) intersect(tested_coeffs,nms))
+  if (!is.list(tested_coeffs)) {
+    temp = .get_all_coeff_names_list(mods)
+    tested_coeffs = lapply(temp, function(nms) intersect(tested_coeffs, 
+                                                         nms))
   }
-
-  modflips=lapply(1:length(mods), function(i)
-    { 
-    temp=flipscores::flipscores(formula=mods[[i]],score_type = score_type,n_flips = n_flips,
-               to_be_tested=tested_coeffs[[i]],seed=eval(seed,1))
-    if(statistics%in%c("t")) 
-      if(score_type=="effective"||score_type=="orthogonalized") {
-        sumY2s=colSums(temp$scores^2)
-        n=nrow(temp$scores)
-        tt=sapply(1:length(sumY2s),
-                  function(i) flipscores:::.sum2t(temp$Tspace[,i],sumY2s[i],n))
-        colnames(tt)=colnames(temp$Tspace)
+  modflips = lapply(1:length(mods), function(i) {
+    temp = flipscores::flipscores(formula = mods[[i]], score_type = score_type, 
+                                  n_flips = n_flips, to_be_tested = tested_coeffs[[i]], 
+                                  seed = eval(seed, 1))
+    if (statistics %in% c("t")) 
+      if (score_type == "effective" || score_type == 
+          "orthogonalized") {
+        sumY2s = colSums(temp$scores^2)
+        n = nrow(temp$scores)
+        tt = sapply(1:length(sumY2s), function(i) flipscores:::.sum2t(temp$Tspace[, 
+                                                                                  i], sumY2s[i], n))
+        colnames(tt) = colnames(temp$Tspace)
         temp$Tspace = tt
-      } 
+      }
     temp
   })
-  names(modflips)=names(mods)
+  names(modflips) = names(mods)
   class(modflips) <- c("jointest", class(modflips))
-  
   modflips
 }
