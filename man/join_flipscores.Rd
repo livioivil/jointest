@@ -9,8 +9,8 @@ join_flipscores(
   tested_coeffs = NULL,
   n_flips = 5000,
   score_type = "standardized",
-  seed = NULL,
-  statistics = "t"
+  statistics = "t",
+  seed = NULL
 )
 }
 \arguments{
