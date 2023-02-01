@@ -24,7 +24,7 @@
 #'res=p.adjust.fwer(res)
 #'summary(res)
 join_flipscores <- function (mods, tested_coeffs = NULL, n_flips = 5000, score_type = "standardized", 
-                             statistics = "t",seed=NULL,flipscoresOld=FALSE) 
+                             statistics = "t",seed=NULL,precompute_flips=TRUE,usepackage="flipscores",...) 
 {
   if(!is.null(seed)) set.seed(seed)
   
@@ -39,14 +39,16 @@ join_flipscores <- function (mods, tested_coeffs = NULL, n_flips = 5000, score_t
   }
   
   
-  if(!flipscoresOld){
-    library(flipscores)
-  n_obs=nrow(mods[[1]]$model)
-  if(!exists("flips")||is.null(flips)) flips=.make_flips(n_obs,n_flips)
-  
+  if(usepackage=="flipscoresNew"){
+    library(flipscoresNew)
+    n_obs=nrow(mods[[1]]$model)
+    if(precompute_flips){ 
+      n_flips=.make_flips(n_obs,n_flips)
+      
+  }
   modflips = lapply(1:length(mods), function(i) {
-    temp = flipscores(formula = mods[[i]], score_type = score_type, 
-                                  n_flips = flips, to_be_tested = tested_coeffs[[i]]
+    temp = flipscoresNew::flipscores(formula = mods[[i]], score_type = score_type, 
+                                  n_flips = n_flips, to_be_tested = tested_coeffs[[i]]
                                   )
     if (statistics %in% c("t")) 
       if (score_type == "effective" || score_type == 
@@ -61,7 +63,7 @@ join_flipscores <- function (mods, tested_coeffs = NULL, n_flips = 5000, score_t
     temp
   })
   } else {
-    library(flipscoresOld)
+    eval(paste0("library(",usepackage,")"))
     modflips = lapply(1:length(mods), function(i) {
       temp = flipscores(formula = mods[[i]], score_type = score_type, 
                         n_flips = n_flips, to_be_tested = tested_coeffs[[i]]
