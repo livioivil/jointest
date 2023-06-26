@@ -132,7 +132,7 @@ plot.jointest <- function(mods,
                             group=group,color=group)) + 
     scale_colour_manual(values=cbPalette) +
     geom_point(aes(shape=is_signif))+ 
-    ggtitle(title)
+    ggtitle(title) + theme_minimal() 
   if(!(mark_signif%in%c(0,1))){
     p <- p +
       scale_shape_manual(values=c(3,19),name = paste(p.values,

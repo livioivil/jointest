@@ -24,7 +24,7 @@
 #'res=p.adjust.fwer(res)
 #'summary(res)
 join_flipscores <- function (mods, tested_coeffs = NULL, n_flips = 5000, score_type = "standardized", 
-                             statistics = "t",seed=NULL,precompute_flips=TRUE,usepackage="flipscores",...) 
+                             statistics = "t",seed=NULL,...) 
 {
   if(!is.null(seed)) set.seed(seed)
   
@@ -39,34 +39,15 @@ join_flipscores <- function (mods, tested_coeffs = NULL, n_flips = 5000, score_t
   }
   
   
-  if(usepackage=="flipscoresNew"){
-    library(flipscoresNew)
-    n_obs=nrow(mods[[1]]$model)
-    if(precompute_flips){ 
-      n_flips=.make_flips(n_obs,n_flips)
-      
-  }
-  modflips = lapply(1:length(mods), function(i) {
-    temp = flipscoresNew::flipscores(formula = mods[[i]], score_type = score_type, 
-                                  n_flips = n_flips, to_be_tested = tested_coeffs[[i]]
-                                  )
-    if (statistics %in% c("t")) 
-      if (score_type == "effective" || score_type == 
-          "orthogonalized") {
-        sumY2s = colSums(temp$scores^2)
-        n = nrow(temp$scores)
-        tt = sapply(1:length(sumY2s), function(i) flipscores:::.sum2t(temp$Tspace[, 
-                                                                                  i], sumY2s[i], n))
-        colnames(tt) = colnames(temp$Tspace)
-        temp$Tspace = tt
-      }
-    temp
-  })
-  } else {
-    eval(paste0("library(",usepackage,")"))
+ #   require(flipscores)
+  n_obs=sapply(mods, function(mod) length(mod$y))
+  n_obs=max(n_obs)
+  
+  FLIPS=flipscores:::.make_flips (n_obs=n_obs,n_flips=n_flips)
     modflips = lapply(1:length(mods), function(i) {
-      temp = flipscores(formula = mods[[i]], score_type = score_type, 
-                        n_flips = n_flips, to_be_tested = tested_coeffs[[i]]
+      temp = flipscores(formula = eval(mods[[i]],parent.frame()), score_type = score_type, 
+                        n_flips = eval(FLIPS), to_be_tested = tested_coeffs[[i]],
+                        output_flips=FALSE
       )
       if (statistics %in% c("t")) 
         if (score_type == "effective" || score_type == 
@@ -80,7 +61,7 @@ join_flipscores <- function (mods, tested_coeffs = NULL, n_flips = 5000, score_t
         }
       temp
     })
-  }
+  
   names(modflips) = names(mods)
   class(modflips) <- c("jointest", class(modflips))
   modflips
