@@ -46,7 +46,7 @@ join_flipscores <- function (mods, tested_coeffs = NULL, n_flips = 5000, score_t
   FLIPS=flipscores:::.make_flips (n_obs=n_obs,n_flips=n_flips)
     modflips = lapply(1:length(mods), function(i) {
       temp = flipscores(formula = eval(mods[[i]],parent.frame()), score_type = score_type, 
-                        n_flips = eval(FLIPS), to_be_tested = tested_coeffs[[i]],
+                        flips = eval(FLIPS), to_be_tested = tested_coeffs[[i]],
                         output_flips=FALSE
       )
       if (statistics %in% c("t")) 
@@ -65,8 +65,4 @@ join_flipscores <- function (mods, tested_coeffs = NULL, n_flips = 5000, score_t
   names(modflips) = names(mods)
   class(modflips) <- c("jointest", class(modflips))
   modflips
-}
-
-.make_flips <- function(n_obs,n_flips){
-  matrix(c(-1,1)[sample(2,n_obs*(n_flips-1),replace=TRUE)],n_flips-1,n_obs)
 }

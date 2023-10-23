@@ -49,21 +49,26 @@ mods=list(mod1=mod1,mod2=mod2,mod3=mod3,mod4=mod4)
 for(i in 1:length(mods))
  mods[[i]]$call$data=eval(D)
 library(jointest)
-res=join_flipscores(mods,n_flips = 5000, score_type = "effective" ,
-       seed = 1, tested_coeffs = "X")
+res=join_flipscores(mods,n_flips = 5000,        seed = 1, tested_coeffs = "X")
 summary(res)
 summary(combine(res))
 res=p.adjust.fwer(res)
 summary(res)
-
 ```
 
 
 ## References
 
-J Hemerik, JJ Goeman and L Finos (2019) Robust testing in generalized linear models by sign-flipping score contributions, Submitted, arXiv: 1909.03796
+J Hemerik, JJ Goeman and L Finos (2019) Robust testing in generalized linear models by sign-flipping score contributions. Journal of the Royal Statistical Society Series B: Statistical Methodology, Volume 82, Issue 3, July 2020, Pages 841–864.  
+<https://doi.org/10.1111/rssb.12369>
 
-<https://arxiv.org/abs/1909.03796>
+R De Santis, J Goeman, J Hemerik, L Finos (2022)
+Inference in generalized linear models with robustness to misspecified variances arXiv: 2209.13918.  
+<https://arxiv.org/abs/2209.13918>
+
+P Girardi, A Vesely, D Lakens, G Altoè, M Pastore, A Calcagnì, L Finos (2022) Post-selection Inference in Multiverse Analysis (PIMA): an inferential framework based on the sign flipping score test. arxiv: 2210.02794.  
+<https://arxiv.org/abs/2210.02794>
+
 
 ## Bug reports
 If you encounter a bug, please file a
