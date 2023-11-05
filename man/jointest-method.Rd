@@ -9,12 +9,16 @@
 \usage{
 \method{summary}{jointest}(object, ...)
 
-\method{plot}{jointest}(mods, p.values = c("raw", "adjusted"), mark_signif = 0.05)
+\method{plot}{jointest}(object, p.values = c("raw", "adjusted"), mark_signif = 0.05)
 }
 \arguments{
-\item{object}{a jointest object}
+\item{object}{an object of class \code{jointest}.}
 
 \item{...}{additional arguments to be passed}
+
+\item{p.values}{use "raw" or "adjusted" (i.e. corrected for selective inference)}
+
+\item{mark_signif}{a value between 0 and 1. The plot will mark the p-values smaller than \code{mark_signif} (0.05 by default). If equal to 0 or 1 nothing will be marked.}
 }
 \description{
 Methods for \code{jointest} objects. 

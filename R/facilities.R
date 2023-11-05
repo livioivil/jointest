@@ -45,39 +45,39 @@ make_models<-function (mod, max_cat = 3, var_exclude = NULL, data_new = NULL,
 }
 
 #########################
-multiverse_boostrap<-function (mods, data, var_interest, B = 500, verbatim = TRUE) 
-{
-  n_data <- dim(data)[1]
-  yvar <- all.vars(formula(mods[[1]]))[1]
-  vars <- all.vars(formula(mods[[1]]))[-1]
-  nvar <- length(vars)
-  num_comb <- length(mods)
-  pboot <- matrix(NA, B, num_comb)
-  eboot <- matrix(NA, B, num_comb)
-  pval <- rep(NA, num_comb)
-  eval <- rep(NA, num_comb)
-  pos <- which(vars == var_interest)
-  for (k in 1:num_comb) {
-    formula <- formula(mods[[k]])
-    m1 <- mods[[k]]
-    pval[k] <- coef(summary(m1))[pos + 1, 4]
-    eval[k] <- coef(m1)[pos + 1]
-    data$ytemp <- data[, yvar] - coef(m1)[pos + 1] * (data[, 
-                                                           var_interest])
-    temp <- "ytemp ~ "
-    for (j in 1:nvar) temp <- paste(temp, paste("+", 
-                                                all.vars(formula(mods[[k]]))[-1][j]))
-    formulak <- formula(temp)
-    set.seed(1)
-    bt <- boot::boot(data, function(d, i) coef(summary(update(mods[[k]], 
-                                                              data = d[i, ], formula = formulak)))[pos + 1, c(1, 
-                                                                                                              4)], R = B, stype = "i")
-    eboot[, k] <- bt$t[, 1]
-    pboot[, k] <- bt$t[, 2]
-    if (verbatim) 
-      show(paste("model", k))
-  }
-  list(pval = pval, eval = eval, pboot = pboot, eboot = eboot, 
-       models = mods)
-}
-
+# multiverse_boostrap<-function (mods, data, var_interest, B = 500, verbatim = TRUE) 
+# {
+#   n_data <- dim(data)[1]
+#   yvar <- all.vars(formula(mods[[1]]))[1]
+#   vars <- all.vars(formula(mods[[1]]))[-1]
+#   nvar <- length(vars)
+#   num_comb <- length(mods)
+#   pboot <- matrix(NA, B, num_comb)
+#   eboot <- matrix(NA, B, num_comb)
+#   pval <- rep(NA, num_comb)
+#   eval <- rep(NA, num_comb)
+#   pos <- which(vars == var_interest)
+#   for (k in 1:num_comb) {
+#     formula <- formula(mods[[k]])
+#     m1 <- mods[[k]]
+#     pval[k] <- coef(summary(m1))[pos + 1, 4]
+#     eval[k] <- coef(m1)[pos + 1]
+#     data$ytemp <- data[, yvar] - coef(m1)[pos + 1] * (data[, 
+#                                                            var_interest])
+#     temp <- "ytemp ~ "
+#     for (j in 1:nvar) temp <- paste(temp, paste("+", 
+#                                                 all.vars(formula(mods[[k]]))[-1][j]))
+#     formulak <- formula(temp)
+#     set.seed(1)
+#     bt <- boot::boot(data, function(d, i) coef(summary(update(mods[[k]], 
+#                                                               data = d[i, ], formula = formulak)))[pos + 1, c(1, 
+#                                                                                                               4)], R = B, stype = "i")
+#     eboot[, k] <- bt$t[, 1]
+#     pboot[, k] <- bt$t[, 2]
+#     if (verbatim) 
+#       show(paste("model", k))
+#   }
+#   list(pval = pval, eval = eval, pboot = pboot, eboot = eboot, 
+#        models = mods)
+# }
+# 

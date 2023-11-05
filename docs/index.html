@@ -56,8 +56,9 @@
       </header><div class="row">
   <div class="contents col-md-9">
 <div class="section level1">
-<div class="page-header"><h1 id="welcome-to-the-dev-version-of-jointest-r-package">Welcome to the dev-version of jointest R package<a class="anchor" aria-label="anchor" href="#welcome-to-the-dev-version-of-jointest-r-package"></a>
+<div class="page-header"><h1 id="jointest-r-package">jointest R package<a class="anchor" aria-label="anchor" href="#jointest-r-package"></a>
 </h1></div>
+<p>A package devoted to multivariate resampling-based tests. By resampling jointly on all univariate tests (e.i. sign-flip score tests by Hemerik, Goeman and Finos (2020)) it allows for multivariate and selective inference – e.g. weak and strong control of the Familywise Error Rate or confidence bounds for True Discovery Proportion.</p>
 <!-- #[library flipscores on CRAN](http://cran.r-project.org/web/packages/flipscores/index.html) -->
 <hr>
 <div class="section level2">
@@ -68,7 +69,6 @@
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="do">## install.packages("devtools") </span></span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(devtools)</span>
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">install_github</span>(<span class="st">"livioivil/jointest"</span>)</span></code></pre></div>
-<!-- ## Some examples -->
 </div>
 <div class="section level2">
 <h2 id="a-minimal-example">A (minimal) example<a class="anchor" aria-label="anchor" href="#a-minimal-example"></a>
@@ -89,25 +89,25 @@
 <span><span class="va">res</span><span class="op">=</span><span class="fu"><a href="reference/join_flipscores.html">join_flipscores</a></span><span class="op">(</span><span class="va">mods</span>,n_flips <span class="op">=</span> <span class="fl">5000</span>,        seed <span class="op">=</span> <span class="fl">1</span>, tested_coeffs <span class="op">=</span> <span class="st">"X"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">res</span><span class="op">)</span></span>
 <span><span class="co">#&gt;   Model Coeff  Estimate    Score Std. Error  z value Part. Cor   Pr(&gt;|t|)</span></span>
-<span><span class="co">#&gt; 1  mod1     X 1.1254046 19.78375   6.309305 3.135646 0.7605058 0.01319736</span></span>
-<span><span class="co">#&gt; 2  mod2     X 0.9552644 15.38036   5.053879 3.043278 0.7608195 0.01779644</span></span>
-<span><span class="co">#&gt; 3  mod3     X 1.0121921 14.31866   4.836669 2.960437 0.7643816 0.01379724</span></span>
-<span><span class="co">#&gt; 4  mod4     X 1.1696906 17.62979   5.875380 3.000621 0.7501552 0.01099780</span></span>
+<span><span class="co">#&gt; 1  mod1     X 1.1254046 19.78375   6.309305 3.135646 0.7605058 0.01739652</span></span>
+<span><span class="co">#&gt; 2  mod2     X 0.9552644 15.38036   5.053879 3.043278 0.7608195 0.01519696</span></span>
+<span><span class="co">#&gt; 3  mod3     X 1.0121921 14.31866   4.836669 2.960437 0.7643816 0.01859628</span></span>
+<span><span class="co">#&gt; 4  mod4     X 1.1696906 17.62979   5.875380 3.000621 0.7501552 0.00799840</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="fu"><a href="reference/combine.html">combine</a></span><span class="op">(</span><span class="va">res</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt;   Coeff Stat nMods        S          p</span></span>
-<span><span class="co">#&gt; 1     X maxT     4 19.78375 0.01419716</span></span>
+<span><span class="co">#&gt; 1     X maxT     4 19.78375 0.01879624</span></span>
 <span><span class="va">res</span><span class="op">=</span><span class="fu"><a href="reference/p.adjust.fwer.html">p.adjust.fwer</a></span><span class="op">(</span><span class="va">res</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">res</span><span class="op">)</span></span>
 <span><span class="co">#&gt;   Model Coeff  Estimate    Score Std. Error  z value Part. Cor   Pr(&gt;|t|)</span></span>
-<span><span class="co">#&gt; 1  mod1     X 1.1254046 19.78375   6.309305 3.135646 0.7605058 0.01319736</span></span>
-<span><span class="co">#&gt; 2  mod2     X 0.9552644 15.38036   5.053879 3.043278 0.7608195 0.01779644</span></span>
-<span><span class="co">#&gt; 3  mod3     X 1.0121921 14.31866   4.836669 2.960437 0.7643816 0.01379724</span></span>
-<span><span class="co">#&gt; 4  mod4     X 1.1696906 17.62979   5.875380 3.000621 0.7501552 0.01099780</span></span>
+<span><span class="co">#&gt; 1  mod1     X 1.1254046 19.78375   6.309305 3.135646 0.7605058 0.01739652</span></span>
+<span><span class="co">#&gt; 2  mod2     X 0.9552644 15.38036   5.053879 3.043278 0.7608195 0.01519696</span></span>
+<span><span class="co">#&gt; 3  mod3     X 1.0121921 14.31866   4.836669 2.960437 0.7643816 0.01859628</span></span>
+<span><span class="co">#&gt; 4  mod4     X 1.1696906 17.62979   5.875380 3.000621 0.7501552 0.00799840</span></span>
 <span><span class="co">#&gt;        p.adj</span></span>
-<span><span class="co">#&gt; 1 0.01419716</span></span>
-<span><span class="co">#&gt; 2 0.02179564</span></span>
-<span><span class="co">#&gt; 3 0.02179564</span></span>
-<span><span class="co">#&gt; 4 0.01419716</span></span></code></pre></div>
+<span><span class="co">#&gt; 1 0.01879624</span></span>
+<span><span class="co">#&gt; 2 0.02019596</span></span>
+<span><span class="co">#&gt; 3 0.02019596</span></span>
+<span><span class="co">#&gt; 4 0.01879624</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="references">References<a class="anchor" aria-label="anchor" href="#references"></a>

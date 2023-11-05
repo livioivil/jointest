@@ -1,7 +1,13 @@
 #'jointest for flipscores objects
-#'@param tested_coeff is a list of the same length of \code{mods}, each element of the list being a vector of  
+#'@param mods list of \code{glm}s (or list of any other object that can be evaluated by flipscores) 
+#'@param tested_coeffs is a list of the same length of \code{mods}, each element of the list being a vector of  
 #'of names of tested coefficients. Alternatively, it can be a vector of names of tested coefficients, in this case, the tested coefficients are attributed to all models (when present). 
 #'As a last option, it can be \code{NULL}, if so, all coefficients are tested.
+#'@param n_flips = 5000
+#'@param score_type any valid type for \code{flipscores}, \code{"standardized"} is the default. see \code{\link[flipscores]{flipscores}} for more datails 
+#'@param statistics "t" is the only method implemented (yet). Any other value will not modify the Score (a different statistic will only affect the multivariate inference, not the univariate one).
+#'@param seed \code{NULL} by default. Use a number if you wanto to ensure replicability of the results
+#'@param ... any other further parameter.
 #'@export
 #'
 #'@examples
@@ -59,10 +65,13 @@ join_flipscores <- function (mods, tested_coeffs = NULL, n_flips = 5000, score_t
           colnames(tt) = colnames(temp$Tspace)
           temp$Tspace = tt
         }
+      temp$summary_table=.get_summary_table_from_flipscores(temp)
       temp
     })
-  
-  names(modflips) = names(mods)
-  class(modflips) <- c("jointest", class(modflips))
+  if(is.null(names(mods))){
+    names(modflips)=paste0("mod",1:length(modflips))
+  } else
+    names(modflips) = names(mods)
+  class(modflips) <- unique(c("jointest", class(modflips)))
   modflips
 }

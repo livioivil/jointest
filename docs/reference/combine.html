@@ -49,11 +49,24 @@
 
     <div id="arguments">
     <h2>Arguments</h2>
-    <dl><dt>combined</dt>
-<dd><p>a) NULL = combines all coeffs with the same names along models, 
-b) a vector of characters = it gives a combination for each stats with these names 
-c) a list of arrays = each array has two columns reporting model (first column) 
+    <dl><dt>mods</dt>
+<dd><p>object of class <code>jointest</code> (it can be a list of glm or flipscores converted in a <code>jointest</code> object using <code>as.jointest</code>)</p></dd>
+
+
+<dt>comb_funct</dt>
+<dd><p>Combining function to be used. Several functions are implemented: "mean", "median", "Fisher", "Liptak", (equal to) "Stoufer", "Tippet", (equal to) "minp", "maxT" (the default). 
+Alternativelly it can be a custom function that has a matrix as input. The function return a vector of length equal to the number of rows of the input matrix.</p></dd>
+
+
+<dt>combined</dt>
+<dd><p>a) if <code>NULL</code> it combines all coefficients with the same names along models, 
+b) if a vector of characters, it gives a combination for each stats with these names 
+c) if a list of arrays, each array has two columns reporting model (first column) 
 and name of the coefficient to be combined.</p></dd>
+
+
+<dt>tail</dt>
+<dd><p>direction of the alternative hypothesis. It can be "two.sided" (or 0, the default), "less" (or -1) or "greater" (or +1)</p></dd>
 
 </dl></div>
 

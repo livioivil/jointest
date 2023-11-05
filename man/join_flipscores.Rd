@@ -10,13 +10,26 @@ join_flipscores(
   n_flips = 5000,
   score_type = "standardized",
   statistics = "t",
-  seed = NULL
+  seed = NULL,
+  ...
 )
 }
 \arguments{
-\item{tested_coeff}{is a list of the same length of \code{mods}, each element of the list being a vector of
+\item{mods}{list of \code{glm}s (or list of any other object that can be evaluated by flipscores)}
+
+\item{tested_coeffs}{is a list of the same length of \code{mods}, each element of the list being a vector of
 of names of tested coefficients. Alternatively, it can be a vector of names of tested coefficients, in this case, the tested coefficients are attributed to all models (when present). 
 As a last option, it can be \code{NULL}, if so, all coefficients are tested.}
+
+\item{n_flips}{= 5000}
+
+\item{score_type}{any valid type for \code{flipscores}, \code{"standardized"} is the default. see \code{\link[flipscores]{flipscores}} for more datails}
+
+\item{statistics}{"t" is the only method implemented (yet). Any other value will not modify the Score (a different statistic will only affect the multivariate inference, not the univariate one).}
+
+\item{seed}{\code{NULL} by default. Use a number if you wanto to ensure replicability of the results}
+
+\item{...}{any other further parameter.}
 }
 \description{
 jointest for flipscores objects

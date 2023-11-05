@@ -50,13 +50,38 @@
 <span>  n_flips <span class="op">=</span> <span class="fl">5000</span>,</span>
 <span>  score_type <span class="op">=</span> <span class="st">"standardized"</span>,</span>
 <span>  statistics <span class="op">=</span> <span class="st">"t"</span>,</span>
-<span>  seed <span class="op">=</span> <span class="cn">NULL</span></span>
+<span>  seed <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  <span class="va">...</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
-    <dl><dt>tested_coeff</dt>
+    <dl><dt>mods</dt>
+<dd><p>object of class <code>jointest</code> (it can be a list of glm or flipscores converted in a <code>jointest</code> object using <code>as.jointest</code>)</p></dd>
+
+
+<dt>n_flips</dt>
+<dd><p>= 5000</p></dd>
+
+
+<dt>score_type</dt>
+<dd><p>any valid type for <code>flipscores</code>, <code>"standardized"</code> is the default. see <code><a href="https://rdrr.io/pkg/flipscores/man/flipscores.html" class="external-link">flipscores::flipscores</a></code> for more datails</p></dd>
+
+
+<dt>statistics</dt>
+<dd><p>"t" is the only method implemented (yet). Any other value will not modify the Score (a different statistic will only affect the multivariate inference, not the univariate one).</p></dd>
+
+
+<dt>seed</dt>
+<dd><p><code>NULL</code> by default. Use a number if you wanto to ensure replicability of the results</p></dd>
+
+
+<dt>...</dt>
+<dd><p>any other further parameter.</p></dd>
+
+
+<dt>tested_coeff</dt>
 <dd><p>is a list of the same length of <code>mods</code>, each element of the list being a vector of
 of names of tested coefficients. Alternatively, it can be a vector of names of tested coefficients, in this case, the tested coefficients are attributed to all models (when present). 
 As a last option, it can be <code>NULL</code>, if so, all coefficients are tested.</p></dd>
@@ -81,25 +106,25 @@ As a last option, it can be <code>NULL</code>, if so, all coefficients are teste
 <span class="r-in"><span>      seed <span class="op">=</span> <span class="fl">1</span>, tested_coeffs <span class="op">=</span> <span class="st">"X"</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">res</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Model Coeff  Estimate    Score Std. Error  z value Part. Cor   Pr(&gt;|t|)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1  mod1     X 1.1254046 19.78375   6.309305 3.135646 0.7605058 0.01599680</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2  mod2     X 0.9552644 15.38036   5.053879 3.043278 0.7608195 0.01299740</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3  mod3     X 1.0121921 14.31866   4.836669 2.960437 0.7643816 0.01339732</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4  mod4     X 1.1696906 17.62979   5.875380 3.000621 0.7501552 0.01339732</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1  mod1     X 1.1254046 19.78375   6.309305 3.135646 0.7605058 0.01419716</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2  mod2     X 0.9552644 15.38036   5.053879 3.043278 0.7608195 0.01539692</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3  mod3     X 1.0121921 14.31866   4.836669 2.960437 0.7643816 0.01959608</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4  mod4     X 1.1696906 17.62979   5.875380 3.000621 0.7501552 0.01059788</span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="fu"><a href="combine.html">combine</a></span><span class="op">(</span><span class="va">res</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Coeff Stat nMods        S          p</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1     X maxT     4 19.78375 0.01679664</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1     X maxT     4 19.78375 0.01519696</span>
 <span class="r-in"><span><span class="va">res</span><span class="op">=</span><span class="fu"><a href="p.adjust.fwer.html">p.adjust.fwer</a></span><span class="op">(</span><span class="va">res</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">res</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Model Coeff  Estimate    Score Std. Error  z value Part. Cor   Pr(&gt;|t|)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1  mod1     X 1.1254046 19.78375   6.309305 3.135646 0.7605058 0.01599680</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2  mod2     X 0.9552644 15.38036   5.053879 3.043278 0.7608195 0.01299740</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3  mod3     X 1.0121921 14.31866   4.836669 2.960437 0.7643816 0.01339732</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4  mod4     X 1.1696906 17.62979   5.875380 3.000621 0.7501552 0.01339732</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1  mod1     X 1.1254046 19.78375   6.309305 3.135646 0.7605058 0.01419716</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2  mod2     X 0.9552644 15.38036   5.053879 3.043278 0.7608195 0.01539692</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3  mod3     X 1.0121921 14.31866   4.836669 2.960437 0.7643816 0.01959608</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4  mod4     X 1.1696906 17.62979   5.875380 3.000621 0.7501552 0.01059788</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>        p.adj</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1 0.01679664</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2 0.01679664</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3 0.01679664</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4 0.01679664</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1 0.01519696</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2 0.02139572</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3 0.02139572</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4 0.01519696</span>
 </code></pre></div>
     </div>
   </div>

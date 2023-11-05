@@ -5,7 +5,7 @@ Title: Multivariate testing trought joint sign-flip scores [Hemerik, Goeman and 
 Author: Livio Finos
 Maintainer: Livio Finos <livio.finos@unipd.it>
 Description: runs resampling-based tests jointly (e.i. sign-flip score tests [Hemerik, Goeman and Finos (2020)] to allow for multivariate testing -- e.g. weak and strong control of the Familywise Error Rate or True Discovery Proportion.
-Imports: flipscores, methods 
+Imports: flipscores, ggplot2, methods, flip 
 Encoding: UTF-8
 License: GPL-2
-RoxygenNote: 7.1.2
+RoxygenNote: 7.2.3

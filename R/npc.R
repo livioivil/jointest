@@ -1,4 +1,5 @@
-npc <- function (Tspace, comb_funct = comb_funct_fisher, tail = 0) 
+
+npc <- function (Tspace, comb_funct = "Fisher", tail = 0) 
 {
   if (!(comb_funct %in% c("mean", "median"))) 
     Tspace = .set_tail(Tspace, tail = tail)

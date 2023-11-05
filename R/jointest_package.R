@@ -31,4 +31,8 @@
 #'
 #' @author Livio Finos
 #' @name jointest-package
+#' @importFrom stats median
+#' @importFrom stats qnorm
+#' @importFrom stats quantile
+#' @importFrom stats update
 NULL

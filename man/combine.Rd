@@ -7,10 +7,17 @@
 combine(mods, comb_funct = "maxT", combined = NULL, tail = 0)
 }
 \arguments{
-\item{combined}{a) NULL = combines all coeffs with the same names along models, 
-b) a vector of characters = it gives a combination for each stats with these names 
-c) a list of arrays = each array has two columns reporting model (first column) 
+\item{mods}{object of class \code{jointest} (it can be a list of glm or flipscores converted in a \code{jointest} object using \code{as.jointest})}
+
+\item{comb_funct}{Combining function to be used. Several functions are implemented: "mean", "median", "Fisher", "Liptak", (equal to) "Stoufer", "Tippet", (equal to) "minp", "maxT" (the default). 
+Alternativelly it can be a custom function that has a matrix as input. The function return a vector of length equal to the number of rows of the input matrix.}
+
+\item{combined}{a) if \code{NULL} it combines all coefficients with the same names along models, 
+b) if a vector of characters, it gives a combination for each stats with these names 
+c) if a list of arrays, each array has two columns reporting model (first column) 
 and name of the coefficient to be combined.}
+
+\item{tail}{direction of the alternative hypothesis. It can be "two.sided" (or 0, the default), "less" (or -1) or "greater" (or +1)}
 }
 \description{
 (nonparametric) combination of jointest object
