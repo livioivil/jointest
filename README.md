@@ -1,6 +1,12 @@
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# Welcome to the dev-version of jointest R package
+# jointest R package
+
+A package devoted to multivariate resampling-based tests. By resampling
+jointly on all univariate tests (e.i. sign-flip score tests by Hemerik,
+Goeman and Finos (2020)) it allows for multivariate and selective
+inference – e.g. weak and strong control of the Familywise Error Rate or
+confidence bounds for True Discovery Proportion.
 
 <!-- #[library flipscores on CRAN](http://cran.r-project.org/web/packages/flipscores/index.html) -->
 
@@ -14,8 +20,6 @@ To **install** this github version type (in R):
     ## install.packages("devtools") 
     library(devtools)
     install_github("livioivil/jointest")
-
-<!-- ## Some examples -->
 
 ## A (minimal) example
 
@@ -35,25 +39,25 @@ library(jointest)
 res=join_flipscores(mods,n_flips = 5000,        seed = 1, tested_coeffs = "X")
 summary(res)
 #>   Model Coeff  Estimate    Score Std. Error  z value Part. Cor   Pr(>|t|)
-#> 1  mod1     X 1.1254046 19.78375   6.309305 3.135646 0.7605058 0.01319736
-#> 2  mod2     X 0.9552644 15.38036   5.053879 3.043278 0.7608195 0.01779644
-#> 3  mod3     X 1.0121921 14.31866   4.836669 2.960437 0.7643816 0.01379724
-#> 4  mod4     X 1.1696906 17.62979   5.875380 3.000621 0.7501552 0.01099780
+#> 1  mod1     X 1.1254046 19.78375   6.309305 3.135646 0.7605058 0.01739652
+#> 2  mod2     X 0.9552644 15.38036   5.053879 3.043278 0.7608195 0.01519696
+#> 3  mod3     X 1.0121921 14.31866   4.836669 2.960437 0.7643816 0.01859628
+#> 4  mod4     X 1.1696906 17.62979   5.875380 3.000621 0.7501552 0.00799840
 summary(combine(res))
 #>   Coeff Stat nMods        S          p
-#> 1     X maxT     4 19.78375 0.01419716
+#> 1     X maxT     4 19.78375 0.01879624
 res=p.adjust.fwer(res)
 summary(res)
 #>   Model Coeff  Estimate    Score Std. Error  z value Part. Cor   Pr(>|t|)
-#> 1  mod1     X 1.1254046 19.78375   6.309305 3.135646 0.7605058 0.01319736
-#> 2  mod2     X 0.9552644 15.38036   5.053879 3.043278 0.7608195 0.01779644
-#> 3  mod3     X 1.0121921 14.31866   4.836669 2.960437 0.7643816 0.01379724
-#> 4  mod4     X 1.1696906 17.62979   5.875380 3.000621 0.7501552 0.01099780
+#> 1  mod1     X 1.1254046 19.78375   6.309305 3.135646 0.7605058 0.01739652
+#> 2  mod2     X 0.9552644 15.38036   5.053879 3.043278 0.7608195 0.01519696
+#> 3  mod3     X 1.0121921 14.31866   4.836669 2.960437 0.7643816 0.01859628
+#> 4  mod4     X 1.1696906 17.62979   5.875380 3.000621 0.7501552 0.00799840
 #>        p.adj
-#> 1 0.01419716
-#> 2 0.02179564
-#> 3 0.02179564
-#> 4 0.01419716
+#> 1 0.01879624
+#> 2 0.02019596
+#> 3 0.02019596
+#> 4 0.01879624
 ```
 
 ## References

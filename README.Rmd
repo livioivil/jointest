@@ -13,7 +13,11 @@ knitr::opts_chunk$set(
   fig.path = "README-"
 )
 ```
-# Welcome to the dev-version of jointest R package
+
+# jointest R package
+
+A package devoted to multivariate resampling-based tests. By resampling jointly on all univariate tests (e.i. sign-flip score tests by Hemerik, Goeman and Finos (2020)) it allows for multivariate and selective inference -- e.g. weak and strong control of the Familywise Error Rate or confidence bounds for True Discovery Proportion.
+
 
 <!-- #[library flipscores on CRAN](http://cran.r-project.org/web/packages/flipscores/index.html) -->
 
@@ -29,8 +33,6 @@ To **install** this github version type (in R):
     library(devtools)
     install_github("livioivil/jointest")
 
-
-<!-- ## Some examples -->
 
 
 
