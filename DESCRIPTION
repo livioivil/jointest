@@ -1,10 +1,10 @@
 Package: jointest
 Version: 1.2.0
 Date: 2022-09-15
-Title: Multivariate testing trought joint sign-flip scores (Hemerik, Goeman and Finos (2020) <doi:10.1111/rssb.12369>).
+Title: Multivariate testing trought joint sign-flip scores [Hemerik, Goeman and Finos (2020)].
 Author: Livio Finos
 Maintainer: Livio Finos <livio.finos@unipd.it>
-Description: runs resampling-based tests jointly (e.i. sign-flip score tests (Hemerik, Goeman and Finos (2020) <doi:10.1111/rssb.12369>) to allow for multivariate testing -- e.g. weak and strong control of the Familywise Error Rate or True Discovery Proportion.
+Description: runs resampling-based tests jointly (e.i. sign-flip score tests [Hemerik, Goeman and Finos (2020)] to allow for multivariate testing -- e.g. weak and strong control of the Familywise Error Rate or True Discovery Proportion.
 Imports: flipscores, methods 
 Encoding: UTF-8
 License: GPL-2
