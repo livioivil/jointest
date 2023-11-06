@@ -112,6 +112,7 @@ summary.jointest <- function (object, ...)
 }
  
 
+is_signif=NULL
 #############################################
 #' plot.jointest summary method for a jointest object.
 #' @rdname jointest-method
