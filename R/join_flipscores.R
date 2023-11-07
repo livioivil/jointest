@@ -27,8 +27,9 @@
 #'       seed = 1, tested_coeffs = "X")
 #'summary(res)
 #'summary(combine(res))
-#'res=p.adjust.fwer(res)
+#'res=jointest:::p.adjust.jointest(res)
 #'summary(res)
+#'summary(combine(res,by="Model"))
 join_flipscores <- function (mods, tested_coeffs = NULL, n_flips = 5000, score_type = "standardized", 
                              statistics = "t",seed=NULL,...) 
 {
@@ -49,8 +50,10 @@ join_flipscores <- function (mods, tested_coeffs = NULL, n_flips = 5000, score_t
   n_obs=sapply(mods, function(mod) length(mod$y))
   n_obs=max(n_obs)
   
+  mods_names=names(mods)
+  
   FLIPS=flipscores:::.make_flips (n_obs=n_obs,n_flips=n_flips)
-    modflips = lapply(1:length(mods), function(i) {
+    mods = lapply(1:length(mods), function(i) {
       temp = flipscores(formula = eval(mods[[i]],parent.frame()), score_type = score_type, 
                         flips = eval(FLIPS), to_be_tested = tested_coeffs[[i]],
                         output_flips=FALSE
@@ -68,10 +71,14 @@ join_flipscores <- function (mods, tested_coeffs = NULL, n_flips = 5000, score_t
       temp$summary_table=.get_summary_table_from_flipscores(temp)
       temp
     })
-  if(is.null(names(mods))){
-    names(modflips)=paste0("mod",1:length(modflips))
+    
+  if(is.null(mods_names)){
+    names(mods)=paste0("mod",1:length(mos))
   } else
-    names(modflips) = names(mods)
-  class(modflips) <- unique(c("jointest", class(modflips)))
-  modflips
+    names(mods) = mods_names
+    
+
+  out=list(Tspace=.get_all_Tspace(mods),summary_table=.get_all_summary_table(mods))
+  class(out) <- unique(c("jointest", class(out)))
+  out
 }

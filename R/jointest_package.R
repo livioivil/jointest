@@ -6,6 +6,7 @@
 # @importFrom MASS glm.nb
 # @importFrom plyr laply
 # @importFrom methods is
+# @importFrom methods as
 # @importFrom stats D as.formula model.matrix sd summary.glm update
 #' @examples
 #' n=20

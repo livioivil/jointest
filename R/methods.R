@@ -57,24 +57,7 @@
 
 NULL
 # 
-# #' as.jointest method for a jointest object.
-# #' @rdname jointest-method
-# #' @param object an object of class \code{jointest}.
-# #' @param names_obj a vector of names, its length must be equal to the length of \code{object}
-# #' @param ... additional arguments to be passed
-# #' @method as jointest
-# #' @docType methods
-# #' @export
- 
-# as.jointest <- function (object, names_obj=NULL, ...) 
-# {
-#  TODO: calcolare summary_table in ogni elemento di object. se flipscores usa 
-#       .get_summary_table_from_flipscores()
-#   if(!is.null(names_obj)) names(object)=names_obj
-#   if (is.null(names(object))) names(object)=paste0("mod",1:length(object))
-#   class(object) <- unique(c("jointest", class(object)))
-#   object
-# }
+
 # #' print.jointest print method for a jointest object.
 # #' @param x a jointest object
 # #' @method print jointest
@@ -94,25 +77,37 @@ NULL
 
 summary.jointest <- function (object, ...) 
 {
-  if (length(object) > 1) {
-    summary_table = lapply(object, function(cmb) cmb$summary_table)
-    summary_table = do.call(rbind,summary_table)
-  }
-  else {
-    summary_table = object[[1]]$summary_table
-  }
-  rownames(summary_table) = names(object)
-  summary_table
+object$summary_table
 }
 
 .get_summary_table_from_flipscores <- function(object){
   tab = as.data.frame(summary(object)$coefficients)
   tab = tab[!is.na(tab[, "Score"]), ]
+  colnames(tab)[ncol(tab)]="p"
   tab = cbind( Coeff = rownames(tab), tab)
 }
  
 
 is_signif=NULL
+###########################
+#' as.jointest method for a jointest object.
+#' @rdname jointest-method
+#' @param object an object of class \code{jointest}.
+#' @param names_obj a vector of names, its length must be equal to the length of \code{object}
+#' @param ... additional arguments to be passed
+#' @method as jointest
+#' @docType methods
+#' @export
+
+as.jointest <- function (object, names_obj=NULL, ...)
+{
+  # TODO: calcolare summary_table in ogni elemento di object. se flipscores usa
+  #     .get_summary_table_from_flipscores()
+  if(!is.null(names_obj)) names(object)=names_obj
+  if (is.null(names(object))) names(object)=paste0("mod",1:length(object))
+  class(object) <- unique(c("jointest", class(object)))
+  object
+}
 #############################################
 #' plot.jointest summary method for a jointest object.
 #' @rdname jointest-method

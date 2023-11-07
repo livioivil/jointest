@@ -2,11 +2,26 @@
 ################################
 .get_all_Tspace <- function(mods){
   # dplyr::bind_cols(lapply(mods, function(md) md$Tspace))
-  tab=mods[[1]]$Tspace
-  for (i in 2:length(mods)){
-    tab=cbind(tab,mods[[i]]$Tspace)
-  }
-  tab
+  tab=lapply(mods,function(x){
+    if(is.null(x$Tspace)){stop("At least one Tspace is missing")}
+    x$Tspace})
+  tab=do.call(cbind,tab)
+  colnames(tab) = paste0("S", 1:ncol(tab))
+  # tab=mods[[1]]$Tspace
+  # for (i in 2:length(mods)){
+  #   tab=cbind(tab,mods[[i]]$Tspace)
+  # }
+   tab
+}
+
+
+.get_all_summary_table <- function(mods){
+  res=lapply(1:length(mods), function(i) {
+    cbind(Model=names(mods)[i],mods[[i]]$summary_table)
+  })
+  res=do.call(rbind,res)
+  rownames(res)=NULL
+  res
 }
 
 # .get_all_Tspace <- function(mods){
@@ -42,13 +57,13 @@
       names(mods)
 }
 
-.set_comb_names_in_summary_table <- function(combs,comb_names){
-  res=lapply(1:length(combs), function(i) {
-    combs[[i]]$summary_table=cbind(Coeff=comb_names[i],combs[[i]]$summary_table)
-    combs[[i]]
-  })
-  res
-}
+# .set_comb_names_in_summary_table <- function(combs,comb_names){
+#   res=lapply(1:length(combs), function(i) {
+#     combs[[i]]$summary_table=cbind(Coeff=comb_names[i],combs[[i]]$summary_table)
+#     combs[[i]]
+#   })
+#   res
+# }
 
 .set_comb_names_in_Tspace <- function(combs,comb_names){
   res=lapply(1:length(combs), function(i) {
