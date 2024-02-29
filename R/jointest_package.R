@@ -28,7 +28,7 @@
 #' res=p.adjust.fwer(res)
 #' summary(res)
 #' 
-#' @docType package
+#' @docType _PACKAGE
 #'
 #' @author Livio Finos
 #' @name jointest-package

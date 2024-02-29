@@ -2,6 +2,7 @@
 % Please edit documentation in R/jointest_package.R
 \docType{package}
 \name{jointest-package}
+\alias{jointest}
 \alias{jointest-package}
 \title{Join resampling based tests}
 \description{

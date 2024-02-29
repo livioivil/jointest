@@ -77,7 +77,8 @@ NULL
 
 summary.jointest <- function (object, ...) 
 {
-object$summary_table
+#object$summary_table
+  do.call(rbind,lapply(object, function(ob) ob$summary_table))
 }
 
 .get_summary_table_from_flipscores <- function(object){
@@ -142,7 +143,7 @@ plot.jointest <- function(object,
   p <- ggplot(D, aes_string(y=y, 
                             x=x, 
                             group=group,color=group)) +
-    geom_point(aes(shape=is_signif))+ 
+    geom_point(aes(shape=is_signif),size=2)+ 
     ggtitle(title) + theme_minimal() 
   if(!(mark_signif%in%c(0,1))){
     p <- p +

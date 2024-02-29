@@ -51,6 +51,7 @@ res=join_flipscores(mods,n_flips = 5000, score_type = "standardized" ,
       seed = 1, tested_coeffs = "X")
 summary(res)
 summary(combine(res))
-res=p.adjust.fwer(res)
+res=jointest:::p.adjust.jointest(res)
 summary(res)
+summary(combine(res,by="Model"))
 }

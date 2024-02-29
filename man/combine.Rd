@@ -4,7 +4,7 @@
 \alias{combine}
 \title{(nonparametric) combination of jointest object}
 \usage{
-combine(mods, comb_funct = "maxT", combined = NULL, tail = 0)
+combine(mods, comb_funct = "maxT", combined = NULL, by = NULL, tail = 0)
 }
 \arguments{
 \item{mods}{object of class \code{jointest} (it can be a list of glm or flipscores converted in a \code{jointest} object using \code{as.jointest})}
@@ -13,9 +13,9 @@ combine(mods, comb_funct = "maxT", combined = NULL, tail = 0)
 Alternativelly it can be a custom function that has a matrix as input. The function return a vector of length equal to the number of rows of the input matrix.}
 
 \item{combined}{a) if \code{NULL} it combines all coefficients with the same names along models, 
-b) if a vector of characters, it gives a combination for each stats with these names 
-c) if a list of arrays, each array has two columns reporting model (first column) 
-and name of the coefficient to be combined.}
+b) if a vector of characters, it gives a combination for each stats with these names}
+
+\item{by}{vector of characters referring to the column's name in summary_table. Equal to "Coeff" by default.}
 
 \item{tail}{direction of the alternative hypothesis. It can be "two.sided" (or 0, the default), "less" (or -1) or "greater" (or +1)}
 }
