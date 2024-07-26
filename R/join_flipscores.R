@@ -7,6 +7,7 @@
 #'@param score_type any valid type for \code{flipscores}, \code{"standardized"} is the default. see \code{\link[flipscores]{flipscores}} for more datails 
 #'@param statistics "t" is the only method implemented (yet). Any other value will not modify the Score (a different statistic will only affect the multivariate inference, not the univariate one).
 #'@param seed \code{NULL} by default. Use a number if you wanto to ensure replicability of the results
+#'@param output_models \code{TRUE} by default. Should the \code{flipscores} model returned?
 #'@param ... any other further parameter.
 #'@export
 #'
@@ -31,14 +32,14 @@
 #'summary(res)
 #'summary(combine(res,by="Model"))
 join_flipscores <- function (mods, tested_coeffs = NULL, n_flips = 5000, score_type = "standardized", 
-                             statistics = "t",seed=NULL,...) 
+                             statistics = "t", seed=NULL, output_models, ...) 
 {
   if(!is.null(seed)) set.seed(seed)
   
   names(mods) = .set_mods_names(mods)
-  if (is.null(tested_coeffs)) {
-    tested_coeffs = .get_all_coeff_names_list(mods)
-  }
+  # if (is.null(tested_coeffs)) {
+  #   tested_coeffs = .get_all_coeff_names_list(mods)
+  # }
   if (!is.list(tested_coeffs)) {
     temp = .get_all_coeff_names_list(mods)
     tested_coeffs = lapply(temp, function(nms) intersect(tested_coeffs, 
@@ -78,7 +79,9 @@ join_flipscores <- function (mods, tested_coeffs = NULL, n_flips = 5000, score_t
     names(mods) = mods_names
     
 
-  out=list(Tspace=.get_all_Tspace(mods),summary_table=.get_all_summary_table(mods))
+  out=list(Tspace=.get_all_Tspace(mods),
+           summary_table=.get_all_summary_table(mods),
+           mods=mods)
   class(out) <- unique(c("jointest", class(out)))
   out
 }

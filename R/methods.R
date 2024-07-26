@@ -77,8 +77,8 @@ NULL
 
 summary.jointest <- function (object, ...) 
 {
-#object$summary_table
-  do.call(rbind,lapply(object, function(ob) ob$summary_table))
+  object$summary_table
+ # do.call(rbind,lapply(object, function(ob) ob$summary_table))
 }
 
 .get_summary_table_from_flipscores <- function(object){
