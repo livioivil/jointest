@@ -57,14 +57,18 @@
 
 NULL
 # 
+#' non funziona e non funziona neppure summary se lo uso: 
+#' #' print.jointest print method for a jointest object.
+#' #' @rdname jointest-method
+#' #' @param object an object of class \code{jointest}.
+#' #' @param ... additional arguments to be passed
+#' #' @method print jointest
+#' #' @docType methods
+#' #' @export
+#' print.jointest <- function (object, ...) {
+#'   #summary.jointest(object, ...)
+#' }
 
-# #' print.jointest print method for a jointest object.
-# #' @param x a jointest object
-# #' @method print jointest
-# #' @docType methods
-# #' @rdname jointest-method
-# #' @export
-# 
 # 
 
 #' summary.jointest summary method for a jointest object.
@@ -133,6 +137,7 @@ plot.jointest <- function(object,
   if(p.values =="raw"){
     if(!is.null(D$`Pr(>|z|)`)) D$p.vals=D$`Pr(>|z|)` else
       D$p.vals=D$`Pr(>|t|)`
+    if(is.null(D$p.vals)) D$p.vals=D$p
   } else
     if(p.values=="adjusted")
       D$p.vals=D$p.adj

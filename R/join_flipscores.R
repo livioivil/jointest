@@ -78,10 +78,36 @@ join_flipscores <- function (mods, tested_coeffs = NULL, n_flips = 5000, score_t
   } else
     names(mods) = mods_names
     
-
+    assign=sapply(mods,function(mod)attr(model.matrix(mod),"assign"))
+    vars_orig=sapply(mods,function(mod)terms(mod$formula[[3]]))
+    names(vars_orig)=mods_names
+    
+    for(i in 1:length(assign)){
+      if(min(assign[[i]])==0){
+        assign[[i]]=assign[[i]]+1
+        vars_orig[[i]]=c(".Intercept.",vars_orig[[i]])
+      }
+    }
+    
+    if(length(assign)>1){
+      for(i in 2:length(assign)){
+        cnt=max(assign[[i-1]])
+        assign[[i]]=cnt+assign[[i]]
+      }
+    } 
+    
+    
+    temp=lapply(1:length(vars_orig), 
+           function(i) paste0("mod_",names(vars_orig)[i],"_",vars_orig[[i]]))
+    names_vars_orig=unlist(temp)
+    assign=unlist(assign)
+    names(assign)=NULL
+    temp=lapply(unique(assign),function(i) which(assign==i))
+    names(temp)=names_vars_orig
   out=list(Tspace=.get_all_Tspace(mods),
            summary_table=.get_all_summary_table(mods),
            mods=mods)
+  attr(out$Tspace,"orig_var")=temp
   class(out) <- unique(c("jointest", class(out)))
   out
 }

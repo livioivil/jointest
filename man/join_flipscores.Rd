@@ -11,6 +11,7 @@ join_flipscores(
   score_type = "standardized",
   statistics = "t",
   seed = NULL,
+  output_models,
   ...
 )
 }
@@ -28,6 +29,8 @@ As a last option, it can be \code{NULL}, if so, all coefficients are tested.}
 \item{statistics}{"t" is the only method implemented (yet). Any other value will not modify the Score (a different statistic will only affect the multivariate inference, not the univariate one).}
 
 \item{seed}{\code{NULL} by default. Use a number if you wanto to ensure replicability of the results}
+
+\item{output_models}{\code{TRUE} by default. Should the \code{flipscores} model returned?}
 
 \item{...}{any other further parameter.}
 }

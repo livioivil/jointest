@@ -5,12 +5,11 @@
   tab=lapply(mods,function(x){
     if(is.null(x$Tspace)){stop("At least one Tspace is missing")}
     x$Tspace})
+  nms = sapply(tab,colnames)
   tab=do.call(cbind,tab)
-  colnames(tab) = paste0("S", 1:ncol(tab))
-  # tab=mods[[1]]$Tspace
-  # for (i in 2:length(mods)){
-  #   tab=cbind(tab,mods[[i]]$Tspace)
-  # }
+  colnames(tab)=nms
+  if(is.null(colnames(tab))) colnames(tab)=paste0("S", 1:ncol(tab))
+  
    tab
 }
 

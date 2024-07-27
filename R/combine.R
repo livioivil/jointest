@@ -45,7 +45,7 @@ combine <- function (mods, comb_funct = "maxT", combined = NULL, by=NULL, tail =
   comb_name = names(combined)[id]
   if (is.null(comb_name)) 
     comb_name = "Combined"
-  Tspace = npc(mods$Tspace[, combined[[id]]], comb_funct = comb_funct, 
+  Tspace = npc(mods$Tspace[, combined[[id]],drop=FALSE], comb_funct = comb_funct, 
                           tail = tail)
   colnames(Tspace) = comb_name
   Coeff=mods$summary_table[combined[[id]],"Coeff"]
