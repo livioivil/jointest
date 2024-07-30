@@ -4,7 +4,7 @@ npc <- function (Tspace, comb_funct = "Fisher", tail = 0)
   if(is.character(comb_funct)){
     implemented_comb_funcs=c("mean", "median","Fisher", 
                            "Liptak", "Stoufer", 
-                           "Tippet", "minp","Mahalanobis")
+                           "Tippet", "minp","maxT","Mahalanobis")
     comb_funct=match.arg(comb_funct,implemented_comb_funcs)
     if (comb_funct %in% c("mean", "median"))
       Tspace = .set_tail(Tspace, tail = tail)

@@ -14,13 +14,16 @@ combine <- function (mods, comb_funct = "maxT", combined = NULL, by=NULL, tail =
   if(is.null(by)) by_cols="Coeff" 
   smr=apply(res$summary_table[,by_cols,drop=FALSE],1,paste,collapse="_")    
   if (is.null(combined)) {
-    uniq_nm = unique(smr)
-    if (length(uniq_nm) == length(smr)) {
-      combined = list(Overall = 1:ncol(res$Tspace))
-    }
-    else {
-      combined = lapply(uniq_nm, function(nm) which(smr == nm))
-      names(combined) = uniq_nm
+    combined=attr(mods$Tspace,"orig_var")
+    if (is.null(combined)) {
+      uniq_nm = unique(smr)
+      if (length(uniq_nm) == length(smr)) {
+        combined = list(Overall = 1:ncol(res$Tspace))
+      }
+      else {
+        combined = lapply(uniq_nm, function(nm) which(smr == nm))
+        names(combined) = uniq_nm
+      }
     }
   } else 
     if (!is.list(combined)) {
