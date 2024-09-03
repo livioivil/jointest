@@ -79,7 +79,7 @@ join_flipscores <- function (mods, tested_coeffs = NULL, n_flips = 5000, score_t
     names(mods) = mods_names
     
     assign=sapply(mods,function(mod)attr(model.matrix(mod),"assign"))
-    vars_orig=sapply(mods,function(mod)terms(mod$formula[[3]]))
+    vars_orig=lapply(mods,function(mod) attr(terms(mod),"term.labels"))
     names(vars_orig)=mods_names
     
     for(i in 1:length(assign)){
