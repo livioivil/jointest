@@ -24,7 +24,8 @@ p.adjust.jointest <- function (mods, method = "maxT", tail = 0, ...)
 #      if("alphas"%in%names(as.list(match.call())))
       p.adj=maxT.light(abs(res$Tspace),...)
     } else 
-      if(method=="minp")  {    p.adj=maxT.light(-abs(res$Tspace),...)
+      if(method%in%c("minp","Tippet") ) {
+        p.adj=maxT.light(-abs(res$Tspace),...)
       } else
         p.adj = flip.adjust(.set_tail(mods$Tspace, tail = tail), 
                             method = method) 
