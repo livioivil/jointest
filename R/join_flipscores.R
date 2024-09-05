@@ -99,12 +99,20 @@ join_flipscores <- function (mods, tested_coeffs = NULL, n_flips = 5000, score_t
     
 #    temp=lapply(1:length(vars_orig), 
  #          function(i) paste0("mod_",names(vars_orig)[i],"_",vars_orig[[i]]))
+    
     names_vars_orig=unlist(vars_orig)#unlist(sapply(1:length(assign),function(i) rep(names(assign)[i],length(vars_orig[[i]])))) #unlist(temp)
     names(names_vars_orig)=NULL
+    
     assign=unlist(assign)
     names(assign)=NULL
-    temp=lapply(unique(assign),function(i) which(assign==i))
-    names(temp)=names_vars_orig
+    
+    if(!is.null(tested_coeffs)){
+      id_tested_coeffs=which(names_vars_orig%in%tested_coeffs)
+      names_vars_orig=names_vars_orig[names_vars_orig%in%tested_coeffs]
+      assign=assign[assign%in%id_tested_coeffs]
+    }
+      temp=lapply(unique(assign),function(i) which(assign==i))
+      names(temp)=names_vars_orig
   out=list(Tspace=.get_all_Tspace(mods),
            summary_table=.get_all_summary_table(mods),
            mods=mods)

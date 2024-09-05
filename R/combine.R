@@ -11,28 +11,26 @@
 combine <- function (mods, comb_funct = "maxT", combined = NULL, by=NULL, tail = 0) 
 {
   # names(mods) = .set_mods_names(mods)
-  if(is.null(by)) by_cols="Coeff" 
-  smr=apply(res$summary_table[,by_cols,drop=FALSE],1,paste,collapse="_")    
-  if (is.null(combined)) {
+  if(is.null(by)) by="Coeff"
+  smr=apply(res$summary_table[,by,drop=FALSE],1,paste,collapse="_")    
+  if (is.null(combined)) 
     combined=attr(mods$Tspace,"orig_var")
-    if (is.null(combined)) {
-      uniq_nm = unique(smr)
-      if (length(uniq_nm) == length(smr)) {
-        combined = list(Overall = 1:ncol(res$Tspace))
-      }
-      else {
-        combined = lapply(uniq_nm, function(nm) which(smr == nm))
-        names(combined) = uniq_nm
-      }
-    }
-  } else 
-    if (!is.list(combined)) {
-    uniq_nm = combined
+  if (is.null(combined))
+    combined = list(Overall = 1:ncol(res$Tspace))
+  
+  uniq_nm = unique(smr)
+  if (length(uniq_nm) %in% c(1,length(smr))) {
+    combined = list(Overall = 1:ncol(res$Tspace))
+    }  else 
+      {
     combined = lapply(uniq_nm, function(nm) which(smr == nm))
     names(combined) = uniq_nm
   }
-  else {
-    uniq_nm = unique(unlist(combined))
+  
+  if (!is.list(combined)) {
+    uniq_nm = combined
+    combined = lapply(uniq_nm, function(nm) which(smr == nm))
+    names(combined) = uniq_nm
   }
   
   res = lapply(1:length(combined), .npc2jointest, 

@@ -16,12 +16,19 @@
 #' @importFrom flip flip.adjust
 #' @export
 #' 
+
 p.adjust.jointest <- function (mods, method = "maxT", tail = 0, ...) 
 {
   if(is.character(method)){
-    p.adj = flip.adjust(.set_tail(mods$Tspace, tail = tail), 
-                            method = method) } 
-  else if(is.function(method)){
+    if(method=="maxT"){
+#      if("alphas"%in%names(as.list(match.call())))
+      p.adj=maxT.light(abs(res$Tspace),...)
+    } else 
+      if(method=="minp")  {    p.adj=maxT.light(-abs(res$Tspace),...)
+      } else
+        p.adj = flip.adjust(.set_tail(mods$Tspace, tail = tail), 
+                            method = method) 
+      } else if(is.function(method)){
     p.adj = method(.set_tail(mods$Tspace, tail = tail))
   }
   mods$summary_table$p.adj = p.adj
