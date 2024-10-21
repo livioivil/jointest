@@ -15,9 +15,8 @@ combine <- function (mods, comb_funct = "maxT", combined = NULL, by=NULL, tail =
   smr=apply(res$summary_table[,by,drop=FALSE],1,paste,collapse="_")    
   if (is.null(combined)) 
     combined=attr(mods$Tspace,"orig_var")
-  if (is.null(combined))
-    combined = list(Overall = 1:ncol(res$Tspace))
-  
+  if (is.null(combined)){
+#    combined = list(Overall = 1:ncol(res$Tspace))
   uniq_nm = unique(smr)
   if (length(uniq_nm) %in% c(1,length(smr))) {
     combined = list(Overall = 1:ncol(res$Tspace))
@@ -26,7 +25,7 @@ combine <- function (mods, comb_funct = "maxT", combined = NULL, by=NULL, tail =
     combined = lapply(uniq_nm, function(nm) which(smr == nm))
     names(combined) = uniq_nm
   }
-  
+  }
   if (!is.list(combined)) {
     uniq_nm = combined
     combined = lapply(uniq_nm, function(nm) which(smr == nm))

@@ -37,9 +37,9 @@ join_flipscores <- function (mods, tested_coeffs = NULL, n_flips = 5000, score_t
   if(!is.null(seed)) set.seed(seed)
   
   names(mods) = .set_mods_names(mods)
-  # if (is.null(tested_coeffs)) {
-  #   tested_coeffs = .get_all_coeff_names_list(mods)
-  # }
+  if (is.null(tested_coeffs)) {
+     tested_coeffs = .get_all_coeff_names_list(mods)
+   }
   if (!is.list(tested_coeffs)) {
     temp = .get_all_coeff_names_list(mods)
     tested_coeffs = lapply(temp, function(nms) intersect(tested_coeffs, 
@@ -106,11 +106,11 @@ join_flipscores <- function (mods, tested_coeffs = NULL, n_flips = 5000, score_t
     assign=unlist(assign)
     names(assign)=NULL
     
-    if(!is.null(tested_coeffs)){
-      id_tested_coeffs=which(names_vars_orig%in%tested_coeffs)
-      names_vars_orig=names_vars_orig[names_vars_orig%in%tested_coeffs]
-      assign=assign[assign%in%id_tested_coeffs]
-    }
+    # if(!is.null(tested_coeffs)){
+    #   id_tested_coeffs=which(names_vars_orig%in%tested_coeffs)
+    #   names_vars_orig=names_vars_orig[names_vars_orig%in%tested_coeffs]
+    #   assign=assign[assign%in%id_tested_coeffs]
+    # }
       temp=lapply(unique(assign),function(i) which(assign==i))
       names(temp)=names_vars_orig
   out=list(Tspace=.get_all_Tspace(mods),

@@ -22,7 +22,8 @@
 #'attr(model.matrix(mods[[1]]),"assign")
 #' @import dplyr
 #' @import magrittr
-#' 
+#' @author Livio Finos, Angela Andreella
+#'  
 flip2sss <- function(formula=NULL,
                      data=NULL,
                      cluster=NULL,
@@ -33,7 +34,7 @@ flip2sss <- function(formula=NULL,
   #   cluster=eval(cluster,data)
   # }
   
- 
+  
   ###################
   
   vars_between = .get_sets_vars_between(formula, data, cluster)  
