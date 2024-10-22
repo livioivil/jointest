@@ -31,11 +31,12 @@ This function fits a model based on the provided formula and data, accounting fo
 }
 \examples{
 formula <- SALUTE ~ GENERE * TIME + PROV_BAMB + ETA_B_ARRIVO
-data <- adolong
 cluster <- adolong$SOGG
 library(logistf)
-temp=logistf::logistf(SALUTE ~ TIME, family = binomial(link = "logit"),data=data,control=logistf.control(maxit=100))
 summstats_within <- 'logistf::logistf(SALUTE ~ TIME, family = binomial(link = "logit"),control=logistf::logistf.control(maxit=100))'
 res <- flip2sss(formula, data, cluster, summstats_within)
-attr(model.matrix(mods[[1]]),"assign")
+summary(res)
+}
+\author{
+Livio Finos, Angela Andreella
 }

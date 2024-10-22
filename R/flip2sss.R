@@ -13,13 +13,11 @@
 #'
 #' @examples
 #' formula <- SALUTE ~ GENERE * TIME + PROV_BAMB + ETA_B_ARRIVO
-#' data <- adolong
 #' cluster <- adolong$SOGG
 #' library(logistf)
-#' temp=logistf::logistf(SALUTE ~ TIME, family = binomial(link = "logit"),data=data,control=logistf.control(maxit=100))
 #' summstats_within <- 'logistf::logistf(SALUTE ~ TIME, family = binomial(link = "logit"),control=logistf::logistf.control(maxit=100))'
 #' res <- flip2sss(formula, data, cluster, summstats_within)
-#'attr(model.matrix(mods[[1]]),"assign")
+#' summary(res)
 #' @import dplyr
 #' @import magrittr
 #' @author Livio Finos, Angela Andreella
@@ -59,7 +57,7 @@ flip2sss <- function(formula=NULL,
     mods[[i]]$call$formula = eval(as.formula(vars_between_formulas[[i]]))
   }
   
-  res = join_flipscores(mods, n_flips = 5000, seed = 1)
+  res = join_flipscores(mods,...)
   # summary(res)
   
   res$summary_table$Coeff = apply(res$summary_table[, 2:1], 1, paste, collapse = ":")
