@@ -21,8 +21,6 @@
 #'mod3=glm(Y~X+poly(Z1,2)+poly(Z2,2),data=D)
 #'mod4=glm(Y~X+Z1+poly(Z2,2),data=D)
 #'mods=list(mod1=mod1,mod2=mod2,mod3=mod3,mod4=mod4)
-#'for(i in 1:length(mods))
-#' mods[[i]]$call$data=eval(D)
 #'library(jointest)
 #'res=join_flipscores(mods,n_flips = 5000, score_type = "standardized" ,
 #'       seed = 1, tested_coeffs = "X")
@@ -31,11 +29,28 @@
 #'res=jointest:::p.adjust.jointest(res)
 #'summary(res)
 #'summary(combine(res,by="Model"))
+#'summary(combine(res,by="Coeff"))
+#'
+#'
+#'D$Yna=D$Y
+#'D$Yna[1:2]=NA
+#'mod1=glm(Yna~X+Z1+Z2,data=D)
+#'mods=list(mod1=mod1,mod2=mod2,mod3=mod3,mod4=mod4)
+#'for(i in 1:length(mods))
+#' mods[[i]]$call$data=eval(D)
+#'library(jointest)
+#'res=join_flipscores(mods,n_flips = 5000, score_type = "standardized" ,
+#'       seed = 1, tested_coeffs = "X")
+#'summary(res)
+#'
 join_flipscores <- function (mods, tested_coeffs = NULL, n_flips = 5000, score_type = "standardized", 
                              statistics = "t", seed=NULL, output_models, ...) 
 {
   if(!is.null(seed)) set.seed(seed)
   
+  for(i in 1:length(mods))
+     mods[[i]]$call$data=eval(mods[[i]]$call$data, parent.frame())
+    
   names(mods) = .set_mods_names(mods)
   if (is.null(tested_coeffs)) {
      tested_coeffs = .get_all_coeff_names_list(mods)
@@ -57,7 +72,7 @@ join_flipscores <- function (mods, tested_coeffs = NULL, n_flips = 5000, score_t
     mods = lapply(1:length(mods), function(i) {
       temp = flipscores(formula = eval(mods[[i]],parent.frame()), score_type = score_type, 
                         flips = eval(FLIPS), to_be_tested = tested_coeffs[[i]],
-                        output_flips=FALSE
+                        output_flips=FALSE,nobservations=n_obs
       )
       if (statistics %in% c("t")) 
         if (score_type == "effective" || score_type == 
@@ -78,9 +93,16 @@ join_flipscores <- function (mods, tested_coeffs = NULL, n_flips = 5000, score_t
   } else
     names(mods) = mods_names
     
-    assign=sapply(mods,function(mod)attr(model.matrix(mod),"assign"))
-    vars_orig=lapply(mods,function(mod) attr(terms(mod),"term.labels"))
-    names(vars_orig)=mods_names
+    temp=sapply(1:length(mods),function(i){
+      id_vars_orig=which(attr(terms(mods[[i]]),"term.labels")==tested_coeffs[[i]])
+      list(assign=attr(model.matrix(mods[[i]]),"assign")[attr(model.matrix(mods[[i]]),"assign")%in%id_vars_orig],
+           vars_orig=tested_coeffs[[i]])
+    })
+    
+    vars_orig=temp[2,]
+    assign=temp[1,]
+    names(vars_orig)=names(assign)=mods_names
+    
     
     for(i in 1:length(assign)){
       if(min(assign[[i]])==0){
