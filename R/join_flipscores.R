@@ -93,52 +93,45 @@ join_flipscores <- function (mods, tested_coeffs = NULL, n_flips = 5000, score_t
   } else
     names(mods) = mods_names
     
-    temp=sapply(1:length(mods),function(i){
-      id_vars_orig=which(attr(terms(mods[[i]]),"term.labels")==tested_coeffs[[i]])
-      list(assign=attr(model.matrix(mods[[i]]),"assign")[attr(model.matrix(mods[[i]]),"assign")%in%id_vars_orig],
-           vars_orig=tested_coeffs[[i]])
-    })
     
-    vars_orig=temp[2,]
-    assign=temp[1,]
-    names(vars_orig)=names(assign)=mods_names
+    #####################
     
     
-    for(i in 1:length(assign)){
-      if(min(assign[[i]])==0){
-        assign[[i]]=assign[[i]]+1
-        vars_orig[[i]]=c(".Intercept.",vars_orig[[i]])
+    i=1
+    assign=attr(model.matrix(mods[[i]]),"assign")
+    coeff_names=names(coefficients(mods[[i]]))
+    if(attr(terms(mods[[i]]),"intercept")==1) 
+      term.labels = c("(Intercept)",attr(terms(mods[[i]]),"term.labels")) else 
+        term.labels = attr(terms(mods[[i]]),"term.labels")
+    unique_assign_id=unique(assign)
+    temp=data.frame(coeff_names=coeff_names,
+                    assign=assign,
+                    term.labels=unlist(sapply(1:length(term.labels),function(i) rep(term.labels[i],sum(assign==unique_assign_id[i])))),
+                    Model =mods_names[i]
+    )  
+    temp=temp[temp$coeff_names==tested_coeffs[[i]],]
+    assign_var_orig=temp
+    
+    if(length(mods)>1)
+      for(i in 2:length(mods)){
+        assign=attr(model.matrix(mods[[i]]),"assign")+1+max(assign_var_orig$assign)
+        coeff_names=names(coefficients(mods[[i]]))
+        if(attr(terms(mods[[i]]),"intercept")==1) 
+          term.labels = c("(Intercept)",attr(terms(mods[[i]]),"term.labels")) else 
+            term.labels = attr(terms(mods[[i]]),"term.labels")
+        unique_assign_id=unique(assign)
+        temp=data.frame(coeff_names=coeff_names,
+                        assign=assign,
+                        term.labels=unlist(sapply(1:length(term.labels),function(i) rep(term.labels[i],sum(assign==unique_assign_id[i])))),
+                        Model =mods_names[i]
+        )  
+        assign_var_orig=rbind(assign_var_orig,temp[temp$coeff_names==tested_coeffs[[i]],])
       }
-    }
     
-    if(length(assign)>1){
-      for(i in 2:length(assign)){
-        cnt=max(assign[[i-1]])
-        assign[[i]]=cnt+assign[[i]]
-      }
-    } 
-    
-    
-#    temp=lapply(1:length(vars_orig), 
- #          function(i) paste0("mod_",names(vars_orig)[i],"_",vars_orig[[i]]))
-    
-    names_vars_orig=unlist(vars_orig)#unlist(sapply(1:length(assign),function(i) rep(names(assign)[i],length(vars_orig[[i]])))) #unlist(temp)
-    names(names_vars_orig)=NULL
-    
-    assign=unlist(assign)
-    names(assign)=NULL
-    
-    # if(!is.null(tested_coeffs)){
-    #   id_tested_coeffs=which(names_vars_orig%in%tested_coeffs)
-    #   names_vars_orig=names_vars_orig[names_vars_orig%in%tested_coeffs]
-    #   assign=assign[assign%in%id_tested_coeffs]
-    # }
-      temp=lapply(unique(assign),function(i) which(assign==i))
-      names(temp)=names_vars_orig
   out=list(Tspace=.get_all_Tspace(mods),
            summary_table=.get_all_summary_table(mods),
            mods=mods)
-  attr(out$Tspace,"orig_var")=temp
+  attr(out$Tspace,"orig_var")=assign_var_orig
   class(out) <- unique(c("jointest", class(out)))
   out
 }
