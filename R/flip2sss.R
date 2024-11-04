@@ -12,11 +12,23 @@
 #' @export
 #'
 #' @examples
-#' formula <- SALUTE ~ GENERE * TIME + PROV_BAMB + ETA_B_ARRIVO
-#' cluster <- adolong$SOGG
+#' set.seed(1)
+#' N=50
+#' n=rpois(N,10)
+#' reff=rep(rnorm(N),n)
+#' 
+#' D=data.frame(X1=rnorm(length(reff)),
+#'              X2=rep(rnorm(N),n),
+#'              Grp=factor(rep(rep(LETTERS[1:3],length.out=N),n)),
+#'              SOGG=rep(1:N,n))
+#' D$Y=rbinom(n=nrow(D),prob=dlogis((D$Grp=="B") * D$X1 + D$X2),size=1)
+#' 
+#' formula <- Y ~ Grp * X1 + X2
+#' cluster <- factor(D$SOGG)
 #' library(logistf)
-#' summstats_within <- 'logistf::logistf(SALUTE ~ TIME, family = binomial(link = "logit"),control=logistf::logistf.control(maxit=100))'
-#' res <- flip2sss(formula, data, cluster, summstats_within)
+#' summstats_within <- 'logistf::logistf(Y ~ X1, family = binomial(link = "logit"),control=logistf::logistf.control(maxit=100))'
+#' summstats_within <- 'glm(Y ~ X1, family = binomial(link = "logit"))'
+#' res <- flip2sss(formula, D, cluster, summstats_within)
 #' summary(res)
 #' @import dplyr
 #' @import magrittr
@@ -46,7 +58,7 @@ flip2sss <- function(formula=NULL,
   
   #####################
   data2lev = data %>% 
-    group_by(adolong[,set_between[-1]]) %>%
+    group_by(data[,set_between[-1]]) %>%
     summarise(as.data.frame(t(coefficients(eval(parse(text=summstats_within))))))
   names(data2lev) = gsub("\\W", ".", names(data2lev))
   
@@ -72,27 +84,31 @@ flip2sss <- function(formula=NULL,
 
 ######################
 .get_sets_vars_between <- function(formula, data, cluster){
-  clst_vals = unique(cluster)
+  clst_vals = unique(cluster) NON SERVE!
   D = model.matrix(formula, data = data)
   
   ## find constant cols within cluster
   const_id = do.call(rbind, by(D, cluster, function(D) as.data.frame(t(apply(D, 2, is.constant)))))
   vars_between_intercept = apply(const_id, 2, all)
   
-  terms = labels(terms(reformulate(as.character(formula))))
+  terms = colnames(D)#attributes(terms(formula))$term.labels#labels(terms(reformulate(as.character(formula))))
   ids_const = unique(attributes(D)$assign[vars_between_intercept])
-  if(0 %in% ids_const){
+  # attributes(D)$assign%in%ids_const
+   if(attributes(terms(formula))$intercept==1){
     ids_const = ids_const + 1
     terms = c("1", terms)
-  }
-  vars_between_names = list(.Intercept. = terms[ids_const])
+   }
+  intercept_vars_between_names=names(vars_between_intercept[vars_between_intercept])
+  intercept_vars_between_names=gsub("^\\(Intercept\\)$","1",intercept_vars_between_names)
+  vars_between_names = list(.Intercept. = intercept_vars_between_names)
   
   cors = suppressWarnings(by(D[, !vars_between_intercept], cluster, cor))
   dim3 = c(dim(cors[[1]]), length(cors))
   cors = array(unlist(cors), dim3)
   cors = apply(cors, c(1, 2), min, na.rm = TRUE)
+  cors[is.infinite(cors)]=1
   ei = eigen(cors)
-  vars_between_others = lapply(which(ei$values > .1), function(cls) terms[-ids_const][which(ei$vectors[, cls] != 0)])
+  vars_between_others = lapply(which(ei$values > .1), function(cls) names(vars_between_intercept[!vars_between_intercept])[which(ei$vectors[, cls] != 0)])
   within_coeffs = sapply(vars_between_others, function(preds_vars) Reduce(intersect, strsplit(preds_vars, ":")))  
   
   vars_between_others = lapply(1:length(within_coeffs), function(i) gsub(within_coeffs, "1", vars_between_others[[i]]))

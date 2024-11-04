@@ -40,13 +40,37 @@ combine <- function (mods, comb_funct = "maxT", combined = NULL, by=NULL, tail =
   res
 }
 
+
+###################
+combine_factors <- function (mods, comb_funct = "maxT", tail = 0) 
+{
+  # names(mods) = .set_mods_names(mods)
+  combined=attr(mods$Tspace,"orig_var")
+  if (is.null(combined)){
+    warning('There is not attribute "orig_var" in the object $Tspace' )
+  }
+  if (!is.list(combined)) {
+    uniq_nm = combined
+    combined = lapply(uniq_nm, function(nm) which(smr == nm))
+    names(combined) = uniq_nm
+  }
+  
+  res = lapply(1:length(combined), .npc2jointest, 
+               mods = mods, combined = combined, tail = tail, comb_funct = comb_funct)
+  names(res) = names(combined)
+  res=list(Tspace=.get_all_Tspace(res),summary_table=.get_all_summary_table(res))
+  class(res) <- unique(c("jointest", class(res)))
+  res
+}
+
+#######################
 .npc2jointest <- function (id, mods, combined, tail, comb_funct) 
 {
   comb_name = names(combined)[id]
   if (is.null(comb_name)) 
     comb_name = "Combined"
   Tspace = npc(mods$Tspace[, combined[[id]],drop=FALSE], comb_funct = comb_funct, 
-                          tail = tail)
+               tail = tail)
   colnames(Tspace) = comb_name
   Coeff=mods$summary_table[combined[[id]],"Coeff"]
   Coeff=unique(Coeff)
@@ -56,3 +80,4 @@ combine <- function (mods, comb_funct = "maxT", combined = NULL, by=NULL, tail =
                              p = .t2p_only_first(Tspace, tail = 1))
   list(Tspace = Tspace, summary_table = summary_table)
 }
+
