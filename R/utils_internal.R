@@ -16,12 +16,28 @@
 
 .get_all_summary_table <- function(mods){
   res=lapply(1:length(mods), function(i) {
-    cbind(Model=names(mods)[i],mods[[i]]$summary_table)
+    cbind(Model=names(mods)[i],
+          mods[[i]]$summary_table)
   })
   res=do.call(rbind,res)
   rownames(res)=NULL
   res
 }
+
+.get_summary_table_from_flipscores <- function(object){
+  tab = as.data.frame(summary(object)$coefficients)
+  tab = tab[!is.na(tab[, "Score"]), ]
+  colnames(tab)[ncol(tab)]="p"
+  
+  mm=model.matrix(object)
+  .assign=attr(mm,"assign")
+  .assign=.assign[dimnames(mm)[[2]]%in%rownames(tab)]
+  
+  tab = cbind( .assign=.assign,
+               Coeff = rownames(tab), 
+               tab)
+}
+
 
 # .get_all_Tspace <- function(mods){
 #   # dplyr::bind_cols(lapply(mods, function(md) md$Tspace))

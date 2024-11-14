@@ -81,17 +81,11 @@ NULL
 
 summary.jointest <- function (object, ...) 
 {
+  object$summary_table$.assign=NULL
   object$summary_table
  # do.call(rbind,lapply(object, function(ob) ob$summary_table))
 }
 
-.get_summary_table_from_flipscores <- function(object){
-  tab = as.data.frame(summary(object)$coefficients)
-  tab = tab[!is.na(tab[, "Score"]), ]
-  colnames(tab)[ncol(tab)]="p"
-  tab = cbind( Coeff = rownames(tab), tab)
-}
- 
 
 is_signif=NULL
 ###########################

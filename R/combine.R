@@ -2,36 +2,33 @@
 #' @param mods object of class \code{jointest} (it can be a list of glm or flipscores converted in a \code{jointest} object using \code{as.jointest})
 #' @param comb_funct  Combining function to be used. Several functions are implemented: "mean", "median", "Fisher", "Liptak", (equal to) "Stoufer", "Tippet", (equal to) "minp", "maxT" (the default). 
 #' Alternativelly it can be a custom function that has a matrix as input. The function return a vector of length equal to the number of rows of the input matrix. 
-#' @param combined a) if \code{NULL} it combines all coefficients with the same names along models, 
-#' b) if a vector of characters, it gives a combination for each stats with these names 
-#' @param by vector of characters referring to the column's name in summary_table. Equal to "Coeff" by default.
+#' @param by if \code{NULL} (default), it combines all test statistics.  
+#' If a characters, it refers to the column's name of \code{summary_table} (and printed by something like \code{summary(mods)}). 
+#' The elements with the same value will be combined. If \code{by} is a vector, the values are defined by row-wise concatenation of the values of the columns in \code{by}.
+#' The argument is inactive if \code{by_list} is not \code{NULL}.
+#' @param by_list NULL (default) or a list of vectors. For each vector of the list it combines test statistics with position given by the element of the vector. 
+#' If the vectors in the list are characters, these refer to names(mods$Tspace).
 #' @param tail direction of the alternative hypothesis. It can be "two.sided" (or 0, the default), "less" (or -1) or "greater" (or +1)
 #' @export
 #' 
-combine <- function (mods, comb_funct = "maxT", combined = NULL, by=NULL, tail = 0) 
+combine <- function (mods, comb_funct = "maxT", by = NULL, by_list=NULL, tail = 0) 
 {
+  if(!is.null(by_list)){
+    combined=by_list
+  } else    
+    { # by_list is not active, let's use by
+    
   # names(mods) = .set_mods_names(mods)
-  if(is.null(by)) by="Coeff"
-  smr=apply(res$summary_table[,by,drop=FALSE],1,paste,collapse="_")    
-  if (is.null(combined)) 
-    combined=attr(mods$Tspace,"orig_var")
-  if (is.null(combined)){
-#    combined = list(Overall = 1:ncol(res$Tspace))
-  uniq_nm = unique(smr)
-  if (length(uniq_nm) %in% c(1,length(smr))) {
+  if(is.null(by)){ # combine overall     
     combined = list(Overall = 1:ncol(res$Tspace))
-    }  else 
-      {
-    combined = lapply(uniq_nm, function(nm) which(smr == nm))
-    names(combined) = uniq_nm
-  }
-  }
-  if (!is.list(combined)) {
-    uniq_nm = combined
-    combined = lapply(uniq_nm, function(nm) which(smr == nm))
-    names(combined) = uniq_nm
-  }
   
+    } else { # more complex combinations 
+    smr=apply(res$summary_table[,by,drop=FALSE],1,paste,collapse=".")    
+    uniq_nm = unique(smr)
+    combined = lapply(uniq_nm, function(nm) which(smr == nm))
+        names(combined) = uniq_nm
+    }
+  }
   res = lapply(1:length(combined), .npc2jointest, 
                mods = mods, combined = combined, tail = tail, comb_funct = comb_funct)
   names(res) = names(combined)
@@ -42,19 +39,25 @@ combine <- function (mods, comb_funct = "maxT", combined = NULL, by=NULL, tail =
 
 
 ###################
-combine_factors <- function (mods, comb_funct = "maxT", tail = 0) 
+#' (nonparametric) combination of jointest object 
+#' @param mods object of class \code{jointest} (it can be a list of glm or flipscores converted in a \code{jointest} object using \code{as.jointest})
+#' @param comb_funct  Combining function to be used. Several functions are implemented: "mean", "median", "Fisher", "Liptak", (equal to) "Stoufer", "Tippet", (equal to) "minp", "maxT" (the default). 
+#' Alternativelly it can be a custom function that has a matrix as input. The function return a vector of length equal to the number of rows of the input matrix. 
+#' @param tail direction of the alternative hypothesis. It can be "two.sided" (or 0, the default), "less" (or -1) or "greater" (or +1)
+#' @export
+# @describeIn combine \code{combine_contrasts} combines the tests derived from the contrasts of a factor variable to get a global test for the factor (i.e. categorical predictor). It has strong analogies with anova test.
+
+combine_contrasts <- function (mods, comb_funct = "maxT", tail = 0) 
 {
   # names(mods) = .set_mods_names(mods)
-  combined=attr(mods$Tspace,"orig_var")
+  combined=paste(mods$summary_table$Model,mods$summary_table$.assign,sep="_")
   if (is.null(combined)){
-    warning('There is not attribute "orig_var" in the object $Tspace' )
+    warning('There is not column $summary_table$.assign, nothing is done.' )
   }
-  if (!is.list(combined)) {
-    uniq_nm = combined
-    combined = lapply(uniq_nm, function(nm) which(smr == nm))
-    names(combined) = uniq_nm
-  }
-  
+  uniq_nm = unique(combined)
+  combined = lapply(uniq_nm, function(nm) which(combined == nm))
+  names(combined) = uniq_nm
+
   res = lapply(1:length(combined), .npc2jointest, 
                mods = mods, combined = combined, tail = tail, comb_funct = comb_funct)
   names(res) = names(combined)
