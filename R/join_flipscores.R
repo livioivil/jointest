@@ -25,8 +25,8 @@
 #'res=join_flipscores(mods)
 
 #'summary(res)
-#'summary(combine(res,by="Coeff"))
-#'summary(combine(res,by="Model"))
+#'summary(jointest::combine(res,by="Coeff"))
+#'summary(jointest::combine(res,by="Model"))
 #'summary(jointest:::combine_contrasts(res))
 
 #'res=jointest:::p.adjust.jointest(res)

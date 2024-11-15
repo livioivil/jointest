@@ -2,12 +2,13 @@
 % Please edit documentation in R/flip2sss.R
 \name{flip2sss}
 \alias{flip2sss}
-\title{flip2sss}
+\title{flip2sss:  flipscores 2-Stage Summary Statistics approach}
 \usage{
 flip2sss(
   formula = NULL,
   data = NULL,
   cluster = NULL,
+  family = "gaussian",
   summstats_within = NULL,
   ...
 )
@@ -18,6 +19,8 @@ flip2sss(
 \item{data}{The dataset to be used for fitting the model.}
 
 \item{cluster}{A vector or a formula evaluated on the data that defines the clusters.}
+
+\item{family}{as in \code{glm}, but given as a character. Not used if argument \code{summstats_within} is not \code{NULL}.}
 
 \item{summstats_within}{A vector of summary statistics model within the data or a function with argument data.}
 
@@ -30,12 +33,29 @@ A jointest object containing the model results. Note that the flipscores models 
 This function fits a model based on the provided formula and data, accounting for clusters and summary statistics within the model.
 }
 \examples{
-formula <- SALUTE ~ GENERE * TIME + PROV_BAMB + ETA_B_ARRIVO
-cluster <- adolong$SOGG
+set.seed(123)
+N=20
+n=rpois(N,20)
+reff=rep(rnorm(N),n)
+
+D=data.frame(X1=rnorm(length(reff)),
+             X2=rep(rnorm(N),n),
+             Grp=factor(rep(rep(LETTERS[1:3],length.out=N),n)),
+             SOGG=rep(1:N,n))
+D$Y=rbinom(n=nrow(D),prob=plogis( 2*D$X1 * (D$Grp=="B") +  2*D$X2+reff),size=1)
+
+formula <- Y ~ Grp * X1 + X2
+cluster <- factor(D$SOGG)
 library(logistf)
-summstats_within <- 'logistf::logistf(SALUTE ~ TIME, family = binomial(link = "logit"),control=logistf::logistf.control(maxit=100))'
-res <- flip2sss(formula, data, cluster, summstats_within)
+summstats_within <- 'logistf::logistf(Y ~ X1, family = binomial(link = "logit"),control=logistf::logistf.control(maxit=100))'
+#summstats_within <- 'glm(Y ~ X1, family = binomial(link = "logit"))'
+library(jointest)
+res <- flip2sss(formula, D, cluster, summstats_within=summstats_within)
+res <- flip2sss(formula, D, cluster, family="binomial")
 summary(res)
+summary(combine(res))
+summary(combine(res,by="Model"))
+summary(jointest:::combine_contrasts(res))
 }
 \author{
 Livio Finos, Angela Andreella

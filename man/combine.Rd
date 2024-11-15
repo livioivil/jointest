@@ -2,9 +2,12 @@
 % Please edit documentation in R/combine.R
 \name{combine}
 \alias{combine}
+\alias{combine_contrasts}
 \title{(nonparametric) combination of jointest object}
 \usage{
-combine(mods, comb_funct = "maxT", combined = NULL, by = NULL, tail = 0)
+combine(mods, comb_funct = "maxT", by = NULL, by_list = NULL, tail = 0)
+
+combine_contrasts(mods, comb_funct = "maxT", tail = 0)
 }
 \arguments{
 \item{mods}{object of class \code{jointest} (it can be a list of glm or flipscores converted in a \code{jointest} object using \code{as.jointest})}
@@ -12,13 +15,21 @@ combine(mods, comb_funct = "maxT", combined = NULL, by = NULL, tail = 0)
 \item{comb_funct}{Combining function to be used. Several functions are implemented: "mean", "median", "Fisher", "Liptak", (equal to) "Stoufer", "Tippet", (equal to) "minp", "maxT" (the default). 
 Alternativelly it can be a custom function that has a matrix as input. The function return a vector of length equal to the number of rows of the input matrix.}
 
-\item{combined}{a) if \code{NULL} it combines all coefficients with the same names along models, 
-b) if a vector of characters, it gives a combination for each stats with these names}
+\item{by}{if \code{NULL} (default), it combines all test statistics.
+If a characters, it refers to the column's name of \code{summary_table} (and printed by something like \code{summary(mods)}). 
+The elements with the same value will be combined. If \code{by} is a vector, the values are defined by row-wise concatenation of the values of the columns in \code{by}.
+The argument is inactive if \code{by_list} is not \code{NULL}.}
 
-\item{by}{vector of characters referring to the column's name in summary_table. Equal to "Coeff" by default.}
+\item{by_list}{NULL (default) or a list of vectors. For each vector of the list it combines test statistics with position given by the element of the vector. 
+If the vectors in the list are characters, these refer to names(mods$Tspace).}
 
 \item{tail}{direction of the alternative hypothesis. It can be "two.sided" (or 0, the default), "less" (or -1) or "greater" (or +1)}
 }
 \description{
 (nonparametric) combination of jointest object
 }
+\section{Functions}{
+\itemize{
+\item \code{combine_contrasts()}: \code{combine_contrasts} combines the tests derived from the contrasts of a factor variable to get a global test for the factor (i.e. categorical predictor). It has strong analogies with anova test.
+
+}}

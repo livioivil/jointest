@@ -47,14 +47,25 @@ mod2=glm(Y~X+poly(Z1,2)+Z2,data=D)
 mod3=glm(Y~X+poly(Z1,2)+poly(Z2,2),data=D)
 mod4=glm(Y~X+Z1+poly(Z2,2),data=D)
 mods=list(mod1=mod1,mod2=mod2,mod3=mod3,mod4=mod4)
+library(jointest)
+res=join_flipscores(mods)
+summary(res)
+summary(jointest::combine(res,by="Coeff"))
+summary(jointest::combine(res,by="Model"))
+summary(jointest:::combine_contrasts(res))
+res=jointest:::p.adjust.jointest(res)
+summary(res)
+
+
+D$Yna=D$Y
+D$Yna[1:2]=NA
+mod1=glm(Yna~X+Z1+Z2,data=D)
+mods=list(mod1=mod1,mod2=mod2,mod3=mod3,mod4=mod4)
 for(i in 1:length(mods))
 mods[[i]]$call$data=eval(D)
 library(jointest)
-res=join_flipscores(mods,n_flips = 5000, score_type = "standardized" ,
-      seed = 1, tested_coeffs = "X")
+res=join_flipscores(mods, tested_coeffs = "X")
 summary(res)
 summary(combine(res))
-res=jointest:::p.adjust.jointest(res)
-summary(res)
-summary(combine(res,by="Model"))
+
 }

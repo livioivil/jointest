@@ -8,4 +8,4 @@ Description: runs resampling-based tests jointly (e.i. sign-flip score tests [He
 Imports: flipscores, ggplot2, methods, flip 
 Encoding: UTF-8
 License: GPL-2
-RoxygenNote: 7.3.1
+RoxygenNote: 7.3.2

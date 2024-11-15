@@ -87,3 +87,16 @@
   })
   res
 }
+
+library(stringr)
+
+# Trova il pattern comune
+.find_common_pattern <- function(strings) {
+  split_strings <- strsplit(strings, "")
+  common <- Reduce(function(x, y) {
+    sapply(seq_along(x), function(i) if (x[i] == y[i]) x[i] else "")
+  }, split_strings)
+  
+  paste0(common, collapse = "")
+}
+
