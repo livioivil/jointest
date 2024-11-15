@@ -34,7 +34,7 @@
 #' summary(res)
 #' summary(combine(res))
 #' summary(combine(res,by="Model"))
-#' summary(jointest:::combine_contrasts(res))
+#' summary(jointest::combine_contrasts(res))
 #' @import dplyr
 #' @import magrittr
 #' @author Livio Finos, Angela Andreella
