@@ -55,7 +55,7 @@ res <- flip2sss(formula, D, cluster, family="binomial")
 summary(res)
 summary(combine(res))
 summary(combine(res,by="Model"))
-summary(jointest:::combine_contrasts(res))
+summary(jointest::combine_contrasts(res))
 }
 \author{
 Livio Finos, Angela Andreella
