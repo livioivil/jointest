@@ -1,0 +1,2 @@
+- togliere dipendenza con flip (flip.adjust): closed testing deve diventare nativo del package
+- maxt compilata? import dal package di pierre
