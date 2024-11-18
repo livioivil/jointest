@@ -2,11 +2,7 @@
 
 # jointest R package
 
-A package devoted to multivariate resampling-based tests. By resampling
-jointly on all univariate tests (e.i. sign-flip score tests by Hemerik,
-Goeman and Finos (2020)) it allows for multivariate and selective
-inference – e.g., weak and strong control of the Familywise Error Rate or
-confidence bounds for True Discovery Proportion.
+A package devoted to multivariate resampling-based tests. By resampling jointly on all univariate tests (e.g., sign-flip score tests by Hemerik, Goeman and Finos (2020) <doi.org/10.1111/rssb.12369>) it allows for multivariate and selective inference – i.e.,, weak and strong control of the familywise error rate or confidence bounds for true discovery proportion.
 
 <!-- #[library flipscores on CRAN](http://cran.r-project.org/web/packages/flipscores/index.html) -->
 
@@ -14,7 +10,7 @@ confidence bounds for True Discovery Proportion.
 
 ## Set up
 
-To **install** this github version type (in R):
+To **install** this GitHub version type (in `R`):
 
 ``` r
 ##if devtools is not installed yet: 
@@ -52,7 +48,7 @@ summary(combine(res))
 ```
 
 ``` r
-res=jointest:::p.adjust.jointest(res)
+res=jointest:::p.adjust(res)
 summary(res)
 #>   Model Coeff  Estimate    Score Std. Error  z value Part. Cor          p
 #> 1  mod1     X 1.1254046 19.78375   6.309305 3.135646 0.7605058 0.01499700
