@@ -88,7 +88,7 @@
   res
 }
 
-library(stringr)
+#library(stringr)
 
 # Trova il pattern comune
 .find_common_pattern <- function(strings) {
@@ -98,5 +98,73 @@ library(stringr)
   }, split_strings)
   
   paste0(common, collapse = "")
+}
+
+###########################################################################
+##############################From flipscores##############################
+###########################################################################
+
+.make_flips <- function(n_obs,n_flips,id=NULL){
+  if(is.null(id)){  
+    flips = matrix(3-2*sample(2,(n_flips)*n_obs,replace=TRUE),n_flips,n_obs)
+  } else {
+    unique_id=unique(id)
+    n_id=length(unique_id)
+    temp = matrix(3-2*sample(2,(n_flips)*n_id,replace=TRUE),n_flips,n_id)
+    flips=matrix(NA,n_flips,n_obs)
+    for(i in 1:n_id)
+      flips[,id==unique_id[i]]=temp[,i]
+    # for(i in unique(id))
+    #   for(j in which(id==i)) 
+    #     flips[,j]=temp[,i]
+  }
+  flips
+}
+
+#transform sum stat into t stat
+.sum2t <- function(stat,sumY2,n){
+  # sumY2=sum(Y^2,na.rm = TRUE)
+  # n=sum(!is.na(Y))
+  # print(sumY2)
+  # print(stat)
+  # stat0=stat
+  sumY2=sumY2*(n**0.5)
+  # if(any((sumY2-(stat^2)/n)*(n/(n-1))<0)) browser()
+  stat=stat/sqrt((sumY2-(stat^2)/n)*(n/(n-1)))
+  # print(stat)
+  # if(any(is.na(stat))) browser()
+  stat
+}
+
+.flip_test_no_pval<- function(scores,
+                              flips=NULL,
+                              n_flips=NULL,
+                              .score_fun,
+                              output_flips=FALSE,
+                              seed=NULL,
+                              precompute_flips=TRUE,
+                              ...){
+  
+  
+  ##########################################
+  
+  #      browser()
+  n_obs=nrow(scores)
+  Tobs=  .score_fun(rep(1,n_obs),scores)
+  #      set.seed(seed)
+  if(!is.null(flips)){
+    #  browser()
+    Tspace=as.vector(c(Tobs,
+                       sapply(1:(n_flips-1),
+                              function(i).score_fun(flips[i,],scores))))
+    
+  } else {
+    set.seed(seed)
+    Tspace=as.vector(c(Tobs,replicate(n_flips-1,{
+      .score_fun(sample(c(-1,1),n_obs, replace = T),scores)
+    })))
+  }
+  
+  return(Tspace)
 }
 

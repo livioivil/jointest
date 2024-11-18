@@ -1,4 +1,4 @@
-#' (stepdown) Westfall and Young max-t procedure 
+# (stepdown) Westfall and Young max-t procedure 
 maxT.light <- function (permT, alphas = c(.001,(1:9)/100,
                                           (2:9)/10), weights = NULL, m = ncol(permT)) 
 {

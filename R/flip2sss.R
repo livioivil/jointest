@@ -1,18 +1,24 @@
-#' flip2sss:  flipscores 2-Stage Summary Statistics approach
-#'
-#' This function fits a model based on the provided formula and data, accounting for clusters and summary statistics within the model.
-#'
+#' @title flipscores 2-Stage Summary Statistics approach
+#' @description This function fits a model based on the provided formula and data, accounting for clusters and summary statistics within the model.
+#' @usage flip2sss(formula = NULL, data = NULL, cluster = NULL, 
+#' family = "gaussian", summstats_within=NULL, ...)
 #' @param formula A formula or a list of formulas. It can be a complete model as.formula or a list of formulas, one for each element produced by the function.
 #' @param data The dataset to be used for fitting the model.
 #' @param cluster A vector or a formula evaluated on the data that defines the clusters.
 #' @param family as in \code{glm}, but given as a character. Not used if argument \code{summstats_within} is not \code{NULL}.
 #' @param summstats_within A vector of summary statistics model within the data or a function with argument data.
-#' @param ... Other arguments passed to the `flipscores` function.
+#' @param ... Other arguments passed to the \code{\link[flipscores]{flipscores}} function.
 #' @export
-#' @return A jointest object containing the model results. Note that the flipscores models for each coefficient within are also included in the jointest object.
-#'
+#' @return A \code{jointest} object, i.e., a list containing the following objects: 
+#' \describe{
+#'  \item{Tspace}{\code{data.frame} where rows represents the sign-flipping transformed (plus the identity one) test and columns the variables.}
+#'  \item{summary_table}{\code{data.frame} containing for each second-step covariate the estimated parameter, score, std error, test , partial correlation and p-value.} 
+#'  \item{mods}{List of \code{glm} objects, i.e., first-step \code{glm} objects}
+#' }
 #' @examples
+#' library(jointest)
 #' set.seed(123)
+#' # Simulate data
 #' N=20
 #' n=rpois(N,20)
 #' reff=rep(rnorm(N),n)
@@ -23,21 +29,37 @@
 #'              SOGG=rep(1:N,n))
 #' D$Y=rbinom(n=nrow(D),prob=plogis( 2*D$X1 * (D$Grp=="B") +  2*D$X2+reff),size=1)
 #' 
+#' # Define model of interest
 #' formula <- Y ~ Grp * X1 + X2
+#' # Define clusters structure
 #' cluster <- factor(D$SOGG)
-#' library(logistf)
-#' summstats_within <- 'logistf::logistf(Y ~ X1, family = binomial(link = "logit"),control=logistf::logistf.control(maxit=100))'
+#' 
+#' # Define the summary statistics (here we propose the glm with firth correction 
+#' # from the logistf package)
+#' summstats_within <- 'logistf::logistf(Y ~ X1, family = binomial(link = "logit"),
+#' control=logistf::logistf.control(maxit=100))'
+#' # however also the classic glm function can be used:
 #' #summstats_within <- 'glm(Y ~ X1, family = binomial(link = "logit"))'
-#' library(jointest)
+#' 
+#' # Then, we compute the 2-Stage Summary Statistics approach
+#' # specifying the summary statistics
 #' res <- flip2sss(formula, D, cluster, summstats_within=summstats_within)
+#' # or the family
 #' res <- flip2sss(formula, D, cluster, family="binomial")
 #' summary(res)
+#' 
+#' # We can also combine the tests:
+#' # Overall:
 #' summary(combine(res))
+#' # For each model (i.e., having as dependent variable the estimated intercept and estimated slope):
 #' summary(combine(res,by="Model"))
-#' summary(jointest::combine_contrasts(res))
+#' # This is similar to an ANOVA test:
+#' summary(combine_contrasts(res))
 #' @import dplyr
 #' @import magrittr
+#' @import flipscores
 #' @author Livio Finos, Angela Andreella
+#' @seealso \code{\link{combine_contrasts}}, \code{\link{combine}}
 #'  
 flip2sss <- function(formula=NULL,
                      data=NULL,
