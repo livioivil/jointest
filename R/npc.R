@@ -1,3 +1,14 @@
+#' @importFrom stats qnorm
+#' @importFrom stats median
+#' @importFrom stats as.formula
+#' @importFrom stats coefficients
+#' @importFrom stats formula
+#' @importFrom stats glm
+#' @importFrom stats model.matrix
+#' @importFrom stats quantile
+#' @importFrom stats reformulate
+#' @importFrom stats terms
+#' @importFrom stats update
 
 npc <- function (Tspace, comb_funct = "Fisher", tail = 0) 
 {
@@ -32,7 +43,7 @@ npc <- function (Tspace, comb_funct = "Fisher", tail = 0)
     else if (comb_funct %in% c("Liptak", "Stoufer")) {
       Tspace = rowSums(.comb_funct_liptak(Tspace))
     } else if (comb_funct %in% c("Mahalanobis")) {
-      Tspace = flipscores:::mahalanobis_npc(Tspace)
+      Tspace = mahalanobis_npc(Tspace)
     }
   } else if (is.function(comb_funct)) {
     Tspace = comb_funct(Tspace)
@@ -53,3 +64,30 @@ npc <- function (Tspace, comb_funct = "Fisher", tail = 0)
 .comb_funct_liptak <- function(p)-qnorm(p)
 #add here other functions..
 ################################
+
+#######################FROM FLIPSCORES PACKAGE#######################
+
+mahalanobis_npc <- function(permT){
+  if(ncol(permT)==0) return(rep(0,nrow(permT)))
+  permT=as.matrix(permT)
+  dimnames(permT)=NULL
+  
+  if(ncol(permT)==1) {
+    permT=as.vector(permT)
+    return(abs(permT)/(sum(permT^2)^.5))}
+  #else
+  ei=eigen(t(permT)%*%permT)
+  ei$vectors=ei$vectors[,ei$values>1E-12,drop=FALSE]
+  ei$values=ei$values[ei$values>1E-12]
+  dst=rowSums((permT%*%ei$vect%*%diag(ei$val^-.5))^2)
+  dst=dst*nrow(permT)
+  return(dst)
+}
+
+#performs mahalanobis_npc() on selected columns of permT
+mahalanobis_npc_multi <- function(ids_list,permT){
+  
+  ff=function(ids,permT) mahalanobis_npc(permT[,ids,drop=FALSE])
+  out=sapply(ids_list,ff,permT)
+  (out)
+}

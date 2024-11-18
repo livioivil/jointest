@@ -1,3 +1,39 @@
+#' @title Methods for \code{jointest} objects
+#' @description Methods to extract and manipulate relevant information from
+#' a \code{jointest} object.
+#' @name jointest-methods
+#' @docType methods
+
+# non funziona e non funziona neppure summary se lo uso: 
+# print.jointest print method for a jointest object.
+# @rdname jointest-method
+# @param object an object of class \code{jointest}.
+# @param ... additional arguments to be passed
+# @method print jointest
+# @docType methods
+# @export
+# print.jointest <- function (object, ...) {
+#   #summary.jointest(object, ...)
+# }
+ 
+
+#' @description \code{summary} method for class "\code{jointest}"
+#' @param object an object of class \code{jointest}.
+#' @param ... additional arguments to be passed
+#' @method  summary jointest
+#' @docType methods
+#' @rdname jointest-methods
+#' @export
+
+
+summary.jointest <- function (object, ...) 
+{
+  object$summary_table$.assign=NULL
+  object$summary_table
+ # do.call(rbind,lapply(object, function(ob) ob$summary_table))
+}
+
+is_signif = NULL
 # # TODO
 # # # jointest is a class which inherit fom list. each element of the list is a list with 2 elements: Tspace (mandatory) and summary_table (optional). further elements are allowed.
 # https://www.datamentor.io/r-programming/s3-class
@@ -46,88 +82,62 @@
 # str(jt)
 # jt[1]
 
-#' @title Methods for jointest objects
-#'
-#' @description Methods for \code{jointest} objects. 
-#' The following are methods to extract and manipulate relevant information from
-#' a \code{jointest} object.
-#' 
-#' @name jointest-method
-#' @docType methods
 
-NULL
-# 
-#' non funziona e non funziona neppure summary se lo uso: 
-#' #' print.jointest print method for a jointest object.
-#' #' @rdname jointest-method
-#' #' @param object an object of class \code{jointest}.
-#' #' @param ... additional arguments to be passed
-#' #' @method print jointest
-#' #' @docType methods
-#' #' @export
-#' print.jointest <- function (object, ...) {
-#'   #summary.jointest(object, ...)
-#' }
-
-# 
-
-#' summary.jointest summary method for a jointest object.
-#' @rdname jointest-method
-#' @param object an object of class \code{jointest}.
+#' @description \code{p.adjust} method for class "\code{jointest}"
+#' @rdname jointest-methods
+#' @param mods an object of class \code{jointest}.
+#' @param method any method implemented in \code{flip::flip.adjust} or a custom function. In the last case it must be a function that uses a matrix as input and returns a vector of adjusted p-values equal to the numbero fo columns of the inputed matrix.
+#' @param tail direction of the alternative hypothesis. It can be "two.sided" (or 0, the default), "less" (or -1) or "greater" (or +1)
 #' @param ... additional arguments to be passed
-#' @method  summary jointest
+#' @method  p.adjust jointest
 #' @docType methods
+#' @importFrom flip flip.adjust
+#' @importFrom stats p.adjust
 #' @export
+#' @seealso  \code{\link[flip]{flip.adjust}}
 
-summary.jointest <- function (object, ...) 
+p.adjust.jointest <- function (mods, method = "maxT", tail = 0, ...) 
 {
-  object$summary_table$.assign=NULL
-  object$summary_table
- # do.call(rbind,lapply(object, function(ob) ob$summary_table))
+  if(is.character(method)){
+    if(method=="maxT"){
+      #      if("alphas"%in%names(as.list(match.call())))
+      p.adj=maxT.light(abs(mods$Tspace),...)
+    } else 
+      if(method%in%c("minp","Tippet") ) {
+        p.adj=maxT.light(-abs(mods$Tspace),...)
+      } else
+        p.adj = flip.adjust(.set_tail(mods$Tspace, tail = tail), 
+                            method = method) 
+  } else if(is.function(method)){
+    p.adj = method(.set_tail(mods$Tspace, tail = tail))
+  }
+  mods$summary_table$p.adj = p.adj
+  mods
 }
 
-
-is_signif=NULL
-###########################
-#' as.jointest method for a jointest object.
-#' @rdname jointest-method
-#' @param object an object of class \code{jointest}.
-#' @param names_obj a vector of names, its length must be equal to the length of \code{object}
+#' @rdname jointest-methods
+#' @description \code{plot} shows the distribution of the p-values from multiverse models
+#' @param x an object of class \code{jointest}.
 #' @param ... additional arguments to be passed
-#' @method as jointest
-#' @docType methods
 #' @export
-
-as.jointest <- function (object, names_obj=NULL, ...)
-{
-  # TODO: calcolare summary_table in ogni elemento di object. se flipscores usa
-  #     .get_summary_table_from_flipscores()
-  if(!is.null(names_obj)) names(object)=names_obj
-  if (is.null(names(object))) names(object)=paste0("mod",1:length(object))
-  class(object) <- unique(c("jointest", class(object)))
-  object
-}
-#############################################
-#' plot.jointest summary method for a jointest object.
-#' @rdname jointest-method
-#' @param object an object of class \code{jointest}.
-#' @param p.values  use "raw" or "adjusted" (i.e. corrected for selective inference) 
-#' @param mark_signif a value between 0 and 1. The plot will mark the p-values smaller than \code{mark_signif} (0.05 by default). If equal to 0 or 1 nothing will be marked. 
-#' @param ... additional arguments to be passed
-#' @method  plot jointest
+#' @method plot jointest
 #' @docType methods
-#' @export
-#' @import ggplot2
+#' @importFrom ggplot2 ggplot
+#' @importFrom ggplot2 aes_string
+#' @importFrom ggplot2 geom_point
+#' @importFrom ggplot2 aes
+#' @importFrom ggplot2 ggtitle
+#' @importFrom ggplot2 theme_minimal
+#' @importFrom ggplot2 scale_shape_manual
 
-plot.jointest <- function(object,
-                    p.values=c("raw","adjusted"),
-                    mark_signif=.05){
-  
+plot.jointest <- function(x, ...){
+  p.values=c("raw","adjusted")
+  mark_signif=.05
   p.values=p.values[1]
   y="-log10(p.vals)"
   x="Estimate"
   group="Coeff"
-  D=summary.jointest(object)
+  D=summary.jointest(x)
   if(p.values =="raw"){
     if(!is.null(D$`Pr(>|z|)`)) D$p.vals=D$`Pr(>|z|)` else
       D$p.vals=D$`Pr(>|t|)`
@@ -154,3 +164,4 @@ plot.jointest <- function(object,
   
   p
 }
+

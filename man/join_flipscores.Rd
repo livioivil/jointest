@@ -2,31 +2,23 @@
 % Please edit documentation in R/join_flipscores.R
 \name{join_flipscores}
 \alias{join_flipscores}
-\title{jointest for flipscores objects}
+\title{join tests from multiverse models}
 \usage{
-join_flipscores(
-  mods,
-  tested_coeffs = NULL,
-  n_flips = 5000,
-  score_type = "standardized",
-  statistics = "t",
-  seed = NULL,
-  output_models,
-  ...
-)
+join_flipscores(mods, tested_coeffs = NULL, n_flips = 5000, 
+score_type = "standardized", statistics = "t", seed=NULL, output_models =TRUE, ...)
 }
 \arguments{
-\item{mods}{list of \code{glm}s (or list of any other object that can be evaluated by flipscores)}
+\item{mods}{list of \code{glm}s (or list of any other object that can be evaluated by \code{flipscores})}
 
-\item{tested_coeffs}{is a list of the same length of \code{mods}, each element of the list being a vector of
-of names of tested coefficients. Alternatively, it can be a vector of names of tested coefficients, in this case, the tested coefficients are attributed to all models (when present). 
+\item{tested_coeffs}{list of the same length of \code{mods}, each element of the list being a vector of
+names of tested coefficients. Alternatively, it can be a vector of names of tested coefficients, in this case, the tested coefficients are attributed to all models (when present). 
 As a last option, it can be \code{NULL}, if so, all coefficients are tested.}
 
-\item{n_flips}{= 5000}
+\item{n_flips}{number of flips, default 5000}
 
 \item{score_type}{any valid type for \code{flipscores}, \code{"standardized"} is the default. see \code{\link[flipscores]{flipscores}} for more datails}
 
-\item{statistics}{"t" is the only method implemented (yet). Any other value will not modify the Score (a different statistic will only affect the multivariate inference, not the univariate one).}
+\item{statistics}{"t" is the only method implemented (yet). Any other value will not modify the score (a different statistic will only affect the multivariate inference, not the univariate one).}
 
 \item{seed}{\code{NULL} by default. Use a number if you wanto to ensure replicability of the results}
 
@@ -35,37 +27,26 @@ As a last option, it can be \code{NULL}, if so, all coefficients are tested.}
 \item{...}{any other further parameter.}
 }
 \description{
-jointest for flipscores objects
+The function allows hypothesis testing across all plausible multiverse models
+ensuring strong family-wise error rate control.
 }
 \examples{
-n=20
+library(jointest)
 set.seed(123)
+
+#Simulate data
+n=20
 D=data.frame(X=rnorm(n),Z1=rnorm(n),Z2=rnorm(n))
 D$Y=D$Z1+D$X+rnorm(n)
+
+# Run four glms abd combine it in a list
 mod1=glm(Y~X+Z1+Z2,data=D)
 mod2=glm(Y~X+poly(Z1,2)+Z2,data=D)
 mod3=glm(Y~X+poly(Z1,2)+poly(Z2,2),data=D)
 mod4=glm(Y~X+Z1+poly(Z2,2),data=D)
 mods=list(mod1=mod1,mod2=mod2,mod3=mod3,mod4=mod4)
-library(jointest)
-res=join_flipscores(mods)
-summary(res)
-summary(jointest::combine(res,by="Coeff"))
-summary(jointest::combine(res,by="Model"))
-summary(jointest::combine_contrasts(res))
-res=jointest:::p.adjust.jointest(res)
-summary(res)
 
-
-D$Yna=D$Y
-D$Yna[1:2]=NA
-mod1=glm(Yna~X+Z1+Z2,data=D)
-mods=list(mod1=mod1,mod2=mod2,mod3=mod3,mod4=mod4)
-for(i in 1:length(mods))
-mods[[i]]$call$data=eval(D)
-library(jointest)
-res=join_flipscores(mods, tested_coeffs = "X")
-summary(res)
+# Let us analyze the tests related to coefficient "X" and combine them
+res=join_flipscores(mods,n_flips = 5000, seed = 1, tested_coeffs = "X")
 summary(combine(res))
-
 }
