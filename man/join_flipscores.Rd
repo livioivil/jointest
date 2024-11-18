@@ -8,7 +8,7 @@ join_flipscores(mods, tested_coeffs = NULL, n_flips = 5000,
 score_type = "standardized", statistics = "t", seed=NULL, output_models =TRUE, ...)
 }
 \arguments{
-\item{mods}{list of \code{glm}s (or list of any other object that can be evaluated by \code{flipscores})}
+\item{mods}{list of \code{glm}s or \code{flipscores}-object (or any other object that can be evaluated by \code{flipscores})}
 
 \item{tested_coeffs}{list of the same length of \code{mods}, each element of the list being a vector of
 names of tested coefficients. Alternatively, it can be a vector of names of tested coefficients, in this case, the tested coefficients are attributed to all models (when present). 

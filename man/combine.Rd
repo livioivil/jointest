@@ -12,7 +12,7 @@ combine(mods, comb_funct = "maxT", by = NULL, by_list=NULL, tail = 0)
 combine_contrasts(mods, comb_funct = "maxT", tail = 0)
 }
 \arguments{
-\item{mods}{List of \code{glm} or \code{flipscores} objects.}
+\item{mods}{a \code{jointest} object.}
 
 \item{comb_funct}{combining function to be used. 
 Several functions are implemented: "mean", "median", "Fisher", "Liptak", (equal to) "Stoufer", "Tippet", (equal to) "minp", "maxT" (the default). 
@@ -39,7 +39,7 @@ global test for the factor (i.e. categorical predictor).
 It has strong analogies with ANOVA test.
 }
 \examples{
- #First example
+#First example
 library(jointest)
 set.seed(123)
 

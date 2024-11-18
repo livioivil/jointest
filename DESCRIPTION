@@ -2,9 +2,9 @@ Package: jointest
 Version: 2.0
 Date: 2024-11-15
 Title: Multivariate testing through joint resampling-based tests
-Author: Livio Finos
+Author: Livio Finos and Angela Andreella
 Maintainer: Livio Finos <livio.finos@unipd.it>
-Description: Runs resampling-based tests jointly (e.g., sign-flip score tests <doi.org/10.1111/rssb.12369> to allow for multivariate testing, i.e., weak and strong control of the Familywise Error Rate or True Discovery Proportion.
+Description: Runs resampling-based tests jointly (e.g., sign-flip score tests <doi.org/10.1111/rssb.12369>) to allow for multivariate testing, i.e., weak and strong control of the Familywise Error Rate or True Discovery Proportion.
 Imports: flipscores, ggplot2, dplyr, magrittr, flip, stats
 Encoding: UTF-8
 License: GPL-2

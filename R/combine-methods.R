@@ -2,7 +2,7 @@
 #' @description Methods for combining \code{jointest} objects. 
 #' @docType methods
 #' @name combine-methods
-#' @param mods List of \code{glm} or \code{flipscores} objects.
+#' @param mods a \code{jointest} object.
 #' @param comb_funct  combining function to be used. 
 #' Several functions are implemented: "mean", "median", "Fisher", "Liptak", (equal to) "Stoufer", "Tippet", (equal to) "minp", "maxT" (the default). 
 #' Alternatively it can be a custom function that has a matrix as input. 
@@ -23,7 +23,7 @@
 #' @rdname combine
 #' @export
 #' @examples
-#'  #First example
+#' #First example
 #' library(jointest)
 #' set.seed(123)
 #' 
