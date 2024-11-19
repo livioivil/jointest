@@ -2,6 +2,7 @@
 
 S3method(p.adjust,jointest)
 S3method(plot,jointest)
+S3method(print,jointest)
 S3method(summary,jointest)
 export(combine)
 export(combine_contrasts)

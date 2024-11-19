@@ -4,17 +4,21 @@
 #' @name jointest-methods
 #' @docType methods
 
-# non funziona e non funziona neppure summary se lo uso: 
-# print.jointest print method for a jointest object.
-# @rdname jointest-method
-# @param object an object of class \code{jointest}.
-# @param ... additional arguments to be passed
-# @method print jointest
-# @docType methods
-# @export
-# print.jointest <- function (object, ...) {
-#   #summary.jointest(object, ...)
-# }
+
+#' @description \code{print} method for class "\code{jointest}". 
+#' @param x an object of class \code{jointest}.
+#' @param ... additional arguments to be passed
+#' @method  print jointest
+#' @docType methods
+#' @rdname jointest-methods
+#' @export
+
+
+print.jointest <- function(x, ...) 
+{
+  summary.jointest(x, ...)
+  # do.call(rbind,lapply(object, function(ob) ob$summary_table))
+}
  
 
 #' @description \code{summary} method for class "\code{jointest}"

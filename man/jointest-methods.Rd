@@ -3,11 +3,14 @@
 \docType{methods}
 \name{jointest-methods}
 \alias{jointest-methods}
+\alias{print.jointest}
 \alias{summary.jointest}
 \alias{p.adjust.jointest}
 \alias{plot.jointest}
 \title{Methods for \code{jointest} objects}
 \usage{
+\method{print}{jointest}(x, ...)
+
 \method{summary}{jointest}(object, ...)
 
 \method{p.adjust}{jointest}(mods, method = "maxT", tail = 0, ...)
@@ -15,21 +18,23 @@
 \method{plot}{jointest}(x, ...)
 }
 \arguments{
-\item{object}{an object of class \code{jointest}.}
+\item{x}{an object of class \code{jointest}.}
 
 \item{...}{additional arguments to be passed}
+
+\item{object}{an object of class \code{jointest}.}
 
 \item{mods}{an object of class \code{jointest}.}
 
 \item{method}{any method implemented in \code{flip::flip.adjust} or a custom function. In the last case it must be a function that uses a matrix as input and returns a vector of adjusted p-values equal to the numbero fo columns of the inputed matrix.}
 
 \item{tail}{direction of the alternative hypothesis. It can be "two.sided" (or 0, the default), "less" (or -1) or "greater" (or +1)}
-
-\item{x}{an object of class \code{jointest}.}
 }
 \description{
 Methods to extract and manipulate relevant information from
 a \code{jointest} object.
+
+\code{print} method for class "\code{jointest}".
 
 \code{summary} method for class "\code{jointest}"
 
