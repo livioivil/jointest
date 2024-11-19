@@ -13,22 +13,23 @@
 
 \method{summary}{jointest}(object, ...)
 
-\method{p.adjust}{jointest}(mods, method = "maxT", tail = 0, ...)
+\method{p.adjust}{jointest}(p, method = "maxT", ...)
 
 \method{plot}{jointest}(x, ...)
 }
 \arguments{
 \item{x}{an object of class \code{jointest}.}
 
-\item{...}{additional arguments to be passed}
+\item{...}{additional arguments to be passed, i.e., \code{mark_signif} and
+\code{p.values=c("raw","adjusted")}.}
 
 \item{object}{an object of class \code{jointest}.}
 
-\item{mods}{an object of class \code{jointest}.}
+\item{p}{an object of class \code{jointest}.}
 
-\item{method}{any method implemented in \code{flip::flip.adjust} or a custom function. In the last case it must be a function that uses a matrix as input and returns a vector of adjusted p-values equal to the numbero fo columns of the inputed matrix.}
-
-\item{tail}{direction of the alternative hypothesis. It can be "two.sided" (or 0, the default), "less" (or -1) or "greater" (or +1)}
+\item{method}{any method implemented in \code{flip::flip.adjust} or 
+a custom function. In the last case it must be a function that uses a matrix 
+as input and returns a vector of adjusted p-values equal to the number of columns of the inputed matrix.}
 }
 \description{
 Methods to extract and manipulate relevant information from
@@ -40,7 +41,9 @@ a \code{jointest} object.
 
 \code{p.adjust} method for class "\code{jointest}"
 
-\code{plot} shows the distribution of the p-values from multiverse models
+\code{plot} shows the p-values from multiverse models marked by
+different shape for significance level defined in \code{mark_signif} argument
+default is 0.05 and different colors for each coefficient.
 }
 \seealso{
 \code{\link[flip]{flip.adjust}}

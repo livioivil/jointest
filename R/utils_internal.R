@@ -1,3 +1,7 @@
+
+p.adjust <- function(p, ...) {
+  UseMethod("p.adjust")
+}
 ########### COMBINING FUNCTIONS
 ################################
 .get_all_Tspace <- function(mods){

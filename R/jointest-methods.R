@@ -5,7 +5,7 @@
 #' @docType methods
 
 
-#' @description \code{print} method for class "\code{jointest}". 
+#' @description \code{print} method for class "\code{jointest}".
 #' @param x an object of class \code{jointest}.
 #' @param ... additional arguments to be passed
 #' @method  print jointest
@@ -13,12 +13,11 @@
 #' @rdname jointest-methods
 #' @export
 
-
-print.jointest <- function(x, ...) 
-{
-  summary.jointest(x, ...)
+ print.jointest <- function(x, ...) 
+ {
+   summary.jointest(x, ...)
   # do.call(rbind,lapply(object, function(ob) ob$summary_table))
-}
+ }
  
 
 #' @description \code{summary} method for class "\code{jointest}"
@@ -89,10 +88,12 @@ is_signif = NULL
 
 #' @description \code{p.adjust} method for class "\code{jointest}"
 #' @rdname jointest-methods
-#' @param mods an object of class \code{jointest}.
-#' @param method any method implemented in \code{flip::flip.adjust} or a custom function. In the last case it must be a function that uses a matrix as input and returns a vector of adjusted p-values equal to the numbero fo columns of the inputed matrix.
-#' @param tail direction of the alternative hypothesis. It can be "two.sided" (or 0, the default), "less" (or -1) or "greater" (or +1)
-#' @param ... additional arguments to be passed
+#' @param x an object of class \code{jointest}.
+#' @param method any method implemented in \code{flip::flip.adjust} or 
+#' a custom function. In the last case it must be a function that uses a matrix 
+#' as input and returns a vector of adjusted p-values equal to the number of columns of the inputed matrix.
+#' @param ... additional arguments to be passed, e.g., the argument \code{tail},
+#' tail direction of the alternative hypothesis. It can be "two.sided" (or 0, the default), "less" (or -1) or "greater" (or +1)
 #' @method  p.adjust jointest
 #' @docType methods
 #' @importFrom flip flip.adjust
@@ -100,29 +101,33 @@ is_signif = NULL
 #' @export
 #' @seealso  \code{\link[flip]{flip.adjust}}
 
-p.adjust.jointest <- function (mods, method = "maxT", tail = 0, ...) 
+p.adjust.jointest <- function (x, method = "maxT", ...) 
 {
+  if(is.null(tail)){tail = 0}
   if(is.character(method)){
     if(method=="maxT"){
       #      if("alphas"%in%names(as.list(match.call())))
-      p.adj=maxT.light(abs(mods$Tspace),...)
+      p.adj=maxT.light(abs(x$Tspace),...)
     } else 
       if(method%in%c("minp","Tippet") ) {
-        p.adj=maxT.light(-abs(mods$Tspace),...)
+        p.adj=maxT.light(-abs(x$Tspace),...)
       } else
-        p.adj = flip.adjust(.set_tail(mods$Tspace, tail = tail), 
+        p.adj = flip.adjust(.set_tail(x$Tspace, tail = tail), 
                             method = method) 
   } else if(is.function(method)){
-    p.adj = method(.set_tail(mods$Tspace, tail = tail))
+    p.adj = method(.set_tail(x$Tspace, tail = tail))
   }
-  mods$summary_table$p.adj = p.adj
-  mods
+  x$summary_table$p.adj = p.adj
+  x
 }
 
 #' @rdname jointest-methods
-#' @description \code{plot} shows the distribution of the p-values from multiverse models
+#' @description \code{plot} shows the p-values from multiverse models marked by
+#' different shape for significance level defined in \code{mark_signif} argument
+#' default is 0.05 and different colors for each coefficient.
 #' @param x an object of class \code{jointest}.
-#' @param ... additional arguments to be passed
+#' @param ... additional arguments to be passed, i.e., \code{mark_signif} and
+#' \code{p.values=c("raw","adjusted")}.
 #' @export
 #' @method plot jointest
 #' @docType methods
@@ -138,10 +143,10 @@ plot.jointest <- function(x, ...){
   p.values=c("raw","adjusted")
   mark_signif=.05
   p.values=p.values[1]
-  y="-log10(p.vals)"
-  x="Estimate"
+  Y="-log10(p.vals)"
+  X="Estimate"
   group="Coeff"
-  D=summary.jointest(x)
+  D=summary(x)
   if(p.values =="raw"){
     if(!is.null(D$`Pr(>|z|)`)) D$p.vals=D$`Pr(>|z|)` else
       D$p.vals=D$`Pr(>|t|)`
@@ -153,8 +158,8 @@ plot.jointest <- function(x, ...){
   
   if(p.values=="raw") title="(Raw) p-values" else title="Adjusted p-values"
   
-  p <- ggplot(D, aes_string(y=y, 
-                            x=x, 
+  p <- ggplot(D, aes_string(y=Y, 
+                            x=X, 
                             group=group,color=group)) +
     geom_point(aes(shape=is_signif),size=2)+ 
     ggtitle(title) + theme_minimal() 
