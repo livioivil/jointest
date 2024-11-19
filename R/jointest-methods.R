@@ -86,14 +86,17 @@ is_signif = NULL
 # jt[1]
 
 
-#' @description \code{p.adjust} method for class "\code{jointest}"
+#' @description \code{p.adjust} method for class "\code{jointest}". 
+#' Add adjusted p-values into the \code{jointest} object.
 #' @rdname jointest-methods
 #' @param x an object of class \code{jointest}.
 #' @param method any method implemented in \code{flip::flip.adjust} or 
 #' a custom function. In the last case it must be a function that uses a matrix 
 #' as input and returns a vector of adjusted p-values equal to the number of columns of the inputed matrix.
-#' @param ... additional arguments to be passed, e.g., the argument \code{tail},
-#' tail direction of the alternative hypothesis. It can be "two.sided" (or 0, the default), "less" (or -1) or "greater" (or +1)
+#' @param ... additional arguments to be passed, e.g., the argument \code{tail}. See details. 
+#' @details
+#' \code{tail} argument: expresses the tail direction of the alternative hypothesis. 
+#' It can be "two.sided" (or 0, the default), "less" (or -1) or "greater" (or +1).
 #' @method  p.adjust jointest
 #' @docType methods
 #' @importFrom flip flip.adjust
@@ -122,12 +125,22 @@ p.adjust.jointest <- function (x, method = "maxT", ...)
 }
 
 #' @rdname jointest-methods
-#' @description \code{plot} shows the p-values from multiverse models marked by
-#' different shape for significance level defined in \code{mark_signif} argument
-#' default is 0.05 and different colors for each coefficient.
+#' @description \code{plot} method for class "\code{jointest}"
+#' This \code{plot} function visualizes p-values from multiverse models, with
+#' different markers to indicate statistical significance levels as defined by
+#' the \code{mark_signif} argument (default is 0.05). Points are plotted with 
+#' varying shapes based on whether the p-value is below the significance threshold,
+#' and colors are used to distinguish between different coefficients.
 #' @param x an object of class \code{jointest}.
 #' @param ... additional arguments to be passed, i.e., \code{mark_signif} and
-#' \code{p.values=c("raw","adjusted")}.
+#' \code{p.values=c("raw","adjusted")}. See details.
+#' @details
+#' \code{mark_signif} argument: numeric value representing the significance threshold 
+#' for marking p-values. Any p-value below this threshold will be marked 
+#' with a dot. The default is \code{0.05}.
+#' \code{p.values} argument: a character vector specifying which p-values to display.
+#' It can be either \code{"raw"} for raw p-values or \code{"adjusted"} for 
+#' adjusted p-values. The default is \code{"raw"}.
 #' @export
 #' @method plot jointest
 #' @docType methods
@@ -140,8 +153,9 @@ p.adjust.jointest <- function (x, method = "maxT", ...)
 #' @importFrom ggplot2 scale_shape_manual
 
 plot.jointest <- function(x, ...){
-  p.values=c("raw","adjusted")
-  mark_signif=.05
+  if(is.null(p.values)){p.values = c("raw","adjusted")}
+  if(is.null(mark_signif)){mark_signif = .05}
+  
   p.values=p.values[1]
   Y="-log10(p.vals)"
   X="Estimate"
