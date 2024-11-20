@@ -106,7 +106,7 @@ is_signif = NULL
 
 p.adjust.jointest <- function (p, method = "maxT", ...) 
 {
-  if(is.null(tail)){tail = 0}
+  if(!exists("tail")){tail = 0}
   if(is.character(method)){
     if(method=="maxT"){
       #      if("alphas"%in%names(as.list(match.call())))

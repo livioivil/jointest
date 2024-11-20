@@ -55,8 +55,6 @@
 #' summary(combine(res,by="Model"))
 #' # This is similar to an ANOVA test:
 #' summary(combine_contrasts(res))
-#' @import dplyr
-#' @import magrittr
 #' @import flipscores
 #' @author Livio Finos, Angela Andreella
 #' @seealso \code{\link{combine_contrasts}}, \code{\link{combine}}
@@ -92,9 +90,13 @@ flip2sss <- function(formula=NULL,
     summstats_within=paste0("glm(",formula[[2]],formula[[1]],vars_within,", family=",family,")")
   set_between=c(".cluster",set_between[set_between!="1"])
   data$.cluster=cluster
-  data2lev = data %>% 
-    group_by(data[set_between]) %>%
-    summarise(as.data.frame(t(coefficients(eval(parse(text=summstats_within))))))
+  
+  data2lev <- makedata2lev(data = data, cluster, summstats_within)
+   
+# data2lev = data %>% 
+ #   group_by(data[set_between]) %>%
+  #  summarise(as.data.frame(t(coefficients(eval(parse(text=summstats_within))))))
+ 
   data2lev$.cluster=NULL
   names(data2lev) = gsub("\\W", ".", names(data2lev))
   

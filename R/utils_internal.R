@@ -172,3 +172,20 @@ p.adjust <- function(p, ...) {
   return(Tspace)
 }
 
+makedata2lev <- function(data, cluster, summstats_within) { 
+  
+  groups <- unique(cluster) 
+  results <- function(x) { 
+    group_data <- data[cluster == x,] 
+    stats <- eval(parse(text = summstats_within), envir = group_data) 
+    coef_df <- as.data.frame(t(coefficients(stats))) 
+    group_data <- group_data[,!(names(group_data) %in%(with(attributes(terms(stats)), as.character(variables[response+1]))
+    ))]
+    coef_df<- cbind(group_data[setdiff(names(group_data),names(coef_df))],coef_df)
+    return(coef_df)
+  } 
+  result_df <- do.call(rbind, lapply(groups, function(x) unique(results(x))) )
+  rownames(result_df) <- NULL 
+  
+  return(result_df) 
+  } 
