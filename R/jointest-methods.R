@@ -89,7 +89,7 @@ is_signif = NULL
 #' @description \code{p.adjust} method for class "\code{jointest}". 
 #' Add adjusted p-values into the \code{jointest} object.
 #' @rdname jointest-methods
-#' @param x an object of class \code{jointest}.
+#' @param p an object of class \code{jointest}.
 #' @param method any method implemented in \code{flip::flip.adjust} or 
 #' a custom function. In the last case it must be a function that uses a matrix 
 #' as input and returns a vector of adjusted p-values equal to the number of columns of the inputed matrix.
@@ -104,24 +104,24 @@ is_signif = NULL
 #' @export
 #' @seealso  \code{\link[flip]{flip.adjust}}
 
-p.adjust.jointest <- function (x, method = "maxT", ...) 
+p.adjust.jointest <- function (p, method = "maxT", ...) 
 {
   if(is.null(tail)){tail = 0}
   if(is.character(method)){
     if(method=="maxT"){
       #      if("alphas"%in%names(as.list(match.call())))
-      p.adj=maxT.light(abs(x$Tspace),...)
+      p.adj=maxT.light(abs(p$Tspace),...)
     } else 
       if(method%in%c("minp","Tippet") ) {
-        p.adj=maxT.light(-abs(x$Tspace),...)
+        p.adj=maxT.light(-abs(p$Tspace),...)
       } else
-        p.adj = flip.adjust(.set_tail(x$Tspace, tail = tail), 
+        p.adj = flip.adjust(.set_tail(p$Tspace, tail = tail), 
                             method = method) 
   } else if(is.function(method)){
-    p.adj = method(.set_tail(x$Tspace, tail = tail))
+    p.adj = method(.set_tail(p$Tspace, tail = tail))
   }
-  x$summary_table$p.adj = p.adj
-  x
+  p$summary_table$p.adj = p.adj
+  p
 }
 
 #' @rdname jointest-methods
@@ -144,47 +144,68 @@ p.adjust.jointest <- function (x, method = "maxT", ...)
 #' @export
 #' @method plot jointest
 #' @docType methods
-#' @importFrom ggplot2 ggplot
-#' @importFrom ggplot2 aes_string
-#' @importFrom ggplot2 geom_point
-#' @importFrom ggplot2 aes
-#' @importFrom ggplot2 ggtitle
-#' @importFrom ggplot2 theme_minimal
-#' @importFrom ggplot2 scale_shape_manual
+#' @importFrom grDevices dev.off
+#' @importFrom graphics grid
+#' @importFrom graphics layout
+#' @importFrom graphics legend
+#' @importFrom graphics par
+#' @importFrom graphics plot.new
 
-plot.jointest <- function(x, ...){
-  if(is.null(p.values)){p.values = c("raw","adjusted")}
-  if(is.null(mark_signif)){mark_signif = .05}
+plot.jointest <- function(x,...) {
+  if(!exists("p.values")){p.values = c("raw","adjusted")}
+  if(!exists("mark_signif")){mark_signif = .05}
   
-  p.values=p.values[1]
-  Y="-log10(p.vals)"
-  X="Estimate"
-  group="Coeff"
-  D=summary(x)
-  if(p.values =="raw"){
-    if(!is.null(D$`Pr(>|z|)`)) D$p.vals=D$`Pr(>|z|)` else
-      D$p.vals=D$`Pr(>|t|)`
-    if(is.null(D$p.vals)) D$p.vals=D$p
-  } else
-    if(p.values=="adjusted")
-      D$p.vals=D$p.adj
-  D$is_signif=(D$p.vals<=mark_signif)
+  p.values = p.values[1]
   
-  if(p.values=="raw") title="(Raw) p-values" else title="Adjusted p-values"
+  D = summary(x)
   
-  p <- ggplot(D, aes_string(y=Y, 
-                            x=X, 
-                            group=group,color=group)) +
-    geom_point(aes(shape=is_signif),size=2)+ 
-    ggtitle(title) + theme_minimal() 
-  if(!(mark_signif%in%c(0,1))){
-    p <- p +
-      scale_shape_manual(values=c(3,19),name = paste(p.values,
-                                                     "p-value"), 
-                         labels = paste0(c("p >  ", "p <= "),
-                                         mark_signif))
+  if(p.values == "raw") {
+    if(!is.null(D$`Pr(>|z|)`)) D$p.vals = D$`Pr(>|z|)` else
+      D$p.vals = D$`Pr(>|t|)`
+    if(is.null(D$p.vals)) D$p.vals = D$p
+    title = "(Raw) p-values"
+  } else if(p.values == "adjusted") {
+    D$p.vals = D$p.adj
+    title = "Adjusted p-values"
   }
   
-  p
-}
+  D$is_signif = (D$p.vals <= mark_signif)
+  dev.off()
+  if(length(unique(D$Coeff)) > 1){
+  layout(matrix(c(1, 2), nrow = 1), widths = c(3, 1)) # Plot on the left, legends on the right
+  
+  # Main plot
+  par(mar = c(5, 4, 4, 2)) # Adjust margins for the plot 
+  }
+  plot(D$Estimate, -log10(D$p.vals),
+       xlab = "Estimate", ylab = "-log10(p.vals)",
+       main = title,
+       pch = ifelse(D$is_signif, 19, 3),  
+       col = as.factor(D$Coeff))
+  
+  if(!(mark_signif %in% c(0,1))) {
+    legend("topright", 
+           legend = paste0(c("p >  ", "p <= "), mark_signif),
+           pch = c(3, 19),
+           title = paste(p.values, "p-value"),
+           bty = "n", # No box around the legend
+           cex = 0.8)
+  }
+  
 
+  
+  if(length(unique(D$Coeff)) > 1){
+  par(mar = c(5, 0, 4, 0)) # Remove margins for the legend area
+  plot.new() # Create an empty plot for the legends
+  legend("topleft",
+         legend = unique(D$Coeff), 
+         col = 1:length(unique(D$Coeff)), 
+         pch = 19, 
+         title = "Coefficients",
+         bty = "n", # No box around the legend
+         cex = 0.8)
+  }
+
+  
+  grid()
+}

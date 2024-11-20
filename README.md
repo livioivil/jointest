@@ -2,7 +2,7 @@
 
 # jointest R package
 
-A package devoted to multivariate resampling-based tests. By resampling jointly on all univariate tests (e.g., sign-flip score tests by Hemerik, Goeman and Finos (2020) <doi.org/10.1111/rssb.12369>) it allows for multivariate and selective inference – i.e.,, weak and strong control of the familywise error rate or confidence bounds for true discovery proportion.
+A package devoted to multivariate resampling-based tests. By resampling jointly on all univariate tests (e.g., sign-flip score tests by Hemerik, Goeman and Finos (2020) <doi.org/10.1111/rssb.12369>) it allows for multivariate and selective inference – i.e., weak and strong control of the familywise error rate or confidence bounds for true discovery proportion.
 
 <!-- #[library flipscores on CRAN](http://cran.r-project.org/web/packages/flipscores/index.html) -->
 

@@ -26,6 +26,14 @@ As a last option, it can be \code{NULL}, if so, all coefficients are tested.}
 
 \item{...}{any other further parameter.}
 }
+\value{
+A \code{jointest} object, i.e., a list containing the following objects: 
+\describe{
+ \item{Tspace}{\code{data.frame} where rows represents the sign-flipping transformed (plus the identity one) test and columns the variables.}
+ \item{summary_table}{\code{data.frame} containing for each model the estimated parameter(s), score(s), std error(s), test(s), partial correlation(s) and p-value(s).} 
+ \item{mods}{List of \code{glm}s or \code{flipscores} objects.}
+}
+}
 \description{
 The function allows hypothesis testing across all plausible multiverse models
 ensuring strong family-wise error rate control.
