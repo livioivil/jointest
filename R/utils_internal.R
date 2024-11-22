@@ -9,7 +9,7 @@ p.adjust <- function(p, ...) {
   tab=lapply(mods,function(x){
     if(is.null(x$Tspace)){stop("At least one Tspace is missing")}
     x$Tspace})
-  nms = sapply(tab,colnames)
+  nms = unlist(sapply(tab,colnames))
   tab=do.call(cbind,tab)
   colnames(tab)=nms
   if(is.null(colnames(tab))) colnames(tab)=paste0("S", 1:ncol(tab))
@@ -18,7 +18,8 @@ p.adjust <- function(p, ...) {
 }
 
 
-.get_all_summary_table <- function(mods){
+.get_all_summary_table <- function(mods,mods_name=NULL){
+  if(is.null(mods_name)) mods_name=names(mods)
   res=lapply(1:length(mods), function(i) {
     cbind(Model=names(mods)[i],
           mods[[i]]$summary_table)
@@ -95,82 +96,47 @@ p.adjust <- function(p, ...) {
 #library(stringr)
 
 # Trova il pattern comune
-.find_common_pattern <- function(strings) {
-  split_strings <- strsplit(strings, "")
-  common <- Reduce(function(x, y) {
-    sapply(seq_along(x), function(i) if (x[i] == y[i]) x[i] else "")
-  }, split_strings)
+# .find_common_pattern <- function(strings) {
+#   split_strings <- strsplit(strings, "")
+#   common <- Reduce(function(x, y) {
+#     sapply(seq_along(x), function(i) if (x[i] == y[i]) x[i] else "")
+#   }, split_strings)
+#   
+#   paste0(common, collapse = "")
+# }
+.find_common_pattern <- function(vettore) {
+  if (length(vettore) < 2) {
+    return(vettore)
+  }
   
-  paste0(common, collapse = "")
+  if(length(grep(":",vettore[1]))>0){
+    vettore_splt=strsplit(vettore,":")
+    pttrns=sapply(1:length(vettore_splt[[1]]),function(i){
+      .find_common_pattern (sapply(vettore_splt,function(x) x[i]) ) 
+    })
+    return(paste(pttrns,collapse=":"))
+  }
+    
+  chars=sapply(vettore,strsplit,"")
+  #matrix of all chracters
+  charsMat=suppressWarnings(do.call(cbind,chars))
+  # ask row-wise if they are all equals
+  all_eqs=apply(charsMat,1,function(x)length(unique(x))==1)
+  # this is the first different character
+  if(all(all_eqs)) {
+    common_pattern=vettore[1]
+  } else {
+    common_pattern=substr(vettore[1],1,max(which.min(all_eqs)-1,1))
+  }
+  
+  
+  return(common_pattern)
 }
 
 ###########################################################################
 ##############################From flipscores##############################
 ###########################################################################
 
-.make_flips <- function(n_obs,n_flips,id=NULL){
-  if(is.null(id)){  
-    flips = matrix(3-2*sample(2,(n_flips)*n_obs,replace=TRUE),n_flips,n_obs)
-  } else {
-    unique_id=unique(id)
-    n_id=length(unique_id)
-    temp = matrix(3-2*sample(2,(n_flips)*n_id,replace=TRUE),n_flips,n_id)
-    flips=matrix(NA,n_flips,n_obs)
-    for(i in 1:n_id)
-      flips[,id==unique_id[i]]=temp[,i]
-    # for(i in unique(id))
-    #   for(j in which(id==i)) 
-    #     flips[,j]=temp[,i]
-  }
-  flips
-}
-
-#transform sum stat into t stat
-.sum2t <- function(stat,sumY2,n){
-  # sumY2=sum(Y^2,na.rm = TRUE)
-  # n=sum(!is.na(Y))
-  # print(sumY2)
-  # print(stat)
-  # stat0=stat
-  sumY2=sumY2*(n**0.5)
-  # if(any((sumY2-(stat^2)/n)*(n/(n-1))<0)) browser()
-  stat=stat/sqrt((sumY2-(stat^2)/n)*(n/(n-1)))
-  # print(stat)
-  # if(any(is.na(stat))) browser()
-  stat
-}
-
-.flip_test_no_pval<- function(scores,
-                              flips=NULL,
-                              n_flips=NULL,
-                              .score_fun,
-                              output_flips=FALSE,
-                              seed=NULL,
-                              precompute_flips=TRUE,
-                              ...){
-  
-  
-  ##########################################
-  
-  #      browser()
-  n_obs=nrow(scores)
-  Tobs=  .score_fun(rep(1,n_obs),scores)
-  #      set.seed(seed)
-  if(!is.null(flips)){
-    #  browser()
-    Tspace=as.vector(c(Tobs,
-                       sapply(1:(n_flips-1),
-                              function(i).score_fun(flips[i,],scores))))
-    
-  } else {
-    set.seed(seed)
-    Tspace=as.vector(c(Tobs,replicate(n_flips-1,{
-      .score_fun(sample(c(-1,1),n_obs, replace = T),scores)
-    })))
-  }
-  
-  return(Tspace)
-}
 
 makedata2lev <- function(data, cluster, summstats_within) { 
   

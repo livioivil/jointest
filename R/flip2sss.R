@@ -26,14 +26,21 @@
 #' D=data.frame(X1=rnorm(length(reff)),
 #'              X2=rep(rnorm(N),n),
 #'              Grp=factor(rep(rep(LETTERS[1:3],length.out=N),n)),
-#'              SOGG=rep(1:N,n))
+#'              Subj=rep(1:N,n))
 #' D$Y=rbinom(n=nrow(D),prob=plogis( 2*D$X1 * (D$Grp=="B") +  2*D$X2+reff),size=1)
 #' 
-#' # Define model of interest
-#' formula <- Y ~ Grp * X1 + X2
-#' # Define clusters structure
-#' cluster <- factor(D$SOGG)
+#' # model of interest formula <- Y ~ Grp * X1 + X2
+#' # clusters structure defined by cluster <- factor(D$Subj)
+#' # The 2-Stage Summary Statistics via flipscore: 
+#' res <- flip2sss(Y ~ Grp * X1 + X2, data=D, 
+#'                cluster=D$Subj, family="binomial")
+#' summary(res)
+#' # This is an ANOVA-like overall test:
+#' summary(combine(res))
+#' # This is an ANOVA-like test:
+#' summary(combine_contrasts(res))
 #' 
+#' # An alternative and more flexible definition of the model:
 #' # Define the summary statistics (here we propose the glm with firth correction 
 #' # from the logistf package)
 #' summstats_within <- 'logistf::logistf(Y ~ X1, family = binomial(link = "logit"),
@@ -41,18 +48,15 @@
 #' # however also the classic glm function can be used:
 #' #summstats_within <- 'glm(Y ~ X1, family = binomial(link = "logit"))'
 #' 
-#' # Then, we compute the 2-Stage Summary Statistics approach
-#' # specifying the summary statistics
-#' res <- flip2sss(formula, D, cluster, summstats_within=summstats_within)
-#' # or the family
-#' res <- flip2sss(formula, D, cluster, family="binomial")
+#' # Then, compute the 2-Stage Summary Statistics approach
+#' # specifying the summary statistics (within cluster/subject)
+#' res <- flip2sss(Y ~ Grp * X1 + X2, data=D, cluster=D$Subj, 
+#'                    summstats_within=summstats_within)
 #' summary(res)
 #' 
 #' # We can also combine the tests:
 #' # Overall:
 #' summary(combine(res))
-#' # For each model (i.e., having as dependent variable the estimated intercept and estimated slope):
-#' summary(combine(res,by="Model"))
 #' # This is similar to an ANOVA test:
 #' summary(combine_contrasts(res))
 #' @import flipscores

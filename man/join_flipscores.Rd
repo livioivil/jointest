@@ -54,7 +54,9 @@ mod3=glm(Y~X+poly(Z1,2)+poly(Z2,2),data=D)
 mod4=glm(Y~X+Z1+poly(Z2,2),data=D)
 mods=list(mod1=mod1,mod2=mod2,mod3=mod3,mod4=mod4)
 
-# Let us analyze the tests related to coefficient "X" and combine them
-res=join_flipscores(mods,n_flips = 5000, seed = 1, tested_coeffs = "X")
+# flipscores jointly on all models
+res=join_flipscores(mods,n_flips = 1000)
 summary(combine(res))
+summary(combine(res, by="Model"))
+summary(combine_contrasts(res))
 }

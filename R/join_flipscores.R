@@ -38,9 +38,11 @@
 #' mod4=glm(Y~X+Z1+poly(Z2,2),data=D)
 #' mods=list(mod1=mod1,mod2=mod2,mod3=mod3,mod4=mod4)
 #' 
-#' # Let us analyze the tests related to coefficient "X" and combine them
-#' res=join_flipscores(mods,n_flips = 5000, seed = 1, tested_coeffs = "X")
+#' # flipscores jointly on all models
+#' res=join_flipscores(mods,n_flips = 1000)
 #' summary(combine(res))
+#' summary(combine(res, by="Model"))
+#' summary(combine_contrasts(res))
 
 join_flipscores <- function(mods, tested_coeffs = NULL, n_flips = 5000, 
                             score_type = "standardized", 
@@ -67,7 +69,7 @@ join_flipscores <- function(mods, tested_coeffs = NULL, n_flips = 5000,
   
   mods_names=names(mods)
   
-  FLIPS=.make_flips(n_obs=n_obs,n_flips=n_flips)
+  FLIPS=make_flips(n_obs=n_obs,n_flips=n_flips)
     mods = lapply(1:length(mods), function(i) {
       temp = flipscores(formula = eval(mods[[i]],parent.frame()), score_type = score_type, 
                         flips = eval(FLIPS), to_be_tested = tested_coeffs[[i]],
@@ -78,7 +80,7 @@ join_flipscores <- function(mods, tested_coeffs = NULL, n_flips = 5000,
             "orthogonalized") {
           sumY2s = colSums(temp$scores^2)
           n = nrow(temp$scores)
-          tt = sapply(1:length(sumY2s), function(i) .sum2t(temp$Tspace[, 
+          tt = sapply(1:length(sumY2s), function(i) flipscores:::.sum2t(temp$Tspace[, 
                                                                                     i], sumY2s[i], n))
           colnames(tt) = colnames(temp$Tspace)
           temp$Tspace = tt

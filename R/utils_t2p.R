@@ -31,7 +31,3 @@
       Tspace
 }
 
-.sum2t <- function(Tvector, sumY2, n){
-  dev_resid=(sumY2-(Tvector^2/n))
-  Tvector/sqrt(dev_resid/(n-1)*n)
-}

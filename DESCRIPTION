@@ -2,8 +2,10 @@ Package: jointest
 Version: 2.0
 Date: 2024-11-15
 Title: Multivariate testing through joint resampling-based tests
-Author: Livio Finos and Angela Andreella
-Maintainer: Livio Finos <livio.finos@unipd.it>
+Authors@R: 
+    c(person("Livio", "Finos", email = "livio.finos@unipd.it", role = c("cre","aut"), comment = c(ORCID = "0000-0003-3181-8078")),
+    person("Angela", "Andreella", role = "aut"),
+    person("Filippo", "Gambarota", role = "ctb"))
 Description: Runs resampling-based tests jointly (e.g., sign-flip score tests <doi.org/10.1111/rssb.12369>) to allow for multivariate testing, i.e., weak and strong control of the Familywise Error Rate or True Discovery Proportion.
 Imports: flipscores, flip, stats, graphics, grDevices
 Encoding: UTF-8
@@ -12,7 +14,8 @@ RoxygenNote: 7.3.2
 Suggests: 
     knitr,
     logistf,
-    rmarkdown
+    rmarkdown,
+    ggplot2
 Remotes: livioivil/flipscores
 VignetteBuilder: knitr
 Depends: 

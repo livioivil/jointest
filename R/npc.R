@@ -17,21 +17,21 @@ npc <- function (Tspace, comb_funct = "Fisher", tail = 0)
                            "Liptak", "Stoufer", 
                            "Tippet", "minp","maxT","Mahalanobis")
     comb_funct=match.arg(comb_funct,implemented_comb_funcs)
-    if (comb_funct %in% c("mean", "median"))
+    if (comb_funct %in% c("mean", "median","maxT"))
       Tspace = .set_tail(Tspace, tail = tail)
+    
     if (comb_funct %in% c("Fisher", 
                             "Liptak", "Stoufer", 
                             "Tippet", "minp"))
-    Tspace = .t2p(Tspace, tail = 1)
+    Tspace = .t2p(Tspace, tail = tail)
   
     if (comb_funct == "minp") 
-      Tspace = -Tspace
-    if (comb_funct == "mean") {
+      Tspace = .rowMin(Tspace)
+    else if (comb_funct %in% c("maxT")) {
+      Tspace = .rowMax(Tspace)
+    } else if (comb_funct == "mean") {
       Tspace = rowMeans(Tspace)
       Tspace = .set_tail(Tspace, tail = tail)
-    }
-    else if (comb_funct %in% c("minp", "maxT")) {
-      Tspace = .rowMax(Tspace)
     }
     else if (comb_funct == "median") {
       Tspace = .rowMedians(Tspace)
@@ -56,9 +56,10 @@ npc <- function (Tspace, comb_funct = "Fisher", tail = 0)
 
 .rowMedians <- function(X,...)
   apply(X,1,median,...)
-
 .rowMax <- function(X,...)
   apply(X,1,max,...)
+.rowMin <- function(X,...)
+  apply(X,1,min,...)
 
 .comb_funct_fisher <- function(p)-log(p)
 .comb_funct_liptak <- function(p)-qnorm(p)
@@ -66,28 +67,6 @@ npc <- function (Tspace, comb_funct = "Fisher", tail = 0)
 ################################
 
 #######################FROM FLIPSCORES PACKAGE#######################
-
-mahalanobis_npc <- function(permT){
-  if(ncol(permT)==0) return(rep(0,nrow(permT)))
-  permT=as.matrix(permT)
-  dimnames(permT)=NULL
-  
-  if(ncol(permT)==1) {
-    permT=as.vector(permT)
-    return(abs(permT)/(sum(permT^2)^.5))}
-  #else
-  ei=eigen(t(permT)%*%permT)
-  ei$vectors=ei$vectors[,ei$values>1E-12,drop=FALSE]
-  ei$values=ei$values[ei$values>1E-12]
-  dst=rowSums((permT%*%ei$vect%*%diag(ei$val^-.5))^2)
-  dst=dst*nrow(permT)
-  return(dst)
-}
-
+mahalanobis_npc <- flipscores:::mahalanobis_npc
 #performs mahalanobis_npc() on selected columns of permT
-mahalanobis_npc_multi <- function(ids_list,permT){
-  
-  ff=function(ids,permT) mahalanobis_npc(permT[,ids,drop=FALSE])
-  out=sapply(ids_list,ff,permT)
-  (out)
-}
+mahalanobis_npc_multi <- flipscores:::mahalanobis_npc_multi

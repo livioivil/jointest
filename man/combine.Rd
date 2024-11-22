@@ -15,9 +15,10 @@ combine_contrasts(mods, comb_funct = "maxT", tail = 0)
 \item{mods}{a \code{jointest} object.}
 
 \item{comb_funct}{combining function to be used. 
-Several functions are implemented: "mean", "median", "Fisher", "Liptak", (equal to) "Stoufer", "Tippet", (equal to) "minp", "maxT" (the default). 
-Alternatively it can be a custom function that has a matrix as input. 
-The function return a vector of length equal to the number of rows of the input matrix.}
+Several functions are implemented: "mean", "median", "Fisher", "Liptak", (equal to) "Stoufer", "Tippet", (equal to) "minp", "maxT", "Mahalanobis". 
+Alternatively it can be a custom function that has a Tspace matrix as input. 
+For \code{combine} the default is \code{comb_funct="maxT"},
+while for \code{combines_contrasts} the default is \code{comb_funct="Mahalanobis"}.}
 
 \item{by}{if \code{NULL} (default), it combines all test statistics.
 If a characters, it refers to the column's name of \code{summary_table} (and printed by something like \code{summary(mods)}). 
@@ -27,7 +28,10 @@ The argument is inactive if \code{by_list} is not \code{NULL}.}
 \item{by_list}{NULL (default) or a list of vectors. For each vector of the list it combines test statistics with position given by the element of the vector. 
 If the vectors in the list are characters, these refer to names(mods$Tspace).}
 
-\item{tail}{direction of the alternative hypothesis. It can be "two.sided" (or 0, the default), "less" (or -1) or "greater" (or +1)}
+\item{tail}{direction of the alternative hypothesis. It can be "two.sided" (or 0, the default), "less" (or -1) or "greater" (or +1).}
+}
+\value{
+The function returns a \code{jointest}-object.
 }
 \description{
 Methods for combining \code{jointest} objects.
@@ -58,31 +62,17 @@ mods=list(mod1=mod1,mod2=mod2,mod3=mod3,mod4=mod4)
 # Let us analyze the tests related to coefficient "X" and combine them
 res=join_flipscores(mods,n_flips = 5000, seed = 1, tested_coeffs = "X")
 summary(combine(res))
-#Second example
-library(jointest)
-set.seed(123)
-
-#Simulate data
-N=20
-n=rpois(N,20)
-reff=rep(rnorm(N),n)
-D=data.frame(X1=rnorm(length(reff)),
-             X2=rep(rnorm(N),n),
-             Grp=factor(rep(rep(LETTERS[1:3],length.out=N),n)),
-             SOGG=rep(1:N,n))
-D$Y=rbinom(n=nrow(D),prob=plogis( 2*D$X1 * (D$Grp=="B") +  2*D$X2+reff),size=1)
-
-#Define the model of interest
-formula <- Y ~ Grp * X1 + X2
-#Define the cluster structure
-cluster <- factor(D$SOGG)
-
-#Define the summary statistics (here we propose the glm with firth correction)
-summstats_within <- 'logistf::logistf(Y ~ X1, family = binomial(link = "logit"),
-control=logistf::logistf.control(maxit=100))'
-
-#Perform the two summary statistics approach
-res <- flip2sss(formula, D, cluster, summstats_within=summstats_within)
-#Anova-like test
-summary(combine_contrasts(res))
+# Second (continued) example
+# flipscores jointly on all models and all coefficients
+res=join_flipscores(mods,n_flips = 2000)
+summary(combine(res))
+summary(combine(res, by="Model"))
+summary(combine(res, by="Coeff"))
+res2=combine_contrasts(res)
+summary(res2)
+#custom combinations:
+coeffs=c("(Intercept)","X","Z1","Z2")
+coeffs_ids=lapply(coeffs,grep,res2$summary_table$Coeff)
+names(coeffs_ids)=coeffs
+summary(combine(res2,by_list =   coeffs_ids))
 }
