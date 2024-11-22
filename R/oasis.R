@@ -1,4 +1,4 @@
-#' @title OASIS data
+#' @title Longitudinal MRI data in nondemented and demented older adults
 #' @description
 #' This dataset consists of a longitudinal collection of 150 subjects aged 60 to 96. 
 #' Each subject was scanned on two or more visits, separated by at least one year 

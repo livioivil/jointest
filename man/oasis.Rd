@@ -3,7 +3,7 @@
 \docType{data}
 \name{oasis}
 \alias{oasis}
-\title{OASIS data}
+\title{Longitudinal MRI data in nondemented and demented older adults}
 \format{
 A data frame with 373 rows and 15 variables:
 \describe{
