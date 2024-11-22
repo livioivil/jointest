@@ -9,5 +9,9 @@ Imports: flipscores, flip, stats, graphics, grDevices
 Encoding: UTF-8
 License: GPL-2
 RoxygenNote: 7.3.2
-Suggests: logistf
+Suggests: 
+    knitr,
+    logistf,
+    rmarkdown
 Remotes: livioivil/flipscores
+VignetteBuilder: knitr
