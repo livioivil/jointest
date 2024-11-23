@@ -9,7 +9,7 @@
 \usage{
 combine(mods, comb_funct = "maxT", by = NULL, by_list=NULL, tail = 0)
 
-combine_contrasts(mods, comb_funct = "maxT", tail = 0)
+combine_contrasts(mods, comb_funct = "Mahalanobis", tail = 0)
 }
 \arguments{
 \item{mods}{a \code{jointest} object.}

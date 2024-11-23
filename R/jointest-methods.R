@@ -113,14 +113,14 @@ p.adjust.jointest <- function (p, method = "maxT", ...)
       p.adj=maxT.light(abs(p$Tspace),...)
     } else 
       if(method%in%c("minp","Tippet") ) {
-        p.adj=maxT.light(-abs(p$Tspace),...)
+        p.adj=maxT.light(-.t2p(p$Tspace, tail = tail),...)
       } else
         p.adj = flip.adjust(.set_tail(p$Tspace, tail = tail), 
                             method = method) 
   } else if(is.function(method)){
     p.adj = method(.set_tail(p$Tspace, tail = tail))
   }
-  p$summary_table$p.adj = p.adj
+  eval(str2lang(paste0("p$summary_table$p.adj.",method," = p.adj")))
   p
 }
 
