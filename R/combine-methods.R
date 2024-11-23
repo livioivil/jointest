@@ -77,7 +77,7 @@ combine <- function (mods, comb_funct = "maxT", by = NULL, by_list=NULL, tail = 
 }
 
 
-#' @usage combine_contrasts(mods, comb_funct = "maxT", tail = 0)
+#' @usage combine_contrasts(mods, comb_funct = "Mahalanobis", tail = 0)
 #' @description \code{combine_contrasts} combines the tests derived from the contrasts of a factor variable to get a 
 #' global test for the factor (i.e. categorical predictor). 
 #' It has strong analogies with ANOVA test.

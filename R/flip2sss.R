@@ -168,11 +168,11 @@ flip2sss <- function(formula=NULL,
   ############# others between variables
   vars_between=lapply(within_vars, function(x) {
     temp=within_vars_all[grep(x,within_vars_all)]
-    temp=gsub(x,"",within_vars_all)
-    temp=gsub(":","",temp)
+    temp=gsub(paste0(x,"(:|)"),"",within_vars_all)
     if(any(temp=="")) temp[temp==""]="1"
     temp
   })
+  vars_between=lapply(vars_between,function(x)gsub(":$","",x))
   names(vars_between)=within_vars
   
   temp=list(".Intercept."=between_vars_intercept)

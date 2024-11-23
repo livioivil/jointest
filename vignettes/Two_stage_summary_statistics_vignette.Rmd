@@ -50,7 +50,7 @@ p+geom_point(size = 3) +geom_boxplot(alpha=.1) + theme_bw()
 p <- ggplot(oasis,aes(Age,nWBV,color=Group))
 p+geom_point(size = 3) +geom_smooth(method = lm) + theme_bw()
 
-p=ggplot(oasis, aes(x = Age, y = nWBV, colour = Group, group = Subject.ID)) + geom_line() + geom_point()
+p=ggplot(oasis, aes(x = Age, y = nWBV, colour = Group, group = Subject.ID)) + geom_line(aes(linetype=Gender)) + geom_point()
 p + theme_bw()
 
 ```
