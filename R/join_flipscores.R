@@ -55,7 +55,7 @@
 #' # flipscores jointly on all models
 #' res=join_flipscores(mods,n_flips = 1000,tested_coeffs ="X")
 #' summary(res)
-#' res=p.adjust.jointest(res)
+#' res=jointest:::p.adjust(res)
 
 
 join_flipscores <- function(mods, tested_coeffs = NULL, n_flips = 5000, 
