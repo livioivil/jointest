@@ -26,7 +26,8 @@
 #' library(jointest)
 #' set.seed(123)
 #' 
-#' #Simulate data
+#'
+#' #EXAMPLE 1: Simulate data:
 #' n=20
 #' D=data.frame(X=rnorm(n),Z1=rnorm(n),Z2=rnorm(n))
 #' D$Y=D$Z1+D$X+rnorm(n)
@@ -43,6 +44,18 @@
 #' summary(combine(res))
 #' summary(combine(res, by="Model"))
 #' summary(combine_contrasts(res))
+#' 
+#' #' #Simulate multivariate (50) bionomial responses 
+#' n=30
+#' D=data.frame(X=rnorm(n),Z=rnorm(n))
+#' Y=replicate(50,rbinom(n,1,plogis(.5*D$Z+.5*D$X)))
+#' colnames(Y)=paste0("Y",1:50)
+#' D=cbind(D,Y)
+#' mods=lapply(1:50,function(i)eval(parse(text=paste(c("glm(formula(Y",i,"~X+Z),data=D,family='binomial')"),collapse=""))))
+#' # flipscores jointly on all models
+#' res=join_flipscores(mods,n_flips = 1000,tested_coeffs ="X")
+#' summary(res)
+
 
 join_flipscores <- function(mods, tested_coeffs = NULL, n_flips = 5000, 
                             score_type = "standardized", 

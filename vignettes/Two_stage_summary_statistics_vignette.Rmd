@@ -69,7 +69,7 @@ anova(mod)
 
 ```
 
-REMARK: Note that **Model failed to converge with max|grad| = 0.640671 (tol = 0.002, component 1)**
+REMARK: Note that without the centering `oasis$Age=oasis$Age-77`:  **Model failed to converge with max|grad| = 0.640671 (tol = 0.002, component 1)**
 
 
 
