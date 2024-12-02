@@ -1,6 +1,6 @@
 # (stepdown) Westfall and Young max-t procedure 
 maxT.light <- function (permT, alphas = c(.001,(1:9)/100,
-                                          (2:9)/10), weights = NULL, m = ncol(permT)) 
+                                          (1:9)/10), weights = NULL, m = ncol(permT)) 
 {
   if (is.null(colnames(permT))) 
     colnames(permT) = 1:m
