@@ -15,7 +15,8 @@ Suggests:
     knitr,
     logistf,
     rmarkdown,
-    ggplot2
+    ggplot2,
+    lme4
 Remotes: livioivil/flipscores
 VignetteBuilder: knitr
 Depends: 

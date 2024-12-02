@@ -12,7 +12,7 @@ A data frame with 373 rows and 15 variables:
   \item{Group}{Class}
   \item{Visit}{Visit order}
   \item{MR.Delay}{MR Delay Time (Contrast)}
-  \item{M.F}{Sex}
+  \item{Gender}{Gender}
   \item{Hand}{All subjects are right-handed}
   \item{Age}{Age of the subject}
   \item{EDUC}{Years of Education}
