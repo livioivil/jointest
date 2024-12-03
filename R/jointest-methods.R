@@ -150,6 +150,7 @@ p.adjust.jointest <- function (p, method = "maxT", ...)
 #' @importFrom graphics legend
 #' @importFrom graphics par
 #' @importFrom graphics plot.new
+#' @importFrom grDevices dev.list
 
 plot.jointest <- function(x,...) {
   if(!exists("p.values")){p.values = c("raw","adjusted")}
@@ -170,7 +171,8 @@ plot.jointest <- function(x,...) {
   }
   
   D$is_signif = (D$p.vals <= mark_signif)
-  dev.off()
+  while (!is.null(dev.list()))  dev.off()
+  
   if(length(unique(D$Coeff)) > 1){
   layout(matrix(c(1, 2), nrow = 1), widths = c(3, 1)) # Plot on the left, legends on the right
   

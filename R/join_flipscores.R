@@ -45,17 +45,31 @@
 #' summary(combine(res, by="Model"))
 #' summary(combine_contrasts(res))
 #' 
-#' #' #Simulate multivariate (50) bionomial responses 
+#' #Simulate multivariate (50) bionomial responses 
+#' set.seed(123)
 #' n=30
 #' D=data.frame(X=rnorm(n),Z=rnorm(n))
 #' Y=replicate(50,rbinom(n,1,plogis(.5*D$Z+.5*D$X)))
 #' colnames(Y)=paste0("Y",1:50)
 #' D=cbind(D,Y)
-#' mods=lapply(1:50,function(i)eval(parse(text=paste(c("glm(formula(Y",i,"~X+Z),data=D,family='binomial')"),collapse=""))))
+#' mods=lapply(1:50,function(i)eval(parse(text=
+#' paste(c("glm(formula(Y",i,"~X+Z),data=D,family='binomial')"),collapse=""))))
 #' # flipscores jointly on all models
 #' res=join_flipscores(mods,n_flips = 1000,tested_coeffs ="X")
 #' summary(res)
 #' res=jointest:::p.adjust(res)
+#' summary(res)
+#' # Compute lower bound for the true discovery proportion. See packages pARI and sumSome
+#' # install.packages("sumSome")
+#' # install.packages("pARI")
+#' # library(sumSome)
+#' # library(pARI)
+#' # pARI returns a lower bound equals 0.24, i.e., at least 24% of the models
+#' # have a significant effect related to X
+#' # pARI::pARI(ix = c(1:50),pvalues = t(jointest:::.t2p(res$Tspace)),family = "simes",delta = 9)$TDP
+#' # sumSome returns a lower bound equals 0.42, i.e., at least 42% of the models
+#' # have a significant effect related to X
+#' # sumSome::tdp(sumSome::sumStats(G = as.matrix(res$Tspace)))
 
 
 join_flipscores <- function(mods, tested_coeffs = NULL, n_flips = 5000, 

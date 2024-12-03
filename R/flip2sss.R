@@ -126,7 +126,8 @@ flip2sss <- function(formula=NULL,
 
 ######################
 .expand_form <- function(FUN){
-  out <- reformulate(labels(terms(FUN)), FUN[[2]])
+
+out <- reformulate(labels(terms(FUN)), FUN[[2]])
   out
 }
 ######################
