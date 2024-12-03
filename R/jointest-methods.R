@@ -102,7 +102,7 @@ is_signif = NULL
 #' @importFrom flip flip.adjust
 #' @importFrom stats p.adjust
 #' @export
-#' @seealso  \code{\link[flip]{flip.adjust}}
+#' @seealso \code{\link[flip]{flip.adjust}}
 
 p.adjust.jointest <- function (p, method = "maxT", ...) 
 {
