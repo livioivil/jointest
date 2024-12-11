@@ -73,7 +73,7 @@ paste(c("glm(formula(Y",i,"~X+Z),data=D,family='binomial')"),collapse=""))))
 # flipscores jointly on all models
 res=join_flipscores(mods,n_flips = 1000,tested_coeffs ="X")
 summary(res)
-res=jointest:::p.adjust(res)
+res=p.adjust(res)
 summary(res)
 # Compute lower bound for the true discovery proportion. See packages pARI and sumSome
 # install.packages("sumSome")

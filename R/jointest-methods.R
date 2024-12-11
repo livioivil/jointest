@@ -15,8 +15,12 @@
 
  print.jointest <- function(x, ...) 
  {
-   summary.jointest(x, ...)
+   cat("Call:\n")
+   print(x$call)
+   
+  # summary.jointest(x, ...)
   # do.call(rbind,lapply(object, function(ob) ob$summary_table))
+   invisible(x)
  }
  
 
@@ -85,43 +89,38 @@ is_signif = NULL
 # str(jt)
 # jt[1]
 
-
 #' @description \code{p.adjust} method for class "\code{jointest}". 
 #' Add adjusted p-values into the \code{jointest} object.
 #' @rdname jointest-methods
-#' @param p an object of class \code{jointest}.
+#' @param object an object of class \code{jointest}.
 #' @param method any method implemented in \code{flip::flip.adjust} or 
 #' a custom function. In the last case it must be a function that uses a matrix 
 #' as input and returns a vector of adjusted p-values equal to the number of columns of the inputed matrix.
-#' @param ... additional arguments to be passed, e.g., the argument \code{tail}. See details. 
-#' @details
-#' \code{tail} argument: expresses the tail direction of the alternative hypothesis. 
+#' @param tail argument: expresses the tail direction of the alternative hypothesis. 
 #' It can be "two.sided" (or 0, the default), "less" (or -1) or "greater" (or +1).
-#' @method  p.adjust jointest
+#' @param ... additional arguments to be passed
 #' @docType methods
 #' @importFrom flip flip.adjust
-#' @importFrom stats p.adjust
 #' @export
 #' @seealso \code{\link[flip]{flip.adjust}}
 
-p.adjust.jointest <- function (p, method = "maxT", ...) 
+p.adjust <- function (object, method = "maxT", tail = 0, ...) 
 {
-  if(!exists("tail")){tail = 0}
   if(is.character(method)){
     if(method=="maxT"){
       #      if("alphas"%in%names(as.list(match.call())))
-      p.adj=maxT.light(abs(p$Tspace),...)
+      p.adj=maxT.light(abs(object$Tspace),...)
     } else 
       if(method%in%c("minp","Tippet") ) {
-        p.adj=maxT.light(-.t2p(p$Tspace, tail = tail),...)
+        p.adj=maxT.light(-.t2p(object$Tspace, tail = tail),...)
       } else
-        p.adj = flip.adjust(.set_tail(p$Tspace, tail = tail), 
+        p.adj = flip.adjust(.set_tail(object$Tspace, tail = tail), 
                             method = method) 
   } else if(is.function(method)){
-    p.adj = method(.set_tail(p$Tspace, tail = tail))
+    p.adj = method(.set_tail(object$Tspace, tail = tail))
   }
-  eval(str2lang(paste0("p$summary_table$p.adj.",method," = p.adj")))
-  p
+  eval(str2lang(paste0("object$summary_table$p.adj.",method," = p.adj")))
+  object
 }
 
 #' @rdname jointest-methods

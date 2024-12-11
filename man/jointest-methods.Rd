@@ -5,7 +5,7 @@
 \alias{jointest-methods}
 \alias{print.jointest}
 \alias{summary.jointest}
-\alias{p.adjust.jointest}
+\alias{p.adjust}
 \alias{plot.jointest}
 \title{Methods for \code{jointest} objects}
 \usage{
@@ -13,7 +13,7 @@
 
 \method{summary}{jointest}(object, ...)
 
-\method{p.adjust}{jointest}(p, method = "maxT", ...)
+p.adjust(object, method = "maxT", tail = 0, ...)
 
 \method{plot}{jointest}(x, ...)
 }
@@ -25,11 +25,12 @@
 
 \item{object}{an object of class \code{jointest}.}
 
-\item{p}{an object of class \code{jointest}.}
-
 \item{method}{any method implemented in \code{flip::flip.adjust} or 
 a custom function. In the last case it must be a function that uses a matrix 
 as input and returns a vector of adjusted p-values equal to the number of columns of the inputed matrix.}
+
+\item{tail}{argument: expresses the tail direction of the alternative hypothesis. 
+It can be "two.sided" (or 0, the default), "less" (or -1) or "greater" (or +1).}
 }
 \description{
 Methods to extract and manipulate relevant information from
@@ -50,9 +51,6 @@ varying shapes based on whether the p-value is below the significance threshold,
 and colors are used to distinguish between different coefficients.
 }
 \details{
-\code{tail} argument: expresses the tail direction of the alternative hypothesis. 
-It can be "two.sided" (or 0, the default), "less" (or -1) or "greater" (or +1).
-
 \code{mark_signif} argument: numeric value representing the significance threshold 
 for marking p-values. Any p-value below this threshold will be marked 
 with a dot. The default is \code{0.05}.

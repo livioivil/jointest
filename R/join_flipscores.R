@@ -57,7 +57,7 @@
 #' # flipscores jointly on all models
 #' res=join_flipscores(mods,n_flips = 1000,tested_coeffs ="X")
 #' summary(res)
-#' res=jointest:::p.adjust(res)
+#' res=p.adjust(res)
 #' summary(res)
 #' # Compute lower bound for the true discovery proportion. See packages pARI and sumSome
 #' # install.packages("sumSome")
@@ -159,7 +159,8 @@ join_flipscores <- function(mods, tested_coeffs = NULL, n_flips = 5000,
     
   out=list(Tspace=.get_all_Tspace(mods),
            summary_table=.get_all_summary_table(mods),
-           mods=mods)
+           mods=mods,
+           call = match.call())
   class(out) <- unique(c("jointest", class(out)))
   out
 }
