@@ -17,7 +17,6 @@ Suggests:
     rmarkdown,
     ggplot2,
     lme4
-Remotes: livioivil/flipscores
 VignetteBuilder: knitr
 Depends: 
     R (>= 2.10)
