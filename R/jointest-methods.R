@@ -175,6 +175,8 @@ plot.jointest <- function(x,...) {
   if(length(unique(D$Coeff)) > 1){
   layout(matrix(c(1, 2), nrow = 1), widths = c(3, 1)) # Plot on the left, legends on the right
   
+  oldpar <- par(no.readonly = TRUE) 
+  on.exit(par(oldpar)) 
   # Main plot
   par(mar = c(5, 4, 4, 2)) # Adjust margins for the plot 
   }

@@ -6,7 +6,7 @@ Authors@R:
     c(person("Livio", "Finos", email = "livio.finos@unipd.it", role = c("cre","aut"), comment = c(ORCID = "0000-0003-3181-8078")),
     person("Angela", "Andreella", role = "aut"),
     person("Filippo", "Gambarota", role = "ctb"))
-Description: Runs resampling-based tests jointly (e.g., sign-flip score tests <doi:10.1111/rssb.12369>) to allow for multivariate testing, i.e., weak and strong control of the Familywise Error Rate or True Discovery Proportion.
+Description: Runs resampling-based tests jointly, e.g., sign-flip score tests from Hemerik et al., (2020) <doi:10.1111/rssb.12369>, to allow for multivariate testing, i.e., weak and strong control of the Familywise Error Rate or True Discovery Proportion.
 Imports: flipscores, flip, stats, graphics, grDevices
 Encoding: UTF-8
 License: GPL-2
