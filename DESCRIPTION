@@ -1,6 +1,6 @@
 Package: jointest
-Version: 2.0
-Date: 2024-11-15
+Version: 1.0
+Date: 2024-12-13
 Title: Multivariate Testing Through Joint Resampling-Based Tests
 Authors@R: 
     c(person("Livio", "Finos", email = "livio.finos@unipd.it", role = c("cre","aut"), comment = c(ORCID = "0000-0003-3181-8078")),
