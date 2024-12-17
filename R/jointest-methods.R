@@ -36,7 +36,7 @@
 summary.jointest <- function (object, ...) 
 {
   object$summary_table$.assign=NULL
-  object$summary_table
+  print(object$summary_table,digits=4)
  # do.call(rbind,lapply(object, function(ob) ob$summary_table))
 }
 
