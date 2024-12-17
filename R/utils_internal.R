@@ -47,9 +47,9 @@
 # }
 
 
-.get_all_tested_coeffs_names <- function(mods){
-  sapply(mods, function(md)colnames(md$Tspace))
-}
+# .get_all_tested_coeffs_names <- function(mods){
+#   sapply(mods, function(md)colnames(md$Tspace))
+# }
 
 .get_all_coeff_names_vect <- function(mods){
   sapply(mods, function(md)

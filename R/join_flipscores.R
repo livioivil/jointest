@@ -87,8 +87,10 @@ join_flipscores <- function(mods, tested_coeffs = NULL, n_flips = 5000,
    }
   if (!is.list(tested_coeffs)) {
     temp = .get_all_coeff_names_list(mods)
+    
+    tested_coeffs = gsub(" ", "", tested_coeffs)          
     tested_coeffs = lapply(temp, function(nms) intersect(tested_coeffs, 
-                                                         nms))
+                                                         gsub(" ", "", nms)))
   }
   
   
