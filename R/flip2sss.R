@@ -89,10 +89,15 @@ flip2sss <- function(formula=NULL,
   vars_between_formulas = as.list(vars_between_formulas)
   names(vars_between_formulas) = names(vars_between)
   
+
   #####################
   if(is.null(summstats_within))
     summstats_within=paste0("glm(",formula[[2]],formula[[1]],vars_within,", family=",family,")")
-  set_between=c(".cluster",set_between[set_between!="1"])
+  
+  set_between=setdiff(set_between,"1")
+#  data=data[,set_between]
+  set_between=c(".cluster",set_between)
+  
   data$.cluster=cluster
   
   data2lev <- makedata2lev(data = data, cluster, summstats_within)
