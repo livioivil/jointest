@@ -143,7 +143,7 @@ makedata2lev <- function(data, cluster, summstats_within) {
     coef_df <- as.data.frame(t(coefficients(stats))) 
     group_data <- group_data[,!(names(group_data) %in%(with(attributes(terms(stats)), as.character(variables[response+1]))
     ))]
-    coef_df<- cbind(group_data[setdiff(names(group_data),names(coef_df))],coef_df)
+    coef_df<- cbind(group_data[1,setdiff(names(group_data),names(coef_df)),drop=FALSE],coef_df)
     return(coef_df)
   } 
   result_df <- do.call(rbind, lapply(groups, function(x) unique(results(x))) )
