@@ -91,24 +91,20 @@ flip2sss <- function(formula=NULL,
   
 
   #####################
-  if(is.null(summstats_within))
-    summstats_within=paste0("glm(",formula[[2]],formula[[1]],vars_within,", family=",family,")")
   
   set_between=setdiff(set_between,"1")
 #  data=data[,set_between]
   set_between=c(".cluster",set_between)
   
   data$.cluster=cluster
-  
-  data2lev <- makedata2lev(data = data, cluster, summstats_within)
-   
+  if(is.null(summstats_within)){
+    summstats_within=paste0("glm(",formula[[2]],formula[[1]],paste(collapse ="+",vars_within),", family=",family,")")
+  } 
+  data2lev <- makedata2lev(data = data, cluster, summstats_within,set_between[-1])
 # data2lev = data %>% 
  #   group_by(data[set_between]) %>%
   #  summarise(as.data.frame(t(coefficients(eval(parse(text=summstats_within))))))
  
-  data2lev$.cluster=NULL
-  names(data2lev) = gsub("\\W", ".", names(data2lev))
-  
   mods = lapply(vars_between_formulas, function(frm) glm(eval(frm, parent.frame()), data = data2lev))
   
   for(i in 1:length(mods)){
@@ -143,10 +139,10 @@ out <- reformulate(labels(terms(FUN)), FUN[[2]])
   
   ## find constant cols within cluster
   const_id = do.call(rbind, by(D, cluster, function(D) as.data.frame(t(apply(D, 2, is.constant)))))
-  vars_between_intercept = apply(const_id, 2, all)
+  vars_between_intercept_id = apply(const_id, 2, all)
   
   #vars_between_intercept
-  between_vars=attributes(D)$assign[vars_between_intercept]
+  between_vars=attributes(D)$assign[vars_between_intercept_id]
   intercept=0%in%between_vars
   between_vars=unique(between_vars)
   between_vars_intercept<-
@@ -162,23 +158,25 @@ out <- reformulate(labels(terms(FUN)), FUN[[2]])
   
   
   ############# within variables
-  within_vars=attributes(D)$assign[!vars_between_intercept]
+  within_vars=attributes(D)$assign[!vars_between_intercept_id]
   within_vars=unique(within_vars)
   within_vars_all=attr(terms(formula),"term.labels")[within_vars]
   within_vars=within_vars_all
   for(x in between_vars)
     within_vars=gsub(x,"",within_vars)
-  within_vars=gsub(":","",within_vars)
+  within_vars=gsub(":$","",within_vars)
+  within_vars=gsub("^:","",within_vars)
   within_vars=unique(within_vars)
-  
+
   ############# others between variables
   vars_between=lapply(within_vars, function(x) {
-    temp=within_vars_all[grep(x,within_vars_all)]
+    # temp=within_vars_all[grep(x,within_vars_all)]
     temp=gsub(paste0(x,"(:|)"),"",within_vars_all)
+    temp=gsub(":$","",temp)
     if(any(temp=="")) temp[temp==""]="1"
-    temp
+    setdiff(temp,within_vars_all)
   })
-  vars_between=lapply(vars_between,function(x)gsub(":$","",x))
+  #vars_between=lapply(vars_between,function(x)gsub(":$","",x))
   names(vars_between)=within_vars
   
   temp=list(".Intercept."=between_vars_intercept)

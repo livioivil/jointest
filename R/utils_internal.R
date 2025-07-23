@@ -134,16 +134,19 @@
 ###########################################################################
 
 
-makedata2lev <- function(data, cluster, summstats_within) { 
+makedata2lev <- function(data, cluster, summstats_within,set_vars_between) { 
   
   groups <- unique(cluster) 
+  set_vars_between=unique(gsub(":(.+)$","",set_vars_between))
   results <- function(x) { 
+    # browser()
     group_data <- data[cluster == x,] 
     stats <- eval(parse(text = summstats_within), envir = group_data) 
     coef_df <- as.data.frame(t(coefficients(stats))) 
-    group_data <- group_data[,!(names(group_data) %in%(with(attributes(terms(stats)), as.character(variables[response+1]))
-    ))]
-    coef_df<- cbind(group_data[1,setdiff(names(group_data),names(coef_df)),drop=FALSE],coef_df)
+    #group_data <- group_data[,!(names(group_data) %in%(with(attributes(terms(stats)), as.character(variables[response+1]))))]
+#    group_data <- group_data[,setdiff(names(group_data),attributes(terms(formula(stats)))$term.labels)]
+    names(coef_df) = gsub("\\W", ".", names(coef_df))
+    coef_df<- data.frame(coef_df,group_data[,set_vars_between])
     return(coef_df)
   } 
   result_df <- do.call(rbind, lapply(groups, function(x) unique(results(x))) )
