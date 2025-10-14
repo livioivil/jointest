@@ -13,13 +13,12 @@
 #' @rdname jointest-methods
 #' @export
 
- print.jointest <- function(x, ...) 
+ print.jointest <- function(x, n = 2, ...) 
  {
-   cat("Call:\n")
-   print(x$call)
-   
-  # summary.jointest(x, ...)
-  # do.call(rbind,lapply(object, function(ob) ob$summary_table))
+   msg <- "== Joining n = %s models"
+   cat(sprintf(msg, length(unique(x$summary_table$model))))
+   cat("\n\n")
+   .trim(x$summary_table, n = n)
    invisible(x)
  }
  
