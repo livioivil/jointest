@@ -17,7 +17,7 @@
 .get_all_summary_table <- function(mods,mods_name=NULL){
   if(is.null(mods_name)) mods_name=names(mods)
   res=lapply(1:length(mods), function(i) {
-    cbind(Model=names(mods)[i],
+    cbind(model=names(mods)[i],
           mods[[i]]$summary_table)
   })
   res=do.call(rbind,res)
@@ -28,14 +28,15 @@
 .get_summary_table_from_flipscores <- function(object){
   tab = as.data.frame(summary(object)$coefficients)
   tab = tab[!is.na(tab[, "Score"]), ]
-  colnames(tab)[ncol(tab)]="p"
   
+  names(tab) <- c("estimate", "score", "se", "z", "pcor", "p")
+  # colnames(tab)[ncol(tab)]="p"
   mm=model.matrix(object)
   .assign=attr(mm,"assign")
   .assign=.assign[dimnames(mm)[[2]]%in%rownames(tab)]
   
   tab = cbind( .assign=.assign,
-               Coeff = rownames(tab), 
+               coefficent = rownames(tab), 
                tab)
 }
 
@@ -68,7 +69,7 @@
 
 .set_mods_names <- function(mods,force=FALSE){
   if((is.null(names(mods)))|force){
-    paste0("Model",1:length(mods))
+    paste0("model",1:length(mods))
     } else
       names(mods)
 }
