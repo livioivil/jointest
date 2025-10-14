@@ -118,7 +118,8 @@ p.adjust <- function (object, method = "maxT", tail = 0, ...)
   } else if(is.function(method)){
     p.adj = method(.set_tail(object$Tspace, tail = tail))
   }
-  eval(str2lang(paste0("object$summary_table$p.adj.",method," = p.adj")))
+  object$summary_table$p.adj <- p.adj
+  object$p.adjust.method <- method
   object
 }
 
