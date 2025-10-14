@@ -100,7 +100,8 @@ flip2sss <- function(formula=NULL,
   if(is.null(summstats_within)){
     summstats_within=paste0("glm(",formula[[2]],formula[[1]],paste(collapse ="+",vars_within),", family=",family,")")
   } 
-  data2lev <- makedata2lev(data = data, cluster, summstats_within,set_between[-1])
+  data2lev <- makedata2lev(data = data, cluster, 
+                           summstats_within,set_between[-1])
 # data2lev = data %>% 
  #   group_by(data[set_between]) %>%
   #  summarise(as.data.frame(t(coefficients(eval(parse(text=summstats_within))))))

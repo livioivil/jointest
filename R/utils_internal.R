@@ -146,7 +146,9 @@ makedata2lev <- function(data, cluster, summstats_within,set_vars_between) {
     #group_data <- group_data[,!(names(group_data) %in%(with(attributes(terms(stats)), as.character(variables[response+1]))))]
 #    group_data <- group_data[,setdiff(names(group_data),attributes(terms(formula(stats)))$term.labels)]
     names(coef_df) = gsub("\\W", ".", names(coef_df))
+    names_coef_df <- names(coef_df)
     coef_df<- data.frame(coef_df,group_data[,set_vars_between])
+    colnames(coef_df) <- c(names_coef_df,set_vars_between)
     return(coef_df)
   } 
   result_df <- do.call(rbind, lapply(groups, function(x) unique(results(x))) )
