@@ -32,10 +32,10 @@
 #' @export
 
 
-summary.jointest <- function (object, ...) 
+summary.jointest <- function (object, digits = 4, ...) 
 {
   object$summary_table$.assign=NULL
-  print(object$summary_table,digits=4)
+  print(object$summary_table, digits = digits)
  # do.call(rbind,lapply(object, function(ob) ob$summary_table))
 }
 
