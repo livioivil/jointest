@@ -157,3 +157,16 @@ makedata2lev <- function(data, cluster, summstats_within,set_vars_between) {
   
   return(result_df) 
   } 
+
+.trim <- function(x, n = 4){
+  k <- nrow(x)
+  if(k <= 4){
+    print(head(x, n = n))
+  } else{
+    print(head(x, n = n), row.names = FALSE)
+    cat("\n")
+    cat("...\n")
+    cat("\n")
+    print(tail(x, n = n), row.names = FALSE)
+  }
+}
