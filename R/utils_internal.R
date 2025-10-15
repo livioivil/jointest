@@ -36,7 +36,7 @@
   .assign=.assign[dimnames(mm)[[2]]%in%rownames(tab)]
   
   tab = cbind( .assign=.assign,
-               coefficent = rownames(tab), 
+               coefficient = rownames(tab), 
                tab)
 }
 
