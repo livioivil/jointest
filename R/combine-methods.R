@@ -59,7 +59,7 @@ combine <- function (mods, comb_funct = "maxT", by = NULL, by_list=NULL, tail = 
     
   # names(mods) = .set_mods_names(mods)
   if(is.null(by)){ # combine overall     
-    combined = list(Overall = 1:ncol(mods$Tspace))
+    combined = list(overall = 1:ncol(mods$Tspace))
   
     } else { # more complex combinations 
     smr=apply(mods$summary_table[,by,drop=FALSE],1,paste,collapse=".")    
@@ -72,7 +72,7 @@ combine <- function (mods, comb_funct = "maxT", by = NULL, by_list=NULL, tail = 
                mods = mods, combined = combined, tail = tail, comb_funct = comb_funct)
   names(res) = names(combined)
   res=list(Tspace=.get_all_Tspace(res),summary_table=.get_all_summary_table(res))
-  class(res) <- unique(c("jointest", class(res)))
+  class(res) <- unique(c("jcombined", "jointest", class(res)))
   res
 }
 
@@ -118,10 +118,10 @@ combine_contrasts <- function (mods, comb_funct = "Mahalanobis", tail = 0)
   # class(res) <- unique(c("jointest", class(res)))
   # res
   
-  smr=apply(mods$summary_table[,c("Model",".assign"),drop=FALSE],1,paste,collapse=".")
-  new_names=sapply(unique(smr),function(x).find_common_pattern(mods$summary_table$Coeff[smr==x]))
-  res=combine(mods,by=c("Model",".assign"),comb_funct = comb_funct, tail = tail)
-  res$summary_table$Coeff=new_names
+  smr=apply(mods$summary_table[,c("model",".assign"),drop=FALSE],1,paste,collapse=".")
+  new_names=sapply(unique(smr),function(x).find_common_pattern(mods$summary_table$coefficient[smr==x]))
+  res=combine(mods,by=c("model",".assign"),comb_funct = comb_funct, tail = tail)
+  res$summary_table$coefficient=new_names
   assigns=paste0(".",unique(mods$summary_table$.assign),"$")
   as_ids=lapply(assigns, function(as)  grep(as,res$summary_table$Model))
   for(i in 1:length(assigns)){
@@ -135,16 +135,15 @@ combine_contrasts <- function (mods, comb_funct = "Mahalanobis", tail = 0)
 {
   comb_name = names(combined)[id]
   if (is.null(comb_name)) 
-    comb_name = "Combined"
+    comb_name = "combined"
   Tspace = npc(mods$Tspace[, combined[[id]],drop=FALSE], comb_funct = comb_funct, 
                tail = tail)
   colnames(Tspace) = comb_name
-  Coeff=mods$summary_table[combined[[id]],"Coeff"]
+  Coeff=mods$summary_table[combined[[id]],"coefficient"]
   Coeff=unique(Coeff)
-  if(length(Coeff)>1) Coeff="many"
-  summary_table = data.frame(Coeff = Coeff, Stat = comb_funct, 
-                             nTests = max(1, length(combined[[id]])), S = Tspace[1], 
+  if(length(Coeff) > 1) Coeff="many"
+  summary_table = data.frame(coefficient = Coeff, stat = comb_funct, 
+                             ntests = max(1, length(combined[[id]])), S = Tspace[1], 
                              p = .t2p_only_first(Tspace, tail = 1))
   list(Tspace = Tspace, summary_table = summary_table)
 }
-

@@ -9,9 +9,9 @@
 \alias{plot.jointest}
 \title{Methods for \code{jointest} objects}
 \usage{
-\method{print}{jointest}(x, ...)
+\method{print}{jointest}(x, n = 2, ...)
 
-\method{summary}{jointest}(object, ...)
+\method{summary}{jointest}(object, digits = 4, ...)
 
 p.adjust(object, method = "maxT", tail = 0, ...)
 

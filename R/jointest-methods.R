@@ -212,3 +212,8 @@ plot.jointest <- function(x,...) {
   
   grid()
 }
+
+#' @export
+print.jcombined <- function(x, digits = 4, ...) {
+  print(x$summary_table, digits = digits)
+}
