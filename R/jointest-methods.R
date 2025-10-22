@@ -108,7 +108,7 @@ p.adjust <- function (object, method = "maxT", tail = 0, ...)
   if(is.character(method)){
     if(method=="maxT"){
       #      if("alphas"%in%names(as.list(match.call())))
-      p.adj=maxT.light(abs(object$Tspace),...)
+      p.adj=maxT.light(.set_tail(object$Tspace, tail = tail),...)
     } else 
       if(method%in%c("minp","minP","Tippet","Tippett") ) {
         p.adj=maxT.light(-.t2p(object$Tspace, tail = tail),...)
