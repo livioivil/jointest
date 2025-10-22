@@ -103,7 +103,7 @@ join_flipscores <- function(mods, tested_coeffs = NULL, n_flips = 5000,
     mods = lapply(1:length(mods), function(i) {
       temp = flipscores(formula = eval(mods[[i]],parent.frame()), score_type = score_type, 
                         flips = eval(FLIPS), to_be_tested = tested_coeffs[[i]],
-                        output_flips=FALSE,nobservations=n_obs
+                        output_flips=FALSE,nobservations=n_obs,...
       )
       if (statistics %in% c("t")) 
         if (score_type == "effective" || score_type == 
