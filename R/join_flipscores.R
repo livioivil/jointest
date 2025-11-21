@@ -93,9 +93,11 @@ join_flipscores <- function(mods, tested_coeffs = NULL, n_flips = 5000,
                                                          gsub(" ", "", nms)))
   }
   
-  
+  n_obs_rn = sapply(mods, function(mod) max(as.numeric(rownames(model.matrix(mod)))))
+  n_obs_rn = max(n_obs_rn)
   n_obs=sapply(mods, function(mod) length(mod$y))
-  n_obs=max(n_obs)
+  n_obs=max(n_obs,n_obs_rn)
+  
   
   mods_names=names(mods)
   
