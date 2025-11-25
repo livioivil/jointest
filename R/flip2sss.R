@@ -116,12 +116,12 @@ flip2sss <- function(formula=NULL,
   res = join_flipscores(mods,...)
   # summary(res)
   
-  res$summary_table$Coeff = paste(res$summary_table$Coeff, res$summary_table$Model,sep = ":")
-  res$summary_table$Coeff = gsub(":\\.Intercept\\.$", "", res$summary_table$Coeff)
-  res$summary_table$Coeff = gsub("\\(Intercept\\):", "", res$summary_table$Coeff)
+  res$summary_table$Coeff = paste(res$summary_table$coefficient, res$summary_table$model,sep = ":")
+  res$summary_table$Coeff = gsub(":\\.Intercept\\.$", "", res$summary_table$coefficient)
+  res$summary_table$Coeff = gsub("\\(Intercept\\):", "", res$summary_table$coefficient)
   
   # res$summary_table$Model = "flip2sss"
-  colnames(res$Tspace) = paste(res$summary_table$Coeff, res$summary_table$Model,sep = "_model.") 
+  colnames(res$Tspace) = paste(res$summary_table$coefficient, res$summary_table$model,sep = "_model.") 
   res$mods=mods
   res
 }
