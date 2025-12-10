@@ -1,12 +1,15 @@
 #' @title flipscores 2-Stage Summary Statistics approach
 #' @description This function fits a model based on the provided formula and data, accounting for clusters and summary statistics within the model.
 #' @usage flip2sss(formula = NULL, data = NULL, cluster = NULL, 
-#' family = "gaussian", summstats_within=NULL, ...)
+#' family = "gaussian", summstats_within=NULL, n_flips = 5000, flips = NULL, ...)
 #' @param formula A formula or a list of formulas. It can be a complete model as.formula or a list of formulas, one for each element produced by the function.
 #' @param data The dataset to be used for fitting the model.
 #' @param cluster A vector or a formula evaluated on the data that defines the clusters.
 #' @param family as in \code{glm}, but given as a character. Not used if argument \code{summstats_within} is not \code{NULL}.
 #' @param summstats_within A vector of summary statistics model within the data or a function with argument data.
+#' @param n_flips The number of random flips of the score contributions. Overwritten with the \code{nrow(flips)} when \code{flips} is not \code{NULL} (see parameter \code{flips} for more details).
+#' When \code{n_flips} is equal or larger than the maximum number of possible flips (i.e. n^2), all possible flips are performed.
+#' @param flips matrix fo +1 or -1, the matrix has \code{n_flips} rows and n (number of observations) columns
 #' @param ... Other arguments passed to the \code{\link[flipscores]{flipscores}} function.
 #' @export
 #' @return A \code{jointest} object, i.e., a list containing the following objects: 
@@ -68,6 +71,8 @@ flip2sss <- function(formula=NULL,
                      cluster=NULL,
                      family="gaussian",
                      summstats_within=NULL,
+                     n_flips = 5000,
+                     flips = NULL,
                      ...){
   
   # if(is(cluster,"formula")){
@@ -112,8 +117,8 @@ flip2sss <- function(formula=NULL,
     mods[[i]]$call$data = eval(data2lev)
     mods[[i]]$call$formula = eval(as.formula(vars_between_formulas[[i]]))
   }
-  
-  res = join_flipscores(mods,...)
+  res = join_flipscores(mods, flips = flips, ...)
+
   # summary(res)
   
   res$summary_table$Coeff = paste(res$summary_table$coefficient, res$summary_table$model,sep = ":")

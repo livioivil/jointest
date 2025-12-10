@@ -2,13 +2,14 @@
 #' @description
 #' The function allows hypothesis testing across all plausible multiverse models
 #' ensuring strong family-wise error rate control.
-#' @usage join_flipscores(mods, tested_coeffs = NULL, n_flips = 5000, 
+#' @usage join_flipscores(mods, tested_coeffs = NULL, n_flips = 5000, flips = NULL,
 #' score_type = "standardized", statistics = "t", seed=NULL, output_models =TRUE, ...)
 #' @param mods list of \code{glm}s or \code{flipscores}-object (or any other object that can be evaluated by \code{flipscores}) 
 #' @param tested_coeffs list of the same length of \code{mods}, each element of the list being a vector of  
 #' names of tested coefficients. Alternatively, it can be a vector of names of tested coefficients, in this case, the tested coefficients are attributed to all models (when present). 
 #' As a last option, it can be \code{NULL}, if so, all coefficients are tested.
 #' @param n_flips number of flips, default 5000
+#' @param flips matrix fo +1 or -1, the matrix has \code{n_flips} rows and n (number of observations) columns
 #' @param score_type any valid type for \code{flipscores}, \code{"standardized"} is the default. see \code{\link[flipscores]{flipscores}} for more datails 
 #' @param statistics "t" is the only method implemented (yet). Any other value will not modify the score (a different statistic will only affect the multivariate inference, not the univariate one).
 #' @param seed \code{NULL} by default. Use a number if you wanto to ensure replicability of the results
@@ -72,7 +73,7 @@
 #' # sumSome::tdp(sumSome::sumStats(G = as.matrix(res$Tspace)))
 
 
-join_flipscores <- function(mods, tested_coeffs = NULL, n_flips = 5000, 
+join_flipscores <- function(mods, tested_coeffs = NULL, n_flips = 5000, flips = NULL,
                             score_type = "standardized", 
                             statistics = "t", seed=NULL, output_models = TRUE, ...) 
 {
@@ -100,10 +101,13 @@ join_flipscores <- function(mods, tested_coeffs = NULL, n_flips = 5000,
   
   
   mods_names=names(mods)
-  
-  FLIPS=make_flips(n_obs=n_obs,n_flips=n_flips)
+  if(is.null(flips)){
+    FLIPS=make_flips(n_obs=n_obs,n_flips=n_flips)
+  }else{
+    FLIPS = flips
+  }
     mods = lapply(1:length(mods), function(i) {
-      if(exists("flips")){FLIPS <- flips}
+      
       temp = flipscores(formula = eval(mods[[i]],parent.frame()), score_type = score_type, 
                         flips = eval(FLIPS), to_be_tested = tested_coeffs[[i]],
                         output_flips=FALSE,nobservations=n_obs,...
