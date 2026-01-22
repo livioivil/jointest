@@ -182,6 +182,8 @@ De Santis, R., Goeman, J. J., Hemerik, J., Davenport, S., & Finos, L. (2022). In
 
 Girardi, P., Vesely, A., Lakens, D., Altoè, G., Pastore, M., Calcagnì, A., & Finos, L. (2024). Post-selection Inference in Multiverse Analysis (PIMA): An Inferential Framework Based on the Sign Flipping Score Test. Psychometrika, 1-27. <https://doi.org/10.1007/s11336-024-09973-6> 
 
+Andreella, A., Goeman, J., Hemerik, J., Finos, L. (2025). Robust Inference for Generalized Linear Mixed Models: A “Two-Stage Summary Statistics” Approach Based on Score Sign Flipping. Psychometrika, 1-23.
+
 ## Bug reports
 
 If you encounter a bug, please file a
