@@ -1,5 +1,6 @@
 #' @title flipscores 2-Stage Summary Statistics approach
-#' @description This function fits a model based on the provided formula and data, accounting for clusters and summary statistics within the model.
+#' @description This function fits a model based on the provided formula and data, accounting for clusters and summary statistics within the model as described in 
+#' A Andreella, J Goeman, J Hemerik, L Finos (2025) Robust Inference for Generalized Linear Mixed Models: A “Two-Stage Summary Statistics” Approach Based on Score Sign Flipping. Psychometrika, 1-23.
 #' @usage flip2sss(formula = NULL, data = NULL, cluster = NULL, 
 #' family = "gaussian", summstats_within=NULL, n_flips = 5000, flips = NULL, ...)
 #' @param formula A formula or a list of formulas. It can be a complete model as.formula or a list of formulas, one for each element produced by the function.

@@ -4,7 +4,7 @@
 \alias{join_flipscores}
 \title{join tests from multiverse models}
 \usage{
-join_flipscores(mods, tested_coeffs = NULL, n_flips = 5000, 
+join_flipscores(mods, tested_coeffs = NULL, n_flips = 5000, flips = NULL,
 score_type = "standardized", statistics = "t", seed=NULL, output_models =TRUE, ...)
 }
 \arguments{
@@ -15,6 +15,8 @@ names of tested coefficients. Alternatively, it can be a vector of names of test
 As a last option, it can be \code{NULL}, if so, all coefficients are tested.}
 
 \item{n_flips}{number of flips, default 5000}
+
+\item{flips}{matrix fo +1 or -1, the matrix has \code{n_flips} rows and n (number of observations) columns}
 
 \item{score_type}{any valid type for \code{flipscores}, \code{"standardized"} is the default. see \code{\link[flipscores]{flipscores}} for more datails}
 
