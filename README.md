@@ -2,9 +2,24 @@
 
 # jointest R package
 
-A package devoted to multivariate resampling-based tests. By resampling jointly on all univariate tests (e.g., sign-flip score tests by Hemerik, Goeman and Finos (2020) <doi.org/10.1111/rssb.12369>) it allows for multivariate and selective inference – i.e., weak and strong control of the familywise error rate or confidence bounds for true discovery proportion.
+A package devoted to multivariate resampling-based tests. 
+By resampling jointly on all univariate tests (e.g., from `library(flipscores)` -- see reference below) it allows for multivariate and selective inference – i.e., weak and strong control of the familywise error rate or confidence bounds for true discovery proportion.
 
 <!-- #[library flipscores on CRAN](http://cran.r-project.org/web/packages/flipscores/index.html) -->
+
+## References
+
+De Santis, R., Goeman, J. J., Hemerik, J., Davenport, S., & Finos, L. (2025). Inference in generalized linear models with robustness to misspecified variances. Journal of the American Statistical Association, 1-10 <https://doi.org/10.1080/01621459.2025.2491775>
+
+Hemerik, J., Goeman, J. J., & Finos, L. (2020). Robust testing in generalized linear models by sign flipping score contributions. Journal of the Royal Statistical Society Series B: Statistical Methodology, 82(3), 841-864. <https://doi.org/10.1111/rssb.12369>
+
+R De Santis, JJ Goeman, S Davenport, J Hemerik, L Finos (2025) Permutation-based multiple testing when fitting many generalized linear models
+Electronic Journal of Statistics 19 (2), 3317-3332 <https://doi.org/10.1214/25-EJS2409>
+
+Girardi, P., Vesely, A., Lakens, D., Altoè, G., Pastore, M., Calcagnì, A., & Finos, L. (2024). Post-selection Inference in Multiverse Analysis (PIMA): An Inferential Framework Based on the Sign Flipping Score Test. Psychometrika, 1-27. <https://doi.org/10.1007/s11336-024-09973-6> 
+
+Andreella, A., Goeman, J., Hemerik, J., Finos, L. (2025). Robust Inference for Generalized Linear Mixed Models: A “Two-Stage Summary Statistics” Approach Based on Score Sign Flipping. Psychometrika, 1-23. <https://doi.org/10.1017/psy.2024.22>
+
 
 ------------------------------------------------------------------------
 
@@ -174,15 +189,6 @@ summary(combine_contrasts(res))
 5          X1.1      Grp:X1 maxT     2   3.978594 0.01959608
 ```
 
-## References
-
-Hemerik, J., Goeman, J. J., & Finos, L. (2020). Robust testing in generalized linear models by sign flipping score contributions. Journal of the Royal Statistical Society Series B: Statistical Methodology, 82(3), 841-864. <https://doi.org/10.1111/rssb.12369>
-
-De Santis, R., Goeman, J. J., Hemerik, J., Davenport, S., & Finos, L. (2022). Inference in generalized linear models with robustness to misspecified variances. arXiv preprint arXiv:2209.13918. <https://arxiv.org/abs/2209.13918>
-
-Girardi, P., Vesely, A., Lakens, D., Altoè, G., Pastore, M., Calcagnì, A., & Finos, L. (2024). Post-selection Inference in Multiverse Analysis (PIMA): An Inferential Framework Based on the Sign Flipping Score Test. Psychometrika, 1-27. <https://doi.org/10.1007/s11336-024-09973-6> 
-
-Andreella, A., Goeman, J., Hemerik, J., Finos, L. (2025). Robust Inference for Generalized Linear Mixed Models: A “Two-Stage Summary Statistics” Approach Based on Score Sign Flipping. Psychometrika, 1-23.
 
 ## Bug reports
 
