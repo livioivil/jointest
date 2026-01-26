@@ -83,12 +83,12 @@ flip2sss <- function(formula=NULL,
   
   ###################
   
-  pred_vars_between_dummy = .get_vars_between_within(formula, data, cluster)  
+  vars_between_within = .get_vars_between_within(formula, data, cluster)  
   
-  #vars_within=vars_between_within$within_vars
+  vars_within=vars_between_within$vars_within
   #pred_vars_between=vars_between_within$pred_vars_between
   #vars_within_dummy=vars_between_within$within_dummy_vars_intercept
-  # pred_vars_between_dummy=vars_between_within$pred_vars_between_dummy
+  pred_vars_between_dummy=vars_between_within$pred_vars_between_dummy
   
   # rm(vars_between_within)
   ## make the second level dataset  
@@ -181,15 +181,15 @@ flip2sss <- function(formula=NULL,
   
   
   # ############# within variables
-  # within_vars=attributes(D)$assign[!vars_between_intercept_id]
-  # within_vars=unique(within_vars)
-  # within_vars_all=attr(terms(formula),"term.labels")[within_vars]
-  # within_vars=within_vars_all
-  # for(x in between_vars)
-  #   within_vars=gsub(x,"",within_vars)
-  # within_vars=gsub(":$","",within_vars)
-  # within_vars=gsub("^:","",within_vars)
-  # within_vars=unique(within_vars)
+  within_vars=attributes(D)$assign[!vars_between_intercept_id]
+  within_vars=unique(within_vars)
+  within_vars_all=attr(terms(formula),"term.labels")[within_vars]
+  within_vars=within_vars_all
+  for(x in between_vars)
+    within_vars=gsub(x,"",within_vars)
+  within_vars=gsub(":$","",within_vars)
+  within_vars=gsub("^:","",within_vars)
+  within_vars=unique(within_vars)
   # 
   # if(intercept) 
   #   within_vars_intercept=c("1", within_vars) else
@@ -256,12 +256,11 @@ flip2sss <- function(formula=NULL,
   }
   
   ###################
-  #list(#vars_within=within_vars,
+  list(vars_within=within_vars,
        #pred_vars_between=pred_vars_between,
        #vars_within_dummy=within_dummy_vars_intercept,
-   #    pred_vars_between_dummy=pred_vars_between_dummy)
-  pred_vars_between_dummy
-}
+       pred_vars_between_dummy=pred_vars_between_dummy)
+  }
  
 is.constant <- function(x) length(unique(x)) == 1
 
