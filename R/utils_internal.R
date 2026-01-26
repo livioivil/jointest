@@ -113,7 +113,7 @@
     })
     return(paste(pttrns,collapse=":"))
   }
-    
+  
   chars=sapply(vettore,strsplit,"")
   #matrix of all chracters
   charsMat=suppressWarnings(do.call(cbind,chars))
@@ -135,28 +135,36 @@
 ###########################################################################
 
 
-makedata2lev <- function(data, cluster, summstats_within,set_vars_between) { 
+makedata2lev <- function(data, cluster, summstats_within,model.matrix.between) { 
   
   groups <- unique(cluster) 
-  set_vars_between=unique(gsub(":(.+)$","",set_vars_between))
+  #set_vars_between=unique(gsub(":(.+)$","",set_vars_between))
   results <- function(x) { 
     # browser()
     group_data <- data[cluster == x,] 
+    group_model.matrix.between <- model.matrix.between[cluster == x,,drop=FALSE]
     stats <- eval(parse(text = summstats_within), envir = group_data) 
     coef_df <- as.data.frame(t(coefficients(stats))) 
     #group_data <- group_data[,!(names(group_data) %in%(with(attributes(terms(stats)), as.character(variables[response+1]))))]
-#    group_data <- group_data[,setdiff(names(group_data),attributes(terms(formula(stats)))$term.labels)]
+    #    group_data <- group_data[,setdiff(names(group_data),attributes(terms(formula(stats)))$term.labels)]
     names(coef_df) = gsub("\\W", ".", names(coef_df))
     names_coef_df <- names(coef_df)
-    coef_df<- data.frame(coef_df,group_data[,set_vars_between])
-    colnames(coef_df) <- c(names_coef_df,set_vars_between)
+    coef_df<- data.frame(coef_df,group_model.matrix.between[1,,drop=FALSE])
+    #colnames(coef_df) <- c(names_coef_df,colnames(group_model.matrix.between))
     return(coef_df)
   } 
-  result_df <- do.call(rbind, lapply(groups, function(x) unique(results(x))) )
+  
+  results_list <- lapply(groups, function(x) (results(x)))
+  all_cols=unique(unlist(as.list(sapply(results_list,names))))
+  dfs_filled <- lapply(results_list, function(x) {
+    x[setdiff(all_cols, names(x))] <- NA
+    x[all_cols]
+  })
+  result_df <- do.call(rbind, dfs_filled)
   rownames(result_df) <- NULL 
   
   return(result_df) 
-  } 
+} 
 
 .trim <- function(x, n = 4){
   k <- nrow(x)
