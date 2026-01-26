@@ -76,54 +76,34 @@ flip2sss <- function(formula=NULL,
                      flips = NULL,
                      ...){
   
-  # if(is(cluster,"formula")){
-  #   cluster=eval(cluster,data)
-  # }
-  
+  if(is(cluster,"formula")){
+     cluster=model.frame(cluster,data)
+   }
   
   ###################
   
   vars_between_within = .get_vars_between_within(formula, data, cluster)  
   
   vars_within=vars_between_within$vars_within
-  #pred_vars_between=vars_between_within$pred_vars_between
-  #vars_within_dummy=vars_between_within$within_dummy_vars_intercept
   pred_vars_between_dummy=vars_between_within$pred_vars_between_dummy
+  data=vars_between_within$data
+  cluster=vars_between_within$cluster
   
-  # rm(vars_between_within)
-  ## make the second level dataset  
- # set_between = unique(unlist(pred_vars_between))
-#  if(any(set_between=="1")) set_between=set_between[set_between!="1"]
-  # vars_between_formulas = lapply(pred_vars_between, paste0, collapse = "+")
-  # vars_between_formulas = paste(names(vars_between_formulas), vars_between_formulas, sep = "~")
-  # vars_between_formulas = as.list(vars_between_formulas)
-  # names(vars_between_formulas) = names(pred_vars_between)
-  #set_between=c(".cluster",set_between)
+  rm(vars_between_within)
   
-  #####################
-  ## make the second level dataset  
-  #set_between_dummy = unique(unlist(pred_vars_between_dummy))
   vars_between_formulas_dummy = lapply(pred_vars_between_dummy, paste0, collapse = "+")
   vars_between_formulas_dummy = paste(names(vars_between_formulas_dummy), vars_between_formulas_dummy, sep = "~")
   vars_between_formulas_dummy = as.list(vars_between_formulas_dummy)
   names(vars_between_formulas_dummy) = names(pred_vars_between_dummy)
-  #set_between_dummy=c(".cluster",set_between_dummy)
   #####################
   
-  #set_between=setdiff(set_between,"1")
-#  data=data[,set_between]
-  
-  #data$.cluster=cluster
   if(is.null(summstats_within)){
     summstats_within=paste0("glm(",formula[[2]],formula[[1]],paste(collapse ="+",vars_within),", family=",family,")")
   } 
   model.matrix.between=model.matrix(formula,data)[,unique(unlist(pred_vars_between_dummy)),drop=FALSE]
   data2lev <- makedata2lev(data = data, cluster, 
                            summstats_within,model.matrix.between)
-# data2lev = data %>% 
- #   group_by(data[set_between]) %>%
-  #  summarise(as.data.frame(t(coefficient(eval(parse(text=summstats_within))))))
- 
+
   mods = lapply(vars_between_formulas_dummy, function(frm) glm(eval(frm, parent.frame()), data = data2lev))
   
   for(i in 1:length(mods)){
@@ -132,13 +112,11 @@ flip2sss <- function(formula=NULL,
   }
   res = join_flipscores(mods, flips = flips, ...)
   
-  # summary(res)
-  
+
   res$summary_table$coefficient = paste(res$summary_table$coefficient, res$summary_table$model,sep = ":")
   res$summary_table$coefficient = gsub(":\\.Intercept\\.$", "", res$summary_table$coefficient)
   res$summary_table$coefficient = gsub("\\(Intercept\\):", "", res$summary_table$coefficient)
   
-  # res$summary_table$Model = "flip2sss"
   colnames(res$Tspace) = paste(res$summary_table$coefficient, res$summary_table$model,sep = "_model.") 
   res$mods=mods
   res
@@ -153,7 +131,14 @@ flip2sss <- function(formula=NULL,
 ######################
 .get_vars_between_within <- function(formula, data, cluster){
   formula=.expand_form(formula)
-  #clst_vals = unique(cluster) NON SERVE!
+  
+  idnas=which(is.na(data),arr.ind = TRUE)
+  if(nrow(idnas)>0){
+    idnas=unique(idnas[,1])
+    data=data[-idnas,,drop=FALSE]
+    cluster=cluster[-idnas]
+    }
+  
   D = model.matrix(formula, data = data)
   
   ## find constant cols within cluster
@@ -190,22 +175,6 @@ flip2sss <- function(formula=NULL,
   within_vars=gsub(":$","",within_vars)
   within_vars=gsub("^:","",within_vars)
   within_vars=unique(within_vars)
-  # 
-  # if(intercept) 
-  #   within_vars_intercept=c("1", within_vars) else
-  #     within_vars_intercept=within_vars
-  
-  ############# others between variables
-  # vars_between=lapply(within_vars, function(x) {
-  #   # temp=within_vars_all[grep(x,within_vars_all)]
-  #   temp=gsub(paste0(x,"(:|)"),"",within_vars_all)
-  #   temp=gsub(":$","",temp)
-  #   if(any(temp=="")) temp[temp==""]="1"
-  #   setdiff(temp,within_vars_all)
-  # })
-  # #vars_between=lapply(vars_between,function(x)gsub(":$","",x))
-  # names(vars_between)=within_vars
-  # 
   
   within_dummy_vars_all=names(vars_between_intercept_id)[!vars_between_intercept_id]
   within_dummy_vars=within_dummy_vars_all
@@ -215,28 +184,7 @@ flip2sss <- function(formula=NULL,
   within_dummy_vars=gsub("^:","",within_dummy_vars)
   within_dummy_vars=unique(within_dummy_vars)
   
-  # if(intercept) 
-  #   within_dummy_vars_intercept=c("1", within_dummy_vars) else
-  #     within_dummy_vars_intercept=within_dummy_vars
-  
-  ############# predictor between variables for within coefficients
-  # pred_vars_between=lapply(within_vars, function(x) {
-  #   # temp=within_vars_all[grep(x,within_vars_all)]
-  #   x_is_in=grep(paste0("(:|^)",x,"(:|$)"),within_vars_all)
-  #   temp=gsub(paste0(x,"(:|)"),"",within_vars_all[x_is_in])
-  #   temp=gsub(":$","",temp)
-  #   if(any(temp=="")) temp[temp==""]="1"
-  #   #setdiff(temp,within_dummy_vars)
-  #   temp
-  # })
-  # #vars_between=lapply(vars_between,function(x)gsub(":$","",x))
-  # names(pred_vars_between)=within_vars
-  # 
-  # if(intercept){
-  #   temp=list(".Intercept."=between_vars_intercept)
-  #   pred_vars_between=c(temp,pred_vars_between)
-  #   }
-  # 
+   
   ############# DUMMY predictor between variables for within coefficients
   pred_vars_between_dummy=lapply(within_dummy_vars, function(x) {
     # temp=within_vars_all[grep(x,within_vars_all)]
@@ -259,7 +207,9 @@ flip2sss <- function(formula=NULL,
   list(vars_within=within_vars,
        #pred_vars_between=pred_vars_between,
        #vars_within_dummy=within_dummy_vars_intercept,
-       pred_vars_between_dummy=pred_vars_between_dummy)
+       pred_vars_between_dummy=pred_vars_between_dummy,
+       data=data,
+       cluster=cluster)
   }
  
 is.constant <- function(x) length(unique(x)) == 1
