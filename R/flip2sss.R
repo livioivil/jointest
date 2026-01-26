@@ -83,14 +83,14 @@ flip2sss <- function(formula=NULL,
   
   ###################
   
-  vars_between_within = .get_vars_between_within(formula, data, cluster)  
+  pred_vars_between_dummy = .get_vars_between_within(formula, data, cluster)  
   
   #vars_within=vars_between_within$within_vars
   #pred_vars_between=vars_between_within$pred_vars_between
   #vars_within_dummy=vars_between_within$within_dummy_vars_intercept
-  pred_vars_between_dummy=vars_between_within$pred_vars_between_dummy
+  # pred_vars_between_dummy=vars_between_within$pred_vars_between_dummy
   
-  rm(vars_between_within)
+  # rm(vars_between_within)
   ## make the second level dataset  
  # set_between = unique(unlist(pred_vars_between))
 #  if(any(set_between=="1")) set_between=set_between[set_between!="1"]
@@ -180,17 +180,17 @@ flip2sss <- function(formula=NULL,
   
   
   
-  ############# within variables
-  within_vars=attributes(D)$assign[!vars_between_intercept_id]
-  within_vars=unique(within_vars)
-  within_vars_all=attr(terms(formula),"term.labels")[within_vars]
-  within_vars=within_vars_all
-  for(x in between_vars)
-    within_vars=gsub(x,"",within_vars)
-  within_vars=gsub(":$","",within_vars)
-  within_vars=gsub("^:","",within_vars)
-  within_vars=unique(within_vars)
-  
+  # ############# within variables
+  # within_vars=attributes(D)$assign[!vars_between_intercept_id]
+  # within_vars=unique(within_vars)
+  # within_vars_all=attr(terms(formula),"term.labels")[within_vars]
+  # within_vars=within_vars_all
+  # for(x in between_vars)
+  #   within_vars=gsub(x,"",within_vars)
+  # within_vars=gsub(":$","",within_vars)
+  # within_vars=gsub("^:","",within_vars)
+  # within_vars=unique(within_vars)
+  # 
   # if(intercept) 
   #   within_vars_intercept=c("1", within_vars) else
   #     within_vars_intercept=within_vars
@@ -220,23 +220,23 @@ flip2sss <- function(formula=NULL,
   #     within_dummy_vars_intercept=within_dummy_vars
   
   ############# predictor between variables for within coefficients
-  pred_vars_between=lapply(within_vars, function(x) {
-    # temp=within_vars_all[grep(x,within_vars_all)]
-    x_is_in=grep(paste0("(:|^)",x,"(:|$)"),within_vars_all)
-    temp=gsub(paste0(x,"(:|)"),"",within_vars_all[x_is_in])
-    temp=gsub(":$","",temp)
-    if(any(temp=="")) temp[temp==""]="1"
-    #setdiff(temp,within_dummy_vars)
-    temp
-  })
-  #vars_between=lapply(vars_between,function(x)gsub(":$","",x))
-  names(pred_vars_between)=within_vars
-  
-  if(intercept){
-    temp=list(".Intercept."=between_vars_intercept)
-    pred_vars_between=c(temp,pred_vars_between)
-    }
-  
+  # pred_vars_between=lapply(within_vars, function(x) {
+  #   # temp=within_vars_all[grep(x,within_vars_all)]
+  #   x_is_in=grep(paste0("(:|^)",x,"(:|$)"),within_vars_all)
+  #   temp=gsub(paste0(x,"(:|)"),"",within_vars_all[x_is_in])
+  #   temp=gsub(":$","",temp)
+  #   if(any(temp=="")) temp[temp==""]="1"
+  #   #setdiff(temp,within_dummy_vars)
+  #   temp
+  # })
+  # #vars_between=lapply(vars_between,function(x)gsub(":$","",x))
+  # names(pred_vars_between)=within_vars
+  # 
+  # if(intercept){
+  #   temp=list(".Intercept."=between_vars_intercept)
+  #   pred_vars_between=c(temp,pred_vars_between)
+  #   }
+  # 
   ############# DUMMY predictor between variables for within coefficients
   pred_vars_between_dummy=lapply(within_dummy_vars, function(x) {
     # temp=within_vars_all[grep(x,within_vars_all)]
@@ -256,10 +256,11 @@ flip2sss <- function(formula=NULL,
   }
   
   ###################
-  list(vars_within=within_vars,
-       pred_vars_between=pred_vars_between,
+  #list(#vars_within=within_vars,
+       #pred_vars_between=pred_vars_between,
        #vars_within_dummy=within_dummy_vars_intercept,
-       pred_vars_between_dummy=pred_vars_between_dummy)
+   #    pred_vars_between_dummy=pred_vars_between_dummy)
+  pred_vars_between_dummy
 }
  
 is.constant <- function(x) length(unique(x)) == 1
