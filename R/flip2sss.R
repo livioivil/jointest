@@ -133,7 +133,7 @@ flip2sss <- function(formula=NULL,
   formula=.expand_form(formula)
   
   idnas=which(is.na(data),arr.ind = TRUE)
-  if(nrow(idnas)>0){
+  if(length(idnas)>0){
     idnas=unique(idnas[,1])
     data=data[-idnas,,drop=FALSE]
     cluster=cluster[-idnas]
