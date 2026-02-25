@@ -91,6 +91,7 @@ flip2sss <- function(formula=NULL,
   
   rm(vars_between_within)
   
+  
   vars_between_formulas_dummy = lapply(pred_vars_between_dummy, paste0, collapse = "+")
   vars_between_formulas_dummy = paste(names(vars_between_formulas_dummy), vars_between_formulas_dummy, sep = "~")
   vars_between_formulas_dummy = as.list(vars_between_formulas_dummy)
@@ -104,6 +105,10 @@ flip2sss <- function(formula=NULL,
   data2lev <- makedata2lev(data = data, cluster, 
                            summstats_within,model.matrix.between)
 
+  intercept=attr(terms(formula), "intercept")
+  vars_between_formulas_dummy=lapply(vars_between_formulas_dummy,
+                                 function(x) paste0(x,"+",intercept))
+  
   mods = lapply(vars_between_formulas_dummy, function(frm) glm(eval(frm, parent.frame()), data = data2lev))
   
   for(i in 1:length(mods)){
@@ -197,6 +202,9 @@ flip2sss <- function(formula=NULL,
   })
   #vars_between=lapply(vars_between,function(x)gsub(":$","",x))
   names(pred_vars_between_dummy)=within_dummy_vars
+  
+  ########TODO: controllare qui
+  # NON QUI between_dummy_vars_intercept=    c(ifelse(intercept,"1","0"),between_dummy_vars_intercept)
   
   if(intercept){
     temp=list(".Intercept."=between_dummy_vars_intercept)
