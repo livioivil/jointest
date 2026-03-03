@@ -5,7 +5,7 @@
 \title{flipscores 2-Stage Summary Statistics approach}
 \usage{
 flip2sss(formula = NULL, data = NULL, cluster = NULL, 
-family = "gaussian", summstats_within=NULL, ...)
+family = "gaussian", summstats_within=NULL, n_flips = 5000, flips = NULL, ...)
 }
 \arguments{
 \item{formula}{A formula or a list of formulas. It can be a complete model as.formula or a list of formulas, one for each element produced by the function.}
@@ -18,6 +18,11 @@ family = "gaussian", summstats_within=NULL, ...)
 
 \item{summstats_within}{A vector of summary statistics model within the data or a function with argument data.}
 
+\item{n_flips}{The number of random flips of the score contributions. Overwritten with the \code{nrow(flips)} when \code{flips} is not \code{NULL} (see parameter \code{flips} for more details).
+When \code{n_flips} is equal or larger than the maximum number of possible flips (i.e. n^2), all possible flips are performed.}
+
+\item{flips}{matrix fo +1 or -1, the matrix has \code{n_flips} rows and n (number of observations) columns}
+
 \item{...}{Other arguments passed to the \code{\link[flipscores]{flipscores}} function.}
 }
 \value{
@@ -29,7 +34,8 @@ A \code{jointest} object, i.e., a list containing the following objects:
 }
 }
 \description{
-This function fits a model based on the provided formula and data, accounting for clusters and summary statistics within the model.
+This function fits a model based on the provided formula and data, accounting for clusters and summary statistics within the model as described in 
+A Andreella, J Goeman, J Hemerik, L Finos (2025) Robust Inference for Generalized Linear Mixed Models: A “Two-Stage Summary Statistics” Approach Based on Score Sign Flipping. Psychometrika, 1-23.
 }
 \examples{
 library(jointest)

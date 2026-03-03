@@ -14,6 +14,7 @@ knitr::opts_chunk$set(
 )
 ```
 
+Main reference: A Andreella, J Goeman, J Hemerik, L Finos (2025) Robust Inference for Generalized Linear Mixed Models: A “Two-Stage Summary Statistics” Approach Based on Score Sign Flipping. Psychometrika, 1-23.
 
 # Info data
 

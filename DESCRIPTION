@@ -10,7 +10,7 @@ Description: Runs resampling-based tests jointly, e.g., sign-flip score tests fr
 Imports: flipscores, flip, stats, graphics, grDevices
 Encoding: UTF-8
 License: GPL-2
-RoxygenNote: 7.3.2
+RoxygenNote: 7.3.3
 Suggests: 
     knitr,
     logistf,
