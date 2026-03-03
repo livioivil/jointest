@@ -22,7 +22,7 @@
 #'  \item{summary_table}{\code{data.frame} containing for each model the estimated parameter(s), score(s), std error(s), test(s), partial correlation(s) and p-value(s).} 
 #'  \item{mods}{List of \code{glm}s or \code{flipscores} objects.}
 #' }
-#' @example 
+#' @examples 
 #' N=20
 #' n=rpois(N,20)
 #' reff=rep(rnorm(N),n)
