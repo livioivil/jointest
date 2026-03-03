@@ -65,7 +65,8 @@
 #' @import flipscores
 #' @author Livio Finos, Angela Andreella
 #' @seealso \code{\link{combine_contrasts}}, \code{\link{combine}}
-#'  
+#' @references 
+#' Andreella, A., Goeman, J., Hemerik, J., Finos, L. (2025). Robust Inference for Generalized Linear Mixed Models: A “Two-Stage Summary Statistics” Approach Based on Score Sign Flipping. Psychometrika, 1-23. doi: 10.1017/psy.2024.22  
 flip2sss <- function(formula=NULL,
                      data=NULL,
                      cluster=NULL,
@@ -120,15 +121,21 @@ flip2sss <- function(formula=NULL,
   res = join_flipscores(mods, flips = flips, ...)
 
   # summary(res)
+  colnames(res$Tspace) = paste(res$summary_table$coefficient, res$summary_table$model,sep = "_model.") 
   
-  res$summary_table$Coeff = paste(res$summary_table$coefficient, res$summary_table$model,sep = ":")
-  res$summary_table$Coeff = gsub(":\\.Intercept\\.$", "", res$summary_table$coefficient)
-  res$summary_table$Coeff = gsub("\\(Intercept\\):", "", res$summary_table$coefficient)
+  res$summary_table$coefficient = paste(res$summary_table$coefficient, res$summary_table$model,sep = ":")
+ # res$summary_table$Coeff = gsub(":\\.Intercept\\.$", "", res$summary_table$coefficient)
+#  res$summary_table$Coeff = gsub("\\(Intercept\\):", "", res$summary_table$coefficient)
+  res$summary_table$coefficient = gsub(":.Intercept.", "", res$summary_table$coefficient)
+  res$summary_table$coefficient = gsub("^\\(Intercept\\):", "", res$summary_table$coefficient)
+  
+  res$summary_table <- res$summary_table[,c(2:ncol(res$summary_table))]
   
   # res$summary_table$Model = "flip2sss"
-  colnames(res$Tspace) = paste(res$summary_table$coefficient, res$summary_table$model,sep = "_model.") 
   res$mods=mods
   res
+  
+ 
 }
 
 ######################

@@ -41,6 +41,9 @@
 }
 
 
+
+
+
 # .get_all_Tspace <- function(mods){
 #   # dplyr::bind_cols(lapply(mods, function(md) md$Tspace))
 #   temp=lapply(mods, function(md) md$Tspace)
@@ -60,6 +63,11 @@
 .get_all_coeff_names_list <- function(mods){
   lapply(mods, function(md)
     names(md$coefficients))
+}
+
+.get_all_coeff_names_list_flip2sss <- function(mods){
+  lapply(mods, function(md)
+    colnames(md$Tspace))
 }
 
 .get_all_sumScore2 <- function(mods){

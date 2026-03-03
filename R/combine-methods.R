@@ -117,10 +117,13 @@ combine_contrasts <- function (mods, comb_funct = "Mahalanobis", tail = 0)
   # res=list(Tspace=.get_all_Tspace(res),summary_table=.get_all_summary_table(res))
   # class(res) <- unique(c("jointest", class(res)))
   # res
-  
+  if(is.null(mods$summary_table$model)){
+    suffix <-as.integer(factor(sub(".*_model\\.*", "", colnames(mods$Tspace)))) 
+    mods$summary_table$model <- paste0("model", suffix)
+  }
   smr=apply(mods$summary_table[,c("model",".assign"),drop=FALSE],1,paste,collapse=".")
   new_names=sapply(unique(smr),function(x).find_common_pattern(mods$summary_table$coefficient[smr==x]))
-  res=combine(mods,by=c("model",".assign"),comb_funct = comb_funct, tail = tail)
+  res=jointest::combine(mods,by=c("model",".assign"),comb_funct = comb_funct, tail = tail)
   res$summary_table$coefficient=new_names
   assigns=paste0(".",unique(mods$summary_table$.assign),"$")
   as_ids=lapply(assigns, function(as)  grep(as,res$summary_table$Model))
