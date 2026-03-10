@@ -41,6 +41,9 @@
 }
 
 
+
+
+
 # .get_all_Tspace <- function(mods){
 #   # dplyr::bind_cols(lapply(mods, function(md) md$Tspace))
 #   temp=lapply(mods, function(md) md$Tspace)
@@ -60,6 +63,11 @@
 .get_all_coeff_names_list <- function(mods){
   lapply(mods, function(md)
     names(md$coefficients))
+}
+
+.get_all_coeff_names_list_flip2sss <- function(mods){
+  lapply(mods, function(md)
+    colnames(md$Tspace))
 }
 
 .get_all_sumScore2 <- function(mods){
@@ -113,7 +121,7 @@
     })
     return(paste(pttrns,collapse=":"))
   }
-  
+    
   chars=sapply(vettore,strsplit,"")
   #matrix of all chracters
   charsMat=suppressWarnings(do.call(cbind,chars))
@@ -133,7 +141,6 @@
 ###########################################################################
 ##############################From flipscores##############################
 ###########################################################################
-
 
 makedata2lev <- function(data, cluster, summstats_within,model.matrix.between) { 
   
@@ -165,6 +172,7 @@ makedata2lev <- function(data, cluster, summstats_within,model.matrix.between) {
   
   return(result_df) 
 } 
+
 
 .trim <- function(x, n = 4){
   k <- nrow(x)
