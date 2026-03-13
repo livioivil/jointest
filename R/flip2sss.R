@@ -112,10 +112,13 @@ flip2sss <- function(formula=NULL,
   
   mods = lapply(vars_between_formulas_dummy, function(frm) glm(eval(frm, parent.frame()), data = data2lev))
   
+  
   for(i in 1:length(mods)){
     mods[[i]]$call$data = eval(data2lev)
     mods[[i]]$call$formula = eval(as.formula(vars_between_formulas_dummy[[i]]))
   }
+  
+  
   res = join_flipscores(mods, flips = flips, ...)
   
 
@@ -132,7 +135,7 @@ flip2sss <- function(formula=NULL,
   
   # res$summary_table$Model = "flip2sss"
 
-  res$mods=mods
+ # res$mods=mods
   res
   
  
