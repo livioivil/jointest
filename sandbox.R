@@ -1,4 +1,31 @@
+library(flipscores)
+set.seed(123)
+dt=data.frame(X=rnorm(20),
+    Z=factor(rep(LETTERS[1:3],length.out=20)))
+  dt$Y=rpois(n=20,lambda=exp((dt$Z=="C") + 2*dt$X))
+mod=flipscores(Y~Z+X,data=dt,family="gaussian",n_flips=1000)
+summary(mod)
+head(mod$Tspace)
+mod=flipscores(Y~Z+X,data=dt,,score_type = "effective",
+               family="gaussian",n_flips=1000)
+summary(mod)
+head(mod$Tspace)
 
+
+summary(mod)$coeff[4,4]
+summary.glm(mod)$coeff[4,3]
+
+flipscores:::.sum2t(stat = mod$Tspace[1,4],sumY2 = sum(mod$scores[,4]^2),n = nrow(mod$scores))
+.score2t(mod$Tspace[1,4],attr(mod$scores,"nrm")[4],16)
+
+flipscores:::.sum2t(stat = mod$Tspace[1,4],sumY2 = attr(mod$scores,"nrm")[4]^2,n = nrow(mod$scores))
+
+
+scr2t=.score2t(mod$Tspace[,4],attr(mod$scores,"nrm")[4],20)
+sum2t=flipscores:::.sum2t(stat = mod$Tspace[,4],sumY2 = sum(mod$scores[,4]^2),n = nrow(mod$scores))
+plot(sum2t,scr2t)
+
+############################
 set.seed(1)
 dt=data.frame(X=rnorm(20),
               Z=factor(rep(LETTERS[1:3],length.out=20)))
@@ -10,30 +37,6 @@ colSums(mod$scores)
 head(mod$Tspace)
 
 
-score2t <- function(Tspace,nrms=NULL,ns=NULL){
-  if(is(Tspace,"flipscores")){
-    if(is.null(nrms))
-      nrms=attr(Tspace$scores,"nrm")
-    if(is.null(n))
-      ns=rep(nrow(Tspace$scores),ncol(Tspace$scores))
-    Tspace=Tspace$Tspace[,,drop=FALSE]
-  }
-  
-  if(is.null(nrms))
-    warning("nrms is missing and can't be retrived from Tspace since it is not a flipscores object")
-  if(is.null(n))
-    warning("n is missing and can't be retrived from Tspace since it is not a flipscores object")
-  
-  .convert_score2t <-function(i){
-    tspace=Tspace[,i]
-    tspace*sqrt(ns[i]/(nrms[i]^2-tspace^2))
-  }
-  #plot(scale(object$Tspace[,4]),.convert_score2t(4));points(scale(object$Tspace[,4])[1],.convert_score2t(4)[1],col="red")
-  temp=sapply(1:ncol(Tspace),
-               .convert_score2t)
-  Tspace[,]=temp
-  Tspace
-}
 
 str(mod$Tspace)
 head(score2t(mod))
@@ -44,7 +47,7 @@ str(res$Tspace)
 
 nrms=sapply(res$mods,function(mod) attr(mod$scores,"nrm"))
 ns=sapply(res$mods,function(mod) nrow(mod$scores))
-res$Tspace=score2t(res$Tspace,nrms,ns)
+res$Tspace=flipscores:::score2t(res$Tspace,nrms,ns)
 
 
 temp=sapply(1:ncol(res$Tspace),function(i) 

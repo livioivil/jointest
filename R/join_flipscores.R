@@ -112,19 +112,23 @@ join_flipscores <- function(mods, tested_coeffs = NULL, n_flips = 5000, flips = 
                         flips = eval(FLIPS), to_be_tested = tested_coeffs[[i]],
                         output_flips=FALSE,nobservations=n_obs,...
       )
-      if (statistics %in% c("t")) 
-        if (score_type == "effective" || score_type == 
-            "orthogonalized") {
-          sumY2s = colSums(temp$scores^2)
-          n = nrow(temp$scores)
-          tt = sapply(1:length(sumY2s), function(i) flipscores:::.sum2t(temp$Tspace[, 
-                                                                                    i], sumY2s[i], n))
-          colnames(tt) = colnames(temp$Tspace)
-          temp$Tspace = tt
-        }
-      temp$summary_table=.get_summary_table_from_flipscores(temp)
+      if (statistics %in% c("t")) {
+        #TODO: OLD
+        # if (score_type == "effective" || score_type ==
+        #     "orthogonalized") {
+        #   sumY2s = colSums(temp$scores^2)
+        #   n = nrow(temp$scores)
+        #   tt = sapply(1:length(sumY2s), function(i) flipscores:::.sum2t(temp$Tspace[,
+        #                                                                             i], sumY2s[i], n))
+        #   colnames(tt) = colnames(temp$Tspace)
+        #   temp$Tspace = tt
+        # }
+        # SOSTITUIRE CON:
+         temp$Tspace=flipscores:::score2t(temp)
+      
+        temp$summary_table=.get_summary_table_from_flipscores(temp)
       temp
-    })
+    }})
     
   if(is.null(mods_names)){
     names(mods)=paste0("mod",1:length(mods))
