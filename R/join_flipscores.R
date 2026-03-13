@@ -124,7 +124,7 @@ join_flipscores <- function(mods, tested_coeffs = NULL, n_flips = 5000, flips = 
         #   temp$Tspace = tt
         # }
         # SOSTITUIRE CON:
-         temp$Tspace=flipscores:::score2t(temp)
+         # temp$Tspace=flipscores:::score2t(temp)
       
         temp$summary_table=.get_summary_table_from_flipscores(temp)
       temp
