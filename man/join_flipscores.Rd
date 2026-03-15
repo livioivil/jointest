@@ -50,7 +50,7 @@ n=20
 D=data.frame(X=rnorm(n),Z1=rnorm(n),Z2=rnorm(n))
 D$Y=D$Z1+D$X+rnorm(n)
 
-# Run four glms abd combine it in a list
+# Run four glms and combine it in a list
 mod1=glm(Y~X+Z1+Z2,data=D)
 mod2=glm(Y~X+poly(Z1,2)+Z2,data=D)
 mod3=glm(Y~X+poly(Z1,2)+poly(Z2,2),data=D)
@@ -59,9 +59,9 @@ mods=list(mod1=mod1,mod2=mod2,mod3=mod3,mod4=mod4)
 
 # flipscores jointly on all models
 res=join_flipscores(mods,n_flips = 1000)
-summary(combine(res))
-summary(combine(res, by="Model"))
-summary(combine_contrasts(res))
+summary(combinetests(res))
+summary(combinetests(res, by="Model"))
+summary(combinecontrasts(res))
 
 #Simulate multivariate (50) bionomial responses 
 set.seed(123)

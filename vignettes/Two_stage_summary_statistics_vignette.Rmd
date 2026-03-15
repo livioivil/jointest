@@ -86,9 +86,9 @@ summary(mod)
 
 #ANOVA-like combination
 #Overall
-summary(combine(mod))
+summary(combinetests(mod))
 #by Variables
-summary(combine_contrasts(mod))
+summary(combinecontrasts(mod))
 
 
 # p <- ggplot(oasis1lev,aes(Group,Interc,color=Group))

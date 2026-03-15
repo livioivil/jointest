@@ -40,9 +40,9 @@
 #'                cluster=D$Subj, family="binomial")
 #' summary(res)
 #' # This is an ANOVA-like overall test:
-#' summary(combine(res))
+#' summary(combinetests(res))
 #' # This is an ANOVA-like test:
-#' summary(combine_contrasts(res))
+#' summary(combinecontrasts(res))
 #' 
 #' # An alternative and more flexible definition of the model:
 #' # Define the summary statistics (here we propose the glm with firth correction 
@@ -60,12 +60,12 @@
 #' 
 #' # We can also combine the tests:
 #' # Overall:
-#' summary(combine(res))
+#' summary(combinetests(res))
 #' # This is similar to an ANOVA test:
-#' summary(combine_contrasts(res))
+#' summary(combinecontrasts(res))
 #' @import flipscores
 #' @author Livio Finos, Angela Andreella
-#' @seealso \code{\link{combine_contrasts}}, \code{\link{combine}}
+#' @seealso \code{\link{combinecontrasts}}, \code{\link{combinetests}}
 #' @references 
 #' Andreella, A., Goeman, J., Hemerik, J., Finos, L. (2025). Robust Inference for Generalized Linear Mixed Models: A “Two-Stage Summary Statistics” Approach Based on Score Sign Flipping. Psychometrika, 1-23. doi: 10.1017/psy.2024.22  
 flip2sss <- function(formula=NULL,

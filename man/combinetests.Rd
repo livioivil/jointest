@@ -3,13 +3,16 @@
 \docType{methods}
 \name{combine-methods}
 \alias{combine-methods}
+\alias{combinetests}
+\alias{combinecontrasts}
 \alias{combine}
-\alias{combine_contrasts}
 \title{Nonparametric combination of \code{jointest} objects}
 \usage{
-combine(mods, comb_funct = "maxT", by = NULL, by_list=NULL, tail = 0)
+combinetests(mods, comb_funct = "maxT", by = NULL, by_list=NULL, tail = 0)
 
-combine_contrasts(mods, comb_funct = "Mahalanobis", tail = 0)
+combinecontrasts(mods, comb_funct = "Mahalanobis", tail = 0)
+
+combine(...)
 }
 \arguments{
 \item{mods}{a \code{jointest} object.}
@@ -17,8 +20,8 @@ combine_contrasts(mods, comb_funct = "Mahalanobis", tail = 0)
 \item{comb_funct}{combining function to be used. 
 Several functions are implemented: "mean", "median", "Fisher", "Liptak", (equal to) "Stoufer", "Tippet", (equal to) "minp", "maxT", "Mahalanobis". 
 Alternatively it can be a custom function that has a Tspace matrix as input. 
-For \code{combine} the default is \code{comb_funct="maxT"},
-while for \code{combines_contrasts} the default is \code{comb_funct="Mahalanobis"}.}
+For \code{combinetests} the default is \code{comb_funct="maxT"},
+while for \code{combinecontrasts} the default is \code{comb_funct="Mahalanobis"}.}
 
 \item{by}{if \code{NULL} (default), it combines all test statistics.
 If a characters, it refers to the column's name of \code{summary_table} (and printed by something like \code{summary(mods)}). 
@@ -36,9 +39,9 @@ The function returns a \code{jointest}-object.
 \description{
 Methods for combining \code{jointest} objects.
 
-\code{combine} combines the tests derived from multiverse models.
+\code{combinetests} combines the tests derived from multiverse models.
 
-\code{combine_contrasts} combines the tests derived from the contrasts of a factor variable to get a 
+\code{combinecontrasts} combines the tests derived from the contrasts of a factor variable to get a 
 global test for the factor (i.e. categorical predictor). 
 It has strong analogies with ANOVA test.
 }
@@ -61,18 +64,18 @@ mods=list(mod1=mod1,mod2=mod2,mod3=mod3,mod4=mod4)
 
 # Let us analyze the tests related to coefficient "X" and combine them
 res=join_flipscores(mods,n_flips = 5000, seed = 1, tested_coeffs = "X")
-summary(combine(res))
+summary(combinetests(res))
 # Second (continued) example
 # flipscores jointly on all models and all coefficients
 res=join_flipscores(mods,n_flips = 2000)
-summary(combine(res))
-summary(combine(res, by="Model"))
-summary(combine(res, by="Coeff"))
-res2=combine_contrasts(res)
+summary(combinetests(res))
+summary(combinetests(res, by="Model"))
+summary(combinetests(res, by="Coeff"))
+res2=combinecontrasts(res)
 summary(res2)
 #custom combinations:
 coeffs=c("(Intercept)","X","Z1","Z2")
 coeffs_ids=lapply(coeffs,grep,res2$summary_table$Coeff)
 names(coeffs_ids)=coeffs
-summary(combine(res2,by_list =   coeffs_ids))
+summary(combinetests(res2,by_list =   coeffs_ids))
 }
