@@ -1,3 +1,13 @@
+# (single step) Westfall and Young max-t procedure 
+maxT.1step <-function(Tspace, weights = NULL){
+  if (!is.null(weights)) 
+    Tspace = t(weights * t(Tspace))
+  
+  stats=apply(Tspace,1,max)
+  .t2p <- function(t)sum(t<=stats)/length(stats)
+  sapply(unlist(Tspace[1,]),.t2p)
+}
+
 # (stepdown) Westfall and Young max-t procedure 
 maxT.light <- function (permT, alphas = c(.001,(1:99)/1000,
                                           (1:9)/10), weights = NULL, m = ncol(permT)) 
