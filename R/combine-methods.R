@@ -6,8 +6,8 @@
 #' @param comb_funct  combining function to be used. 
 #' Several functions are implemented: "mean", "median", "Fisher", "Liptak", (equal to) "Stoufer", "Tippet", (equal to) "minp", "maxT", "Mahalanobis". 
 #' Alternatively it can be a custom function that has a Tspace matrix as input. 
-#' For \code{combinetests} the default is \code{comb_funct="maxT"},
-#' while for \code{combinecontrasts} the default is \code{comb_funct="Mahalanobis"}.
+#' For \code{combine_tests} the default is \code{comb_funct="maxT"},
+#' while for \code{combine_contrasts} the default is \code{comb_funct="Mahalanobis"}.
 #' @returns The function returns a \code{jointest}-object. 
 #' @param by if \code{NULL} (default), it combines all test statistics.  
 #' If a characters, it refers to the column's name of \code{summary_table} (and printed by something like \code{summary(mods)}). 
@@ -19,10 +19,10 @@
 
 
 
-#' @usage combinetests(mods, comb_funct = "maxT", by = NULL, by_list=NULL, tail = 0)
-#' @description \code{combinetests} combines the tests derived from multiverse models.
+#' @usage combine_tests(mods, comb_funct = "maxT", by = NULL, by_list=NULL, tail = 0)
+#' @description \code{combine_tests} combines the tests derived from multiverse models.
 #' @docType methods
-#' @rdname combinetests
+#' @rdname combine_tests
 #' @export
 #' @examples
 #' #First example
@@ -43,10 +43,10 @@
 #' 
 #' # Let us analyze the tests related to coefficient "X" and combine them
 #' res=join_flipscores(mods,n_flips = 5000, seed = 1, tested_coeffs = "X")
-#' summary(combinetests(res))
+#' summary(combine_tests(res))
 
 
-combinetests <- function (mods, comb_funct = "maxT", by = NULL, by_list=NULL, tail = 0) 
+combine_tests <- function (mods, comb_funct = "maxT", by = NULL, by_list=NULL, tail = 0) 
 {
   
   # for(i in 1:length(mods))
@@ -77,30 +77,30 @@ combinetests <- function (mods, comb_funct = "maxT", by = NULL, by_list=NULL, ta
 }
 
 
-#' @usage combinecontrasts(mods, comb_funct = "Mahalanobis", tail = 0)
-#' @description \code{combinecontrasts} combines the tests derived from the contrasts of a factor variable to get a 
+#' @usage combine_contrasts(mods, comb_funct = "Mahalanobis", tail = 0)
+#' @description \code{combine_contrasts} combines the tests derived from the contrasts of a factor variable to get a 
 #' global test for the factor (i.e. categorical predictor). 
 #' It has strong analogies with ANOVA test.
 #' @docType methods
-#' @rdname combinetests
+#' @rdname combine_tests
 #' @export
 #' @examples
 #' # Second (continued) example
 #' # flipscores jointly on all models and all coefficients
 #' res=join_flipscores(mods,n_flips = 2000)
-#' summary(combinetests(res))
-#' summary(combinetests(res, by="Model"))
-#' summary(combinetests(res, by="Coeff"))
-#' res2=combinecontrasts(res)
+#' summary(combine_tests(res))
+#' summary(combine_tests(res, by="Model"))
+#' summary(combine_tests(res, by="Coeff"))
+#' res2=combine_contrasts(res)
 #' summary(res2)
 #' #custom combinations:
 #' coeffs=c("(Intercept)","X","Z1","Z2")
 #' coeffs_ids=lapply(coeffs,grep,res2$summary_table$Coeff)
 #' names(coeffs_ids)=coeffs
-#' summary(combinetests(res2,by_list =   coeffs_ids))
+#' summary(combine_tests(res2,by_list =   coeffs_ids))
 
 
-combinecontrasts <- function (mods, comb_funct = "Mahalanobis", tail = 0) 
+combine_contrasts <- function (mods, comb_funct = "Mahalanobis", tail = 0) 
 {
   names(mods) = .set_mods_names(mods)
   # combined=paste(mods$summary_table$Model,mods$summary_table$.assign,sep="_")
@@ -123,7 +123,7 @@ combinecontrasts <- function (mods, comb_funct = "Mahalanobis", tail = 0)
   }
   smr=apply(mods$summary_table[,c("model",".assign"),drop=FALSE],1,paste,collapse=".")
   new_names=sapply(unique(smr),function(x).find_common_pattern(mods$summary_table$coefficient[smr==x]))
-  res=combinetests(mods,by=c("model",".assign"),comb_funct = comb_funct, tail = tail)
+  res=combine_tests(mods,by=c("model",".assign"),comb_funct = comb_funct, tail = tail)
   res$summary_table$coefficient=new_names
   assigns=paste0(".",unique(mods$summary_table$.assign),"$")
   as_ids=lapply(assigns, function(as)  grep(as,res$summary_table$Model))
@@ -133,18 +133,18 @@ combinecontrasts <- function (mods, comb_funct = "Mahalanobis", tail = 0)
   res
 }
 #######################
-#' @rdname combinetests
+#' @rdname combine_tests
 #' @export
 combine <- function(...) {
   
   lifecycle::deprecate_warn(
     when = "1.2.0",
     what = "combine()",
-    with = "combinetests()",
-    details = "The function `combine()` was deprecated because it conflicts with `dplyr::combine()`. Please use `combinetests()` instead."
+    with = "combine_tests()",
+    details = "The function `combine()` was deprecated because it conflicts with `dplyr::combine()`. Please use `combine_tests()` instead."
   )
   
-  combinetests(...)
+  combine_tests(...)
 }
 #######################
 .npc2jointest <- function (id, mods, combined, tail, comb_funct) 

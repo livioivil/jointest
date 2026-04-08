@@ -42,9 +42,9 @@
 #' 
 #' # flipscores jointly on all models
 #' res=join_flipscores(mods,n_flips = 1000)
-#' summary(combinetests(res))
-#' summary(combinetests(res, by="Model"))
-#' summary(combinecontrasts(res))
+#' summary(combine_tests(res))
+#' summary(combine_tests(res, by="Model"))
+#' summary(combine_contrasts(res))
 #' 
 #' #Simulate multivariate (50) bionomial responses 
 #' set.seed(123)
