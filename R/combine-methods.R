@@ -89,8 +89,8 @@ combine_tests <- function (mods, comb_funct = "maxT", by = NULL, by_list=NULL, t
 #' # flipscores jointly on all models and all coefficients
 #' res=join_flipscores(mods,n_flips = 2000)
 #' summary(combine_tests(res))
-#' summary(combine_tests(res, by="Model"))
-#' summary(combine_tests(res, by="Coeff"))
+#' summary(combine_tests(res, by="model"))
+#' summary(combine_tests(res, by="coefficient"))
 #' res2=combine_contrasts(res)
 #' summary(res2)
 #' #custom combinations:
