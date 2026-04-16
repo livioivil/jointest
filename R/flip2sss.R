@@ -203,7 +203,7 @@ flip2sss <- function(formula=NULL,
   within_dummy_vars=gsub("^:","",within_dummy_vars)
   within_dummy_vars=unique(within_dummy_vars)
   
-   
+  within_dummy_vars=gsub("\\:",".",within_dummy_vars) 
   ############# DUMMY predictor between variables for within coefficients
   pred_vars_between_dummy=lapply(within_dummy_vars, function(x) {
     # temp=within_vars_all[grep(x,within_vars_all)]
@@ -214,6 +214,13 @@ flip2sss <- function(formula=NULL,
     #setdiff(temp,within_dummy_vars)
     temp
   })
+  
+  for(i in 1:length(pred_vars_between_dummy)){
+    out=unique(unlist(sapply(within_dummy_vars,function(vr_wthn)
+      grep(vr_wthn,pred_vars_between_dummy[[i]]))))
+    if(length(out)>0) pred_vars_between_dummy[[i]]=pred_vars_between_dummy[[i]][-out]
+    }
+    
   #vars_between=lapply(vars_between,function(x)gsub(":$","",x))
   names(pred_vars_between_dummy)=within_dummy_vars
   
