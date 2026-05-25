@@ -48,17 +48,23 @@ join_flip2sss <- function(formulas, summstats_within, data, cluster, tested_coef
   n_mods_within <- length(summstats_within)
   n_mods_between <- length(formulas)
   
-  combs <- expand.grid(mods_between = seq(n_mods_between),
-                       mods_within = seq(n_mods_within))
+ # combs <- expand.grid(mods_between = seq(n_mods_between),
+#                       mods_within = seq(n_mods_within))
   
-  n_mods <- nrow(combs)
+#  n_mods <- nrow(combs)
+  if(n_mods_within != n_mods_between){
+    stop("Error: formulas and summstats_within should be lists of the same length.")
+  }
   
+ # mods <- lapply(seq(n_mods), function(x) 
+#    flip2sss(formula = formulas[[combs[x, 1]]], data = data,
+ #            cluster = cluster,
+  #           summstats_within = summstats_within[[combs[x,2]]]))
   
-  mods <- lapply(seq(n_mods), function(x) 
-    flip2sss(formula = formulas[[combs[x, 1]]], data = data,
-             cluster = cluster,
-             summstats_within = summstats_within[[combs[x,2]]]))
-  
+  mods <- lapply(seq(n_mods_within), function(x)
+  flip2sss(formula = formulas[[x]], data = data,
+           cluster = cluster,
+           summstats_within = summstats_within[[x]]))
   
   for(i in 1:length(mods))
     mods[[i]]$call$data=eval(mods[[i]]$call$data, parent.frame())
@@ -68,7 +74,7 @@ join_flip2sss <- function(formulas, summstats_within, data, cluster, tested_coef
     tested_coeffs = .get_all_coeff_names_list_flip2sss(mods)
   }
   if (!is.list(tested_coeffs)) {
-    temp = .get_all_coeff_names_list(mods)
+    temp = .get_all_coeff_names_list_flip2sss(mods)
     
     tested_coeffs = gsub(" ", "", tested_coeffs)          
     tested_coeffs = lapply(temp, function(nms) intersect(tested_coeffs, 
@@ -87,11 +93,15 @@ join_flip2sss <- function(formulas, summstats_within, data, cluster, tested_coef
   }else{
     FLIPS = flips
   }
+  #TODO: implement tested_coeffs
   mods = lapply(1:length(mods), function(i) {
     
-    temp = flip2sss(formula = formulas[[combs[i, 1]]], data = data,
+    temp = flip2sss(formula = formulas[[i]],#formulas[[combs[i, 1]]], 
+                      data = data,
                     cluster = cluster,
-                    summstats_within = summstats_within[[combs[i,2]]], ...)
+                    summstats_within = summstats_within[[i]],#summstats_within[[combs[i,2]]], 
+                      flips = FLIPS, ...
+                    )
     temp
   })
   

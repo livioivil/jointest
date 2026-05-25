@@ -67,7 +67,8 @@
 
 .get_all_coeff_names_list_flip2sss <- function(mods){
   lapply(mods, function(md)
-    colnames(md$Tspace))
+  #  colnames(md$Tspace))
+    md$summary_table$coefficient)
 }
 
 .get_all_sumScore2 <- function(mods){
