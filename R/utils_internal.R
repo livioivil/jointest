@@ -171,9 +171,9 @@ makedata2lev <- function(data, cluster, summstats_within,model.matrix.between) {
   result_df <- do.call(rbind, dfs_filled)
   rownames(result_df) <- NULL 
   
-  single <- data.frame(table(cluster))$cluster[data.frame(table(cluster))$Freq < 2]
+  few <- data.frame(table(cluster))$cluster[data.frame(table(cluster))$Freq < 10]
 
-  if(!is.null(single)){
+  if(!is.null(few)){
     result_df <- result_df[!apply(result_df, 1, function(x) any(is.na(x))),]
   }
   
