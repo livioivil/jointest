@@ -103,8 +103,9 @@ flip2sss <- function(formula=NULL,
     summstats_within=paste0("glm(",formula[[2]],formula[[1]],paste(collapse ="+",vars_within),", family=",family,")")
   } 
   model.matrix.between=model.matrix(formula,data)[,unique(unlist(pred_vars_between_dummy)),drop=FALSE]
-  data2lev <- makedata2lev(data = data, cluster, 
-                           summstats_within,model.matrix.between)
+  data2lev <- makedata2lev(data = data, cluster = cluster, 
+                           summstats_within = summstats_within,
+                           model.matrix.between = model.matrix.between)
 
   intercept=attr(terms(formula), "intercept")
   vars_between_formulas_dummy=lapply(vars_between_formulas_dummy,

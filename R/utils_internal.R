@@ -162,7 +162,10 @@ makedata2lev <- function(data, cluster, summstats_within,model.matrix.between) {
     return(coef_df)
   } 
   
-  results_list <- lapply(groups, function(x) (results(x)))
+  results_list <- lapply(groups, function(x) tryCatch({
+    results(x)  }, error = function(e) { NA  }))
+  
+  #results_list <- lapply(groups, function(x) (results(x)))
   all_cols=unique(unlist(as.list(sapply(results_list,names))))
   dfs_filled <- lapply(results_list, function(x) {
     x[setdiff(all_cols, names(x))] <- NA
@@ -171,11 +174,8 @@ makedata2lev <- function(data, cluster, summstats_within,model.matrix.between) {
   result_df <- do.call(rbind, dfs_filled)
   rownames(result_df) <- NULL 
   
-  few <- data.frame(table(cluster))$cluster[data.frame(table(cluster))$Freq < 10]
+  result_df <- result_df[!apply(result_df, 1, function(x) any(is.na(x))),]
 
-  if(!is.null(few)){
-    result_df <- result_df[!apply(result_df, 1, function(x) any(is.na(x))),]
-  }
   
   return(result_df) 
 } 
