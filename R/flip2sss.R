@@ -120,7 +120,7 @@ flip2sss <- function(formula=NULL,
   }
   
   
-  res = join_flipscores(mods, flips = flips, ...)
+  res = join_flipscores(mods, ...)
   
 
   # summary(res)
